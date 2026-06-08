@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Deployment Branch Rules: Safer Release Gates</title>
+  <meta name="description" content="Use GitHub Actions deployment branch and tag rules to keep environment secrets, reviewer gates, and release jobs tied to trusted refs before production deploys.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-deployment-branch-rules/">
+  <meta property="og:title" content="GitHub Deployment Branch Rules: Safer Release Gates">
+  <meta property="og:description" content="How deployment branch and tag rules constrain which GitHub Actions refs can reach protected environments.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-deployment-branch-rules/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-deployment-branch-rules.jpg">
+  <meta property="article:published_time" content="2026-06-08T09:51:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T09:51:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="deployment branches">
+  <meta property="article:tag" content="environment protection">
+  <meta property="article:tag" content="release gates">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-deployment-branch-rules.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Deployment Branch Rules: Safer Release Gates",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T09:51:00-06:00",
+    "dateModified": "2026-06-08T09:51:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions deployment branch rules", "environment protection rules", "deployment branches and tags", "GitHub Actions release gates", "environment secrets"],
+    "wordCount": 1016,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-deployment-branch-rules/",
+    "articleBody": "Deployment branch and tag rules are part of the GitHub Actions release boundary because they decide which refs can reach an environment.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-deployment-branch-rules.jpg", "width": 2000, "height": 1333},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Deployments and environments", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments"},
+      {"@type": "CreativeWork", "name": "Review deployments", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/review-deployments"},
+      {"@type": "CreativeWork", "name": "Events that trigger workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows"},
+      {"@type": "CreativeWork", "name": "About protected branches", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Deployment Branch Rules: Safer Release Gates", "item": "https://dsotn.com/articles/github-actions-deployment-branch-rules/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-deployment-branch-rules.jpg" width="2000" height="1333" alt="Studio photograph of a liquid oxygen pressure relief valve.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#rule-options">Rule options</a>
+        <a href="#ref-matching">Ref matching</a>
+        <a href="#secret-boundary">Secret boundary</a>
+        <a href="#reviewer-bypass">Review and bypass</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Deployment Branch Rules: Safer Release Gates</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">Deployment branch and tag rules should be reviewed as production access controls, not as decorative labels on GitHub Actions environments.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub deployment branch rules</h2>
+          <ul>
+            <li>GitHub Docs says deployment protection rules can require manual approval, delay a job, or restrict an environment to certain branches. <a href="#ref-env">[1]</a></li>
+            <li>GitHub Docs lists three deployment branch and tag options: no restriction, protected branches only, and selected branches and tags. <a href="#ref-env">[1]</a></li>
+            <li>GitHub Docs says selected deployment rules are matched against the workflow run's <code>GITHUB_REF</code>. <a href="#ref-env">[1]</a></li>
+            <li>GitHub Docs says environment secrets are only available to jobs that reference the environment, and approval gates delay access until approval. <a href="#ref-env">[1]</a></li>
+            <li>GitHub Docs says protected branches can require pull requests, status checks, signed commits, conversation resolution, and other merge conditions. <a href="#ref-protected">[4]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Deployment branch rules decide which refs may release</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Treat deployment branch and tag rules as the ref-level gate in front of environment secrets, reviewers, and release jobs. The safest pattern is a small set of trusted refs, paired with protected branches and reviewable deployment workflows.
+          </div>
+          <p>GitHub's deployment reference describes deployment protection rules as conditions that must pass before a job referencing an environment proceeds. <a href="#ref-env">[1]</a></p>
+          <p>That makes deployment branch rules part of the release boundary. A workflow can have careful token permissions and reviewers, but the environment still needs to define which branches or tags are allowed to ask for that deployment.</p>
+        </section>
+
+        <section id="rule-options">
+          <h2>The three rule modes carry different release risk</h2>
+          <p>GitHub Docs lists <code>No restriction</code>, <code>Protected branches only</code>, and <code>Selected branches and tags</code> as the available deployment branch and tag choices for an environment. <a href="#ref-env">[1]</a></p>
+          <p><code>No restriction</code> is easiest to operate, but it gives every eligible workflow ref a path toward the environment. <code>Protected branches only</code> ties deployment eligibility to branch-protection coverage. <code>Selected branches and tags</code> makes the release ref pattern explicit.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> Production environments should usually name the branches or tags that are allowed to deploy, unless the repository has a deliberately maintained protected-branch model.
+          </div>
+        </section>
+
+        <section id="ref-matching">
+          <h2>Selected patterns match the workflow run ref</h2>
+          <p>GitHub Docs says the deployment branch or tag rule is matched against the workflow run's <code>GITHUB_REF</code>. <a href="#ref-env">[1]</a></p>
+          <p>The same documentation says a pattern such as <code>releases/*</code> only allows a <code>GITHUB_REF</code> whose name begins with <code>releases/</code>, and that adding <code>refs/pull/*/merge</code> would allow workflows triggered by pull-request events to deploy to the environment. <a href="#ref-env">[1]</a></p>
+          <p>That second example is the review trap. A selected pattern is a production access rule, so broad pull-request, preview, or wildcard patterns should be intentional and documented. If a production environment should deploy only from <code>main</code> or release tags, the rule should say that directly.</p>
+        </section>
+
+        <section id="secret-boundary">
+          <h2>Environment secrets depend on both the job and the gate</h2>
+          <p>GitHub Docs says environment secrets are available only to workflow jobs that reference the environment. <a href="#ref-env">[1]</a></p>
+          <p>The same page says that when an environment requires approval, a job cannot access environment secrets until a required reviewer approves it. <a href="#ref-env">[1]</a></p>
+          <p>That means a release review should trace both paths: the job must name the environment, and the environment must decide whether the run's ref is allowed to reach the gate. A mismatch between workflow triggers and environment branch rules can expose credentials to a release path nobody meant to bless.</p>
+        </section>
+
+        <section id="reviewer-bypass">
+          <h2>Reviewer and bypass settings should match the ref rule</h2>
+          <p>GitHub Docs says required reviewers can require a person or team to approve workflow jobs that reference an environment, and that one required reviewer approval lets the job proceed. <a href="#ref-env">[1]</a></p>
+          <p>GitHub Docs also describes an option to prevent self-reviews for deployments to protected environments, so the user who initiated the deployment cannot approve that deployment job. <a href="#ref-env">[1]</a></p>
+          <p>GitHub's deployment-review guide says administrators can approve or reject jobs awaiting review, and notes that admins may be able to bypass protection rules depending on environment configuration. <a href="#ref-review">[2]</a></p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid verdict:</strong> Do not pair a broad deployment branch rule with easy reviewer bypass and assume the environment is still a strong release gate.
+          </div>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit compares triggers, refs, and environment gates</h2>
+          <p>Start with every job that declares <code>environment:</code>. For each job, record the workflow trigger, the expected release branch or tag, the environment name, and whether the job receives environment secrets after approval.</p>
+          <p>Then compare the workflow's trigger model with the environment's selected branch or tag rules. GitHub's event reference is the source for how events populate workflow refs, so use it when a trigger's ref shape is unclear. <a href="#ref-events">[3]</a></p>
+          <p>Finally, compare protected-branch coverage with the environment rule. GitHub Docs says branch protection rules can require pull requests, status checks, signed commits, conversation resolution, merge queues, deployment success, and other conditions before changes merge. <a href="#ref-protected">[4]</a></p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so deployment branch-rule review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, self-hosted runner, runner-group, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, <code>workflow_run</code>, checkout-credential, npm trusted-publishing, SARIF upload, log-secret, ruleset, secret-scanning, trigger-filter, matrix, service-container, workflow-command, and Docker build-secret audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-env">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments">Deployments and environments</a>.</li>
+            <li id="ref-review">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/review-deployments">Review deployments</a>.</li>
+            <li id="ref-events">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows">Events that trigger workflows</a>.</li>
+            <li id="ref-protected">GitHub Docs, <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches">About protected branches</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (34)
+### GitHub Actions (35)
 
+- [GitHub Deployment Branch Rules: Safer Release Gates](https://dsotn.com/articles/github-actions-deployment-branch-rules/)
 - [GitHub Actions Docker Build Secrets: Safer Container CI](https://dsotn.com/articles/github-actions-docker-build-secrets/)
 - [GitHub Actions Workflow Commands: Secure CI Output](https://dsotn.com/articles/github-actions-workflow-commands-security/)
 - [GitHub Actions Service Containers: Secure CI Tests](https://dsotn.com/articles/github-actions-service-containers-security/)
