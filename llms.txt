@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (21)
+### GitHub Actions (22)
 
+- [GitHub Actions workflow_run: Safe Privileged Follow-ups](https://dsotn.com/articles/github-actions-workflow-run-security/)
 - [Dependabot GitHub Actions: Safer Bot PR CI Workflows](https://dsotn.com/articles/dependabot-github-actions-security/)
 - [GitHub Actions Concurrency: Cancel Stale CI/CD Jobs](https://dsotn.com/articles/github-actions-concurrency/)
 - [GitHub Actions Fork Approvals: Safer PR CI Workflows](https://dsotn.com/articles/github-actions-fork-workflow-approvals/)
