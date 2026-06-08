@@ -13,6 +13,14 @@
     <lastmod>2026-06-08</lastmod>
   </url>
   <url>
+    <loc>https://dsotn.com/articles/github-actions-defaults-run-security/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/github-actions-defaults-run-security.png</image:loc>
+      <image:title>Green terminal screenshot showing a shell script being edited</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dsotn.com/articles/composite-actions-security/</loc>
     <lastmod>2026-06-08</lastmod>
     <image:image>

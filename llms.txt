@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (43)
+### GitHub Actions (44)
 
+- [GitHub Actions defaults.run: Safer CI Shell Controls](https://dsotn.com/articles/github-actions-defaults-run-security/)
 - [Composite Actions Security: Safer GitHub Actions Reuse](https://dsotn.com/articles/composite-actions-security/)
 - [CODEOWNERS for GitHub Actions: Secure Workflow Reviews](https://dsotn.com/articles/codeowners-github-actions-workflows/)
 - [GitHub Actions pull_request: Safer PR CI Workflows](https://dsotn.com/articles/github-actions-pull-request-security/)
