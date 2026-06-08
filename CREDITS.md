@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-workflow-commands-security | https://commons.wikimedia.org/wiki/File:Mkdir_terminal.png | Desshi | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-service-containers-security | https://commons.wikimedia.org/wiki/File:Container_port_(1).jpg | Andrew McMillan | Public domain | 2026-06-08 |
 | github-actions-matrix-builds | https://commons.wikimedia.org/wiki/File:Patchpanel2.JPG | Pcpeggs | Public domain | 2026-06-08 |
 | github-actions-trigger-filters | https://commons.wikimedia.org/wiki/File:Basement_utility_room_(room_24;_air_handling_room),_near_the_west_end_of_the_combat_operations_center,_looking_southwest_towards_fan_system_one,_air_ducts,_and_walk-in_filter_rooms._HABS_CA-2788-A-49.tif | David DeVries / National Park Service | Public domain | 2026-06-08 |
