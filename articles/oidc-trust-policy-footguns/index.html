@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OIDC Trust Policies: Secure GitHub Actions Cloud Deploys</title>
+  <meta name="description" content="Avoid broad GitHub Actions OIDC trust policies by scoping cloud roles to exact repositories, refs, environments, audiences, and job permissions.">
+  <link rel="canonical" href="https://dsotn.com/articles/oidc-trust-policy-footguns/">
+  <meta property="og:title" content="OIDC Trust Policies: Secure GitHub Actions Cloud Deploys">
+  <meta property="og:description" content="How to keep GitHub Actions OIDC cloud trust policies narrow enough for production deployments.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/oidc-trust-policy-footguns/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/oidc-trust-policy-footguns.jpg">
+  <meta property="article:published_time" content="2026-06-07T23:45:00-06:00">
+  <meta property="article:modified_time" content="2026-06-07T23:45:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="GitHub Actions OIDC">
+  <meta property="article:tag" content="cloud trust policies">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/oidc-trust-policy-footguns.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "OIDC Trust Policies: Secure GitHub Actions Cloud Deploys",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-07T23:45:00-06:00",
+    "dateModified": "2026-06-07T23:45:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions OIDC", "OIDC trust policy", "cloud deployments", "id-token permissions"],
+    "wordCount": 1015,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/oidc-trust-policy-footguns/",
+    "articleBody": "GitHub Actions OIDC removes long-lived cloud secrets, but the cloud trust policy becomes the new security boundary.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/oidc-trust-policy-footguns.jpg", "width": 4928, "height": 2768},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "OpenID Connect", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/security/openid-connect"},
+      {"@type": "CreativeWork", "name": "OpenID Connect reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/oidc"},
+      {"@type": "CreativeWork", "name": "Configuring OpenID Connect in Amazon Web Services", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws"},
+      {"@type": "CreativeWork", "name": "Configuring OpenID Connect in Azure", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-azure"},
+      {"@type": "CreativeWork", "name": "Configuring OpenID Connect in Google Cloud Platform", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-google-cloud-platform"},
+      {"@type": "CreativeWork", "name": "Use GITHUB_TOKEN for authentication in workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "OIDC Trust Policies: Secure GitHub Actions Cloud Deploys", "item": "https://dsotn.com/articles/oidc-trust-policy-footguns/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/oidc-trust-policy-footguns.jpg" width="4928" height="2768" alt="Clouds above the north Atlantic Ocean photographed from orbit.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#boundary">Trust boundary</a>
+        <a href="#subject">Subject claims</a>
+        <a href="#providers">Provider checks</a>
+        <a href="#permissions">Token permissions</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>OIDC Trust Policies: Secure GitHub Actions Cloud Deploys</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-07 · 7 min read</p>
+        <p id="editorial-summary">OpenID Connect can remove long-lived cloud secrets from GitHub Actions, but it shifts the critical review to the cloud role trust policy.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions OIDC trust policies</h2>
+          <ul>
+            <li>GitHub describes OIDC as a way for workflows to request short-lived cloud tokens instead of storing long-lived cloud credentials as GitHub secrets. <a href="#ref-oidc">[1]</a></li>
+            <li>GitHub's OIDC reference says the <code>sub</code> claim is essential because it lets the cloud provider allocate access tokens in a predictable way. <a href="#ref-reference">[2]</a></li>
+            <li>The OIDC reference documents subject examples for environment, pull-request, branch, and tag filters. <a href="#ref-reference">[2]</a></li>
+            <li>GitHub's AWS, Azure, and Google Cloud OIDC guides all require a workflow or job <code>permissions</code> setting with <code>id-token: write</code> before a JWT can be requested. <a href="#ref-aws">[3]</a> <a href="#ref-azure">[4]</a> <a href="#ref-gcp">[5]</a></li>
+            <li>GitHub documents workflow-level and job-level controls for reducing default <code>GITHUB_TOKEN</code> access. <a href="#ref-token">[6]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>OIDC hardening happens in the cloud trust rule</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Treat the cloud trust policy as production access control. It should name the exact repository, branch, tag, environment, audience, and job posture that may receive credentials.
+          </div>
+          <p>OIDC is often sold internally as "no more cloud secrets in GitHub." That part is real: GitHub's OIDC overview describes exchanging a GitHub-issued token for a short-lived cloud access token instead of storing long-lived cloud credentials as secrets. <a href="#ref-oidc">[1]</a></p>
+          <p>The mistake is assuming that removing the secret removes the deployment risk. A broad cloud trust policy can let the wrong workflow, branch, or environment request the same cloud role that a static secret used to unlock.</p>
+        </section>
+
+        <section id="boundary">
+          <h2>The issuer is fixed, but the trust decision is yours</h2>
+          <p>GitHub's OIDC reference documents the issuer as <code>https://token.actions.githubusercontent.com</code>. <a href="#ref-reference">[2]</a> That tells the cloud provider where the identity token comes from, but it does not by itself prove that the right workflow should get production access.</p>
+          <p>The claims inside the token carry the workflow context. GitHub documents claims such as <code>repository</code>, <code>repository_owner</code>, <code>ref</code>, <code>event_name</code>, <code>workflow_ref</code>, <code>workflow_sha</code>, and <code>environment</code>. <a href="#ref-reference">[2]</a> Those values are the raw material for a narrow trust policy.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A production cloud role should be reachable only from the deployment workflow and deployment context you would approve by hand.
+          </div>
+        </section>
+
+        <section id="subject">
+          <h2>The subject claim should not accept every repo run</h2>
+          <p>GitHub says audience and subject claims are typically used together to scope cloud role access to GitHub workflows. <a href="#ref-reference">[2]</a> The subject claim is especially important because GitHub's reference says it defines what the cloud provider validates before allocating access tokens. <a href="#ref-reference">[2]</a></p>
+          <p>Review the subject pattern before the workflow YAML. GitHub documents examples for environment-specific subjects, pull-request subjects, branch subjects, and tag subjects. <a href="#ref-reference">[2]</a> A deploy role tied to <code>repo:ORG/REPO:*</code> is easier to configure than a production-only subject, but it gives more workflow contexts a path to cloud credentials.</p>
+          <ul class="risk-list">
+            <li><strong>Repository:</strong> bind the trust rule to the one repository that owns the deployment.</li>
+            <li><strong>Ref:</strong> prefer an exact release branch or tag pattern over every branch.</li>
+            <li><strong>Environment:</strong> use an environment subject when production access should require a named environment.</li>
+            <li><strong>Workflow:</strong> check whether workflow or reusable-workflow claims can separate deploy automation from general CI.</li>
+          </ul>
+        </section>
+
+        <section id="providers">
+          <h2>AWS, Azure, and Google Cloud expose the same footgun</h2>
+          <p>GitHub's AWS OIDC guide shows a role trust policy with <code>token.actions.githubusercontent.com:sub</code> and <code>token.actions.githubusercontent.com:aud</code> conditions. <a href="#ref-aws">[3]</a> The sample is useful because it puts the risky decision in one visible place: which subjects may assume the role.</p>
+          <p>GitHub's Azure guide says teams must define at least one condition before proceeding so untrusted repositories cannot request access tokens for cloud resources. <a href="#ref-azure">[4]</a> The same guide recommends <code>api://AzureADTokenExchange</code> as the audience value for Azure. <a href="#ref-azure">[4]</a></p>
+          <p>GitHub's Google Cloud guide says the provider setup includes creating an identity pool, configuring mapping and conditions, and connecting the pool to a service account. <a href="#ref-gcp">[5]</a> It also lists <code>https://token.actions.githubusercontent.com</code> as the issuer URL to use. <a href="#ref-gcp">[5]</a></p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> Any provider configuration that trusts all branches, all workflows, or every repository under an owner makes OIDC look safer than it is.
+          </div>
+        </section>
+
+        <section id="permissions">
+          <h2><code>id-token: write</code> should live only where OIDC is needed</h2>
+          <p>The AWS, Azure, and Google Cloud guides each state that the workflow or job needs <code>permissions</code> with <code>id-token: write</code> to let GitHub's OIDC provider create a JWT. <a href="#ref-aws">[3]</a> <a href="#ref-azure">[4]</a> <a href="#ref-gcp">[5]</a></p>
+          <p>That permission should not be a repo-wide habit. Put it on the deploy job that exchanges the token, then keep unrelated build, test, and lint jobs without OIDC token minting authority.</p>
+          <p>Also narrow the rest of the token permissions. GitHub recommends granting the <code>GITHUB_TOKEN</code> the least required access and configuring permissions at workflow or job level. <a href="#ref-token">[6]</a> A cloud deploy job that needs an OIDC token and repository read access should not inherit broad write scopes by default.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit starts with every cloud role subject</h2>
+          <p>Inventory each cloud role that trusts GitHub's OIDC issuer. For each role, record the accepted audience, subject pattern, repository, ref, environment, service account or role permissions, and the workflow file that can request the token. <a href="#ref-reference">[2]</a></p>
+          <p>Then trace the matching workflow job. Confirm it has <code>id-token: write</code> only where needed, uses narrow <code>GITHUB_TOKEN</code> permissions, and does not combine untrusted pull-request code or broad manual inputs with production cloud authority. <a href="#ref-token">[6]</a></p>
+          <p>For a local review queue, run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> and review OIDC findings beside trigger, secret, token-permission, timeout, pinned-action, and shell-context findings.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 6 entries, primary platform documentation, last reviewed 2026-06-07.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-oidc">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/security/openid-connect">OpenID Connect</a>.</li>
+            <li id="ref-reference">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/oidc">OpenID Connect reference</a>.</li>
+            <li id="ref-aws">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws">Configuring OpenID Connect in Amazon Web Services</a>.</li>
+            <li id="ref-azure">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-azure">Configuring OpenID Connect in Azure</a>.</li>
+            <li id="ref-gcp">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-google-cloud-platform">Configuring OpenID Connect in Google Cloud Platform</a>.</li>
+            <li id="ref-token">GitHub Docs, <a href="https://docs.github.com/en/actions/tutorials/authenticate-with-github_token">Use GITHUB_TOKEN for authentication in workflows</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

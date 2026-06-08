@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (7)
+### GitHub Actions (8)
 
+- [OIDC Trust Policies: Secure GitHub Actions Cloud Deploys](https://dsotn.com/articles/oidc-trust-policy-footguns/)
 - [GitHub Actions Secrets: Safer Deployment Workflows](https://dsotn.com/articles/github-actions-secrets-deployment-workflows/)
 - [GitHub Actions Timeouts: Safer CI/CD Runtime Limits](https://dsotn.com/articles/github-actions-timeout-minutes/)
 - [workflow_dispatch Inputs: Safer Manual GitHub Actions](https://dsotn.com/articles/workflow-dispatch-input-safety/)
