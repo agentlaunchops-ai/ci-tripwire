@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (37)
+### GitHub Actions (38)
 
+- [GitHub Job Outputs: Safer GitHub Actions Data Flow](https://dsotn.com/articles/github-actions-job-outputs-security/)
 - [repository_dispatch Security: Safer External CI Triggers](https://dsotn.com/articles/repository-dispatch-security/)
 - [GitHub Runner Labels: Safer Self-Hosted CI Routing](https://dsotn.com/articles/github-actions-runner-labels-routing/)
 - [GitHub Deployment Branch Rules: Safer Release Gates](https://dsotn.com/articles/github-actions-deployment-branch-rules/)

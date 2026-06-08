@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-job-outputs-security | https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg | Derrick Coetzee from Berkeley, CA, USA | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | repository-dispatch-security | https://commons.wikimedia.org/wiki/File:Arduino_push_button-1.jpg | DustyDingo | Public domain | 2026-06-08 |
 | github-actions-runner-labels-routing | https://commons.wikimedia.org/wiki/File:KFC_label_peeling_machine.jpg | Fumikas Sagisavas | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-deployment-branch-rules | https://commons.wikimedia.org/wiki/File:Safety_Valve,_Rocket_Engine,_Liquid_Fuel,_R.H._Goddard_-_DPLA_-_23699f0da2c9e960e3bc1311adc935ca_(page_1).jpg | Eric Long / Smithsonian National Air and Space Museum | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
