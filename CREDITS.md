@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-matrix-builds | https://commons.wikimedia.org/wiki/File:Patchpanel2.JPG | Pcpeggs | Public domain | 2026-06-08 |
 | github-actions-trigger-filters | https://commons.wikimedia.org/wiki/File:Basement_utility_room_(room_24;_air_handling_room),_near_the_west_end_of_the_combat_operations_center,_looking_southwest_towards_fan_system_one,_air_ducts,_and_walk-in_filter_rooms._HABS_CA-2788-A-49.tif | David DeVries / National Park Service | Public domain | 2026-06-08 |
 | github-actions-runner-groups-access | https://commons.wikimedia.org/wiki/File:Security_keyboard.jpg | Baran Ivo | Public domain | 2026-06-08 |
 | github-secret-scanning-ci-token-leaks | https://commons.wikimedia.org/wiki/File:Artize_Tailwater_Faucet.jpg | Anupamg | Public domain | 2026-06-08 |
