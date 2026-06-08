@@ -13,6 +13,14 @@
     <lastmod>2026-06-08</lastmod>
   </url>
   <url>
+    <loc>https://dsotn.com/articles/github-actions-runner-groups-access/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/github-actions-runner-groups-access.jpg</image:loc>
+      <image:title>Security keypad for controlled access</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dsotn.com/articles/github-secret-scanning-ci-token-leaks/</loc>
     <lastmod>2026-06-08</lastmod>
     <image:image>
