@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dependency Review Action: Secure GitHub Actions PRs</title>
+  <meta name="description" content="Use dependency-review-action to block vulnerable or policy-breaking dependency changes before GitHub Actions pull requests merge with narrow permissions.">
+  <link rel="canonical" href="https://dsotn.com/articles/dependency-review-action-github-actions/">
+  <meta property="og:title" content="Dependency Review Action: Secure GitHub Actions PRs">
+  <meta property="og:description" content="How to make dependency review a useful pull-request gate instead of another noisy CI check.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/dependency-review-action-github-actions/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/dependency-review-action-github-actions.jpg">
+  <meta property="article:published_time" content="2026-06-08T01:13:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T01:13:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="dependency review">
+  <meta property="article:tag" content="supply chain security">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/dependency-review-action-github-actions.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Dependency Review Action: Secure GitHub Actions PRs",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T01:13:00-06:00",
+    "dateModified": "2026-06-08T01:13:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["dependency-review-action", "GitHub Actions dependency review", "pull request dependency security", "software supply chain"],
+    "wordCount": 1086,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/dependency-review-action-github-actions/",
+    "articleBody": "GitHub dependency review can turn package changes into an enforceable pull-request check when it is scoped and configured deliberately.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/dependency-review-action-github-actions.jpg", "width": 1920, "height": 3412},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Dependency review", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review"},
+      {"@type": "CreativeWork", "name": "Configuring the dependency review action", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/configuring-the-dependency-review-action"},
+      {"@type": "CreativeWork", "name": "dependency-review-action", "publisher": "GitHub Actions", "url": "https://github.com/actions/dependency-review-action"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "Dependency Review Action: Secure GitHub Actions PRs", "item": "https://dsotn.com/articles/dependency-review-action-github-actions/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/dependency-review-action-github-actions.jpg" width="1920" height="3412" alt="Desk with a checklist notebook, keyboard, and monitor.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#pr-gate">PR gate</a>
+        <a href="#configuration">Configuration</a>
+        <a href="#permissions">Permissions</a>
+        <a href="#submission-api">Submitted dependencies</a>
+        <a href="#limits">Limits</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>Dependency Review Action: Secure GitHub Actions PRs</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">Dependency review is most useful when it fails pull requests for the dependency risks your team has already agreed to block.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for dependency-review-action</h2>
+          <ul>
+            <li>GitHub says dependency review shows added, removed, and updated dependencies, plus release dates, dependents, and vulnerability data in pull requests. <a href="#ref-about">[1]</a></li>
+            <li>GitHub says the dependency review action scans vulnerable dependency versions introduced by package changes in pull requests and can fail the check. <a href="#ref-about">[1]</a></li>
+            <li>The GitHub configuration example runs the action on <code>pull_request</code> with <code>contents: read</code> permission. <a href="#ref-config">[2]</a></li>
+            <li>The action README lists <code>fail-on-severity</code>, <code>fail-on-scopes</code>, license controls, package-deny controls, and <code>warn-only</code> as configuration options. <a href="#ref-readme">[3]</a></li>
+            <li>GitHub says dependency review and the dependency submission API can race unless dependency submission runs before review or review retries snapshot warnings. <a href="#ref-about">[1]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Dependency review works best as a narrow merge gate</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Run dependency review on pull requests, keep the job read-only unless comments are required, choose explicit severity and license rules, and audit the surrounding workflow before treating the check as supply-chain coverage.
+          </div>
+          <p>GitHub describes dependency review as a way to understand dependency changes and their security impact at every pull request. It can show package additions, removals, updates, release dates, dependents, and vulnerability data. <a href="#ref-about">[1]</a></p>
+          <p>That makes it a good merge gate for package changes, not a replacement for workflow hardening. The action can tell you what dependency changed; it does not prove that the workflow invoking it is pinned, least-privileged, timeout-bounded, or safe around untrusted pull-request input.</p>
+        </section>
+
+        <section id="pr-gate">
+          <h2>The action turns dependency review into a CI check</h2>
+          <p>GitHub says the dependency review action reports on pull-request differences inside GitHub Actions and adds enforcement mechanisms to the workflow. It scans for vulnerable dependency versions introduced by package version changes and warns about the associated security vulnerabilities. <a href="#ref-about">[1]</a></p>
+          <p>GitHub also says the check fails by default when it discovers vulnerable packages, and that a failed check can block merging when the repository owner requires the dependency review check to pass. <a href="#ref-about">[1]</a></p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> Treat dependency review as a required status check only after the workflow file, branch protection, and exception process are all reviewable by maintainers.
+          </div>
+        </section>
+
+        <section id="configuration">
+          <h2>Configuration should match the risk you intend to block</h2>
+          <p>GitHub documents two configuration methods for the action: inline options in the workflow file or a referenced configuration file. <a href="#ref-config">[2]</a> The separate action README says all configuration options are optional. <a href="#ref-readme">[3]</a></p>
+          <p>The default-free posture is dangerous because teams can mistake installation for policy. The README lists <code>fail-on-severity</code> for vulnerability severity thresholds, <code>fail-on-scopes</code> for runtime, development, or unknown scopes, license controls, <code>deny-packages</code>, <code>deny-groups</code>, and <code>warn-only</code>. <a href="#ref-readme">[3]</a></p>
+          <p>Set the check to fail on the dependency changes you would actually stop in review. A critical-only gate may be reasonable during rollout; a mature repository may want moderate-or-higher runtime vulnerabilities, denied package namespaces, and license rules that mirror legal review.</p>
+        </section>
+
+        <section id="permissions">
+          <h2>The basic workflow only needs read access to contents</h2>
+          <p>GitHub's configuration example runs the workflow on <code>pull_request</code>, checks out the repository, invokes <code>actions/dependency-review-action@v4</code>, and grants <code>contents: read</code>. <a href="#ref-config">[2]</a> The action README's standard installation example uses the same read-only contents permission with <code>actions/dependency-review-action@v5</code>. <a href="#ref-readme">[3]</a></p>
+          <p>Keep that baseline unless the workflow needs more. The README says <code>comment-summary-in-pr</code> can report the review summary as a pull-request comment, and that enabling it requires <code>pull-requests: write</code>. <a href="#ref-readme">[3]</a></p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> A dependency review workflow grants broad write permissions, runs extra scripts from the pull request, and then treats the passing dependency check as proof that the CI path is safe.
+          </div>
+        </section>
+
+        <section id="submission-api">
+          <h2>Submitted dependencies need ordering, not hope</h2>
+          <p>GitHub says the action uses the dependency review REST API to compare dependency changes between base and head commits, and that it also considers dependencies submitted through the dependency submission API. <a href="#ref-about">[1]</a></p>
+          <p>GitHub warns that when dependencies are scanned during a build and uploaded through dependency submission, teams should avoid a race condition between submission and review. For GitHub Actions, it recommends running dependency submission actions in the same workflow as dependency review, or using <code>retry-on-snapshot-warnings</code> with a timeout that slightly exceeds the longest dependency submission run. <a href="#ref-about">[1]</a></p>
+          <p>That ordering matters for generated lockfiles, vendored manifests, build-system plugins, and language ecosystems where the dependency graph depends on submitted snapshots.</p>
+        </section>
+
+        <section id="limits">
+          <h2>Dependency review does not audit the workflow around it</h2>
+          <p>GitHub says dependency review supports the same languages and package management ecosystems as the dependency graph. <a href="#ref-about">[1]</a> That ecosystem boundary is useful context when a repository uses generated dependencies, private package metadata, or build-time dependency submission.</p>
+          <p>Review the dependency gate beside the workflow controls that protect the gate itself: pinned third-party actions, explicit <code>GITHUB_TOKEN</code> permissions, safe pull-request triggers, bounded runtimes, trusted reusable workflows, and secrets that do not enter untrusted jobs.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast dependency-review audit starts with the PR file</h2>
+          <p>Open the workflow that runs dependency review and confirm it uses a pull-request event, a pinned or deliberately versioned action reference, and the narrow permissions documented in the GitHub examples. <a href="#ref-config">[2]</a> Then inspect the policy: severity threshold, scopes, license treatment, package or namespace denies, and whether <code>warn-only</code> disables enforcement. <a href="#ref-readme">[3]</a></p>
+          <p>If your repository uses dependency submission, check that submission completes before review or that retry settings cover the expected run time. <a href="#ref-about">[1]</a> Finally, require the check only after maintainers understand what it can and cannot block.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so dependency review sits beside pinned-action, token-permission, timeout, OIDC, reusable-workflow, runner, cache, attestation, and shell-context checks.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 3 entries, primary GitHub documentation and the official action repository, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-about">GitHub Docs, <a href="https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review">Dependency review</a>.</li>
+            <li id="ref-config">GitHub Docs, <a href="https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/configuring-the-dependency-review-action">Configuring the dependency review action</a>.</li>
+            <li id="ref-readme">GitHub Actions, <a href="https://github.com/actions/dependency-review-action">dependency-review-action</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

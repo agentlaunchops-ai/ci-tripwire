@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (12)
+### GitHub Actions (13)
 
+- [Dependency Review Action: Secure GitHub Actions PRs](https://dsotn.com/articles/dependency-review-action-github-actions/)
 - [GitHub Actions Cache Security: Avoid Poisoned Builds](https://dsotn.com/articles/github-actions-cache-security/)
 - [Artifact Attestations: Verify GitHub Actions Builds](https://dsotn.com/articles/artifact-attestations-github-actions/)
 - [Self-Hosted Runners: Secure GitHub Actions CI Builds](https://dsotn.com/articles/self-hosted-runners-security/)
