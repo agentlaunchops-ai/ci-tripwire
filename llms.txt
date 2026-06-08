@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (38)
+### GitHub Actions (39)
 
+- [GitHub App Tokens: Safer GitHub Actions Automation](https://dsotn.com/articles/github-app-tokens-github-actions/)
 - [GitHub Job Outputs: Safer GitHub Actions Data Flow](https://dsotn.com/articles/github-actions-job-outputs-security/)
 - [repository_dispatch Security: Safer External CI Triggers](https://dsotn.com/articles/repository-dispatch-security/)
 - [GitHub Runner Labels: Safer Self-Hosted CI Routing](https://dsotn.com/articles/github-actions-runner-labels-routing/)

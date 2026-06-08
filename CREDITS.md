@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-app-tokens-github-actions | https://commons.wikimedia.org/wiki/File:Restricted_Area_Sign.jpg | MarkBuckawicki | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-job-outputs-security | https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg | Derrick Coetzee from Berkeley, CA, USA | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | repository-dispatch-security | https://commons.wikimedia.org/wiki/File:Arduino_push_button-1.jpg | DustyDingo | Public domain | 2026-06-08 |
 | github-actions-runner-labels-routing | https://commons.wikimedia.org/wiki/File:KFC_label_peeling_machine.jpg | Fumikas Sagisavas | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
