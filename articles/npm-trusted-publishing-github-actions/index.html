@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>npm Trusted Publishing: Safer GitHub Actions Releases</title>
+  <meta name="description" content="Secure npm releases from GitHub Actions with trusted publishing, OIDC, provenance, scoped job permissions, and protected release workflows today.">
+  <link rel="canonical" href="https://dsotn.com/articles/npm-trusted-publishing-github-actions/">
+  <meta property="og:title" content="npm Trusted Publishing: Safer GitHub Actions Releases">
+  <meta property="og:description" content="How to keep npm publishing workflows tokenless, traceable, and narrow enough to review.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/npm-trusted-publishing-github-actions/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/npm-trusted-publishing-github-actions.jpg">
+  <meta property="article:published_time" content="2026-06-08T05:12:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T05:12:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="npm trusted publishing">
+  <meta property="article:tag" content="OIDC">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/npm-trusted-publishing-github-actions.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "npm Trusted Publishing: Safer GitHub Actions Releases",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T05:12:00-06:00",
+    "dateModified": "2026-06-08T05:12:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["npm trusted publishing", "GitHub Actions OIDC", "npm provenance", "release workflow security"],
+    "wordCount": 927,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/npm-trusted-publishing-github-actions/",
+    "articleBody": "npm trusted publishing removes long-lived npm publish tokens from GitHub Actions, but the release workflow still has to be narrow and reviewable.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/npm-trusted-publishing-github-actions.jpg", "width": 2304, "height": 3072},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Trusted publishing for npm packages", "publisher": "npm Docs", "url": "https://docs.npmjs.com/trusted-publishers/"},
+      {"@type": "CreativeWork", "name": "Generating provenance statements", "publisher": "npm Docs", "url": "https://docs.npmjs.com/generating-provenance-statements/"},
+      {"@type": "CreativeWork", "name": "Viewing package provenance", "publisher": "npm Docs", "url": "https://docs.npmjs.com/viewing-package-provenance/"},
+      {"@type": "CreativeWork", "name": "OpenID Connect in GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/security/openid-connect"},
+      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "npm Trusted Publishing: Safer GitHub Actions Releases", "item": "https://dsotn.com/articles/npm-trusted-publishing-github-actions/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/npm-trusted-publishing-github-actions.jpg" width="2304" height="3072" alt="Corrugated cardboard moving down a conveyor belt.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#tokenless">Tokenless publishing</a>
+        <a href="#oidc">OIDC boundaries</a>
+        <a href="#provenance">Provenance</a>
+        <a href="#workflow">Workflow controls</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>npm Trusted Publishing: Safer GitHub Actions Releases</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">npm trusted publishing can remove long-lived npm publish tokens from release workflows, but it does not make the workflow itself harmless.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for npm trusted publishing</h2>
+          <ul>
+            <li>npm Docs says trusted publishing uses OIDC so GitHub Actions and other supported CI/CD providers can publish without long-lived npm tokens. <a href="#ref-trusted">[1]</a></li>
+            <li>npm Docs says GitHub Actions trusted publishing requires npm CLI 11.5.1 or later and Node.js 22.14.0 or higher. <a href="#ref-trusted">[1]</a></li>
+            <li>npm Docs says trusted publishing from GitHub Actions or GitLab CI/CD automatically generates and publishes provenance attestations for the package. <a href="#ref-trusted">[1]</a></li>
+            <li>npm Docs says trusted publishing currently supports only cloud-hosted runners, with self-hosted runner support intended for a future release. <a href="#ref-trusted">[1]</a></li>
+            <li>GitHub Docs says a workflow or job needs <code>permissions: id-token: write</code> before it can request a GitHub OIDC JWT. <a href="#ref-oidc">[4]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Trusted publishing fixes one credential class, not every release risk</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Use npm trusted publishing to remove long-lived publish tokens, then treat the release workflow as a production path: narrow <code>id-token</code> access, protect the trigger, pin third-party actions, and keep build steps separate from untrusted pull-request code.
+          </div>
+          <p>npm Docs describes trusted publishing as a trust relationship between npm and a CI/CD provider using OpenID Connect. <a href="#ref-trusted">[1]</a></p>
+          <p>That shifts the publish decision from a static npm token to a specific CI identity. The release workflow still decides what code gets built, what package contents are packed, and which job can request the OIDC token.</p>
+        </section>
+
+        <section id="tokenless">
+          <h2>Tokenless npm publish reduces secret storage pressure</h2>
+          <p>npm Docs says trusted publishing allows packages to be published directly from workflows using OIDC authentication, eliminating the need for long-lived npm tokens. <a href="#ref-trusted">[1]</a></p>
+          <p>That matters because publish tokens are high-value secrets. Removing them from repository, organization, and environment secret stores reduces one common leak path, but it does not remove the need to review the workflow that can mint the short-lived publishing path.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A tokenless release job is easier to rotate and audit when its trigger, environment, and permissions are narrow enough to understand during code review.
+          </div>
+        </section>
+
+        <section id="oidc">
+          <h2>The OIDC permission belongs only on release jobs</h2>
+          <p>GitHub Docs says workflows or jobs that need a GitHub OIDC token must set <code>permissions: id-token: write</code>, and that the setting allows the JWT to be requested from GitHub's OIDC provider. <a href="#ref-oidc">[4]</a></p>
+          <p>GitHub's workflow syntax reference says job-level permissions can modify the default <code>GITHUB_TOKEN</code> permissions for a single job, and that unspecified permissions become <code>none</code> after any permission is specified. <a href="#ref-syntax">[5]</a></p>
+          <p>For npm releases, that points to a small release job with explicit <code>contents: read</code> and <code>id-token: write</code>. Test, lint, and pull-request jobs should not carry <code>id-token: write</code> just because the repository has one publish workflow.</p>
+        </section>
+
+        <section id="provenance">
+          <h2>Provenance is evidence, not a review substitute</h2>
+          <p>npm Docs says provenance statements publicly establish where and how a package was built, and who published it, so consumers can verify the package before download. <a href="#ref-provenance">[2]</a></p>
+          <p>The viewing-provenance guide says npm package pages can show build environment, workflow run, source commit, build file, and transparency-log details when provenance is available. <a href="#ref-view">[3]</a></p>
+          <p>That evidence is useful after release. It does not prove that the workflow was well-scoped, that dependencies were pinned, or that untrusted pull-request code could not influence the package before the release job ran.</p>
+        </section>
+
+        <section id="workflow">
+          <h2>The release workflow needs a small trust boundary</h2>
+          <p>The trusted-publishing guide limits current runner support to cloud-hosted runners and says one package can have one trusted publisher configured at a time. <a href="#ref-trusted">[1]</a></p>
+          <p>Keep the trusted publisher bound to a workflow file that is easy to protect. Prefer release triggers that are reviewable, such as tags or GitHub releases created from protected branches, and keep broad shell generation out of the publish job.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> A general automation workflow handles pull requests, writes repository state, requests <code>id-token: write</code>, and publishes to npm from the same job.
+          </div>
+        </section>
+
+        <section id="audit">
+          <h2>A fast npm release audit starts with the workflow file</h2>
+          <p>List every workflow that can publish to npm. For each one, record the trigger, the trusted publisher configuration, whether it runs on GitHub-hosted runners, the job permissions, environment protection, third-party actions, package-build commands, and any path where pull-request input can affect release artifacts.</p>
+          <p>npm Docs says OIDC authentication supports <code>npm publish</code> and <code>npm stage publish</code>, while other npm commands such as <code>install</code>, <code>view</code>, or <code>access</code> still require traditional authentication methods. <a href="#ref-trusted">[1]</a></p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so npm release review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, <code>workflow_run</code>, and checkout-credential audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, primary npm and GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-trusted">npm Docs, <a href="https://docs.npmjs.com/trusted-publishers/">Trusted publishing for npm packages</a>.</li>
+            <li id="ref-provenance">npm Docs, <a href="https://docs.npmjs.com/generating-provenance-statements/">Generating provenance statements</a>.</li>
+            <li id="ref-view">npm Docs, <a href="https://docs.npmjs.com/viewing-package-provenance/">Viewing package provenance</a>.</li>
+            <li id="ref-oidc">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/security/openid-connect">OpenID Connect in GitHub Actions</a>.</li>
+            <li id="ref-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">Workflow syntax for GitHub Actions</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

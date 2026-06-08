@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (23)
+### GitHub Actions (24)
 
+- [npm Trusted Publishing: Safer GitHub Actions Releases](https://dsotn.com/articles/npm-trusted-publishing-github-actions/)
 - [actions/checkout Credentials: Safer GitHub Actions Clones](https://dsotn.com/articles/actions-checkout-credentials-security/)
 - [GitHub Actions workflow_run: Safe Privileged Follow-ups](https://dsotn.com/articles/github-actions-workflow-run-security/)
 - [Dependabot GitHub Actions: Safer Bot PR CI Workflows](https://dsotn.com/articles/dependabot-github-actions-security/)
