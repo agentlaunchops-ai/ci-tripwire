@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (31)
+### GitHub Actions (32)
 
+- [GitHub Actions Service Containers: Secure CI Tests](https://dsotn.com/articles/github-actions-service-containers-security/)
 - [GitHub Actions Matrix Builds: Secure CI/CD Fan-Out](https://dsotn.com/articles/github-actions-matrix-builds/)
 - [GitHub Actions Filters: Safer CI/CD Trigger Scopes](https://dsotn.com/articles/github-actions-trigger-filters/)
 - [GitHub Runner Groups: Secure Self-Hosted CI Access](https://dsotn.com/articles/github-actions-runner-groups-access/)
