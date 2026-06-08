@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pin GitHub Actions to SHAs: Secure CI/CD Pipelines</title>
+  <meta name="description" content="A practical guide to pinning GitHub Actions to full commit SHAs, enforcing repository policy, and keeping third-party workflow dependencies reviewable in CI/CD.">
+  <link rel="canonical" href="https://dsotn.com/articles/pin-github-actions-sha/">
+  <meta property="og:title" content="Pin GitHub Actions to SHAs: Secure CI/CD Pipelines">
+  <meta property="og:description" content="How to make third-party GitHub Actions dependencies immutable, reviewable, and easier to enforce.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/pin-github-actions-sha/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/pin-github-actions-sha.jpg">
+  <meta property="article:published_time" content="2026-06-07T21:34:00-06:00">
+  <meta property="article:modified_time" content="2026-06-07T21:34:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="SHA pinning">
+  <meta property="article:tag" content="third-party actions">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/pin-github-actions-sha.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Pin GitHub Actions to SHAs: Secure CI/CD Pipelines",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-07T21:34:00-06:00",
+    "dateModified": "2026-06-07T21:34:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions SHA pinning", "third-party actions", "CI/CD security", "workflow dependencies"],
+    "wordCount": 977,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/pin-github-actions-sha/",
+    "articleBody": "Pin third-party GitHub Actions to full-length commit SHAs when workflow dependency integrity matters.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/pin-github-actions-sha.jpg", "width": 3000, "height": 2000},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
+      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"},
+      {"@type": "CreativeWork", "name": "Managing GitHub Actions settings for a repository", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository"},
+      {"@type": "CreativeWork", "name": "OpenSSF Scorecard checks", "publisher": "OpenSSF", "url": "https://github.com/ossf/scorecard/blob/main/docs/checks.md#pinned-dependencies"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "Pin GitHub Actions to SHAs: Secure CI/CD Pipelines", "item": "https://dsotn.com/articles/pin-github-actions-sha/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/pin-github-actions-sha.jpg" width="3000" height="2000" alt="Assorted padlocks attached to a chain link fence, used as a visual metaphor for pinned workflow dependencies.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#why-sha">Why SHA pins matter</a>
+        <a href="#what-to-pin">What to pin</a>
+        <a href="#policy">Policy enforcement</a>
+        <a href="#maintenance">Maintenance loop</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>Pin GitHub Actions to SHAs: Secure CI/CD Pipelines</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-07 · 7 min read</p>
+        <p id="editorial-summary">Pinning an action by tag is easy to read. Pinning it by full commit SHA is easier to trust. The review goal is simple: a workflow should show exactly which third-party code can run inside CI.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions SHA pinning</h2>
+          <ul>
+            <li>GitHub's secure-use reference says pinning an action to a full-length commit SHA is currently the only way to use an action as an immutable release. <a href="#ref-secure-use">[1]</a></li>
+            <li>GitHub's workflow syntax reference says a step's `uses` reference can select a SHA, release tag, or branch name. <a href="#ref-workflow-syntax">[2]</a></li>
+            <li>GitHub documents repository-level settings that can require actions and reusable workflows to be pinned to a full-length commit SHA. <a href="#ref-repo-policy">[3]</a></li>
+            <li>OpenSSF Scorecard includes a Pinned-Dependencies check for GitHub Actions workflows and Dockerfiles. <a href="#ref-scorecard">[4]</a></li>
+            <li>SHA pinning reduces one dependency-integrity risk, but it should sit beside token limits, trusted triggers, and workflow review. <a href="/articles/github-token-permissions/">Token scope</a> and <a href="/articles/pull-request-target-security/">pull-request trigger</a> choices still matter.</li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Pin third-party actions where CI trust matters</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Use full-length commit SHAs for third-party actions in release, deploy, security, and privileged pull-request workflows. Keep the human-readable version in a nearby comment or update workflow so maintainers can still review upgrades.
+          </div>
+          <p>GitHub's secure-use reference is direct: a full-length commit SHA is the current way to use an action as an immutable release. <a href="#ref-secure-use">[1]</a> For CI/CD, that matters because a workflow step can run third-party code before the rest of the job touches build artifacts, repository tokens, cloud credentials, or release permissions.</p>
+          <p>This is not an argument for freezing dependencies forever. It is an argument for moving action upgrades into reviewable pull requests instead of letting a mutable tag or branch decide what runs during the next pipeline execution.</p>
+        </section>
+
+        <section id="why-sha">
+          <h2>Tags and branches are readable, but SHAs are reviewable</h2>
+          <p>GitHub's workflow syntax reference describes the `jobs.&lt;job_id&gt;.steps[*].uses` field as the way to select an action, and it documents three common references: a SHA, a release tag, or a branch name. <a href="#ref-workflow-syntax">[2]</a> The same reference says using the commit SHA of a released action version is the safest choice for stability and security. <a href="#ref-workflow-syntax">[2]</a></p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Reviewable dependency:</strong> `owner/action@<full-sha>` lets a reviewer tie a workflow step to a specific commit instead of a moving name.
+          </div>
+          <p>A tag may be the right communication label for humans, but the SHA is the dependency lock. A practical pattern is to pin the `uses` value to a full SHA and add a short comment with the intended upstream version, such as `# v4.2.0`, so update tools and reviewers have context.</p>
+        </section>
+
+        <section id="what-to-pin">
+          <h2>Start with workflows that have real authority</h2>
+          <p>Not every workflow has the same blast radius. The first pinning pass should cover jobs that publish packages, deploy to cloud accounts, upload release artifacts, run security tools with elevated permissions, or write back to the repository.</p>
+          <ul class="risk-list">
+            <li><strong>Release jobs:</strong> pin actions that build, sign, upload, or publish artifacts.</li>
+            <li><strong>Deployment jobs:</strong> pin actions that receive cloud credentials, OIDC trust, SSH keys, or environment approvals.</li>
+            <li><strong>Security jobs:</strong> pin third-party scanners before they receive repository content, SARIF upload permissions, or secrets.</li>
+            <li><strong>Pull-request automation:</strong> pin actions that label, comment, request reviews, or run around untrusted pull-request input.</li>
+          </ul>
+          <p>That priority order matches the broader CI Tripwire posture: make the risky workflow decisions visible first, then clean up lower-privilege convenience workflows.</p>
+        </section>
+
+        <section id="policy">
+          <h2>Repository policy can enforce full-SHA pins</h2>
+          <p>GitHub documents repository settings that can limit which actions and reusable workflows are allowed. In that settings flow, GitHub says the "Require actions to be pinned to a full-length commit SHA" option requires actions to use a full-length commit SHA. <a href="#ref-repo-policy">[3]</a></p>
+          <p>That policy is useful after a repository has a clean baseline. Turning it on before the workflows are updated can break CI, but leaving it off forever means every future workflow change relies only on code review discipline.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Caution:</strong> A full-SHA policy does not decide whether an action is trustworthy. It only makes the selected action revision explicit.
+          </div>
+        </section>
+
+        <section id="maintenance">
+          <h2>SHA pinning needs an update loop, not a freeze</h2>
+          <p>OpenSSF Scorecard's Pinned-Dependencies check includes GitHub Actions workflows in its dependency-pinning review. <a href="#ref-scorecard">[4]</a> That makes pinning visible as an ongoing repository-health signal rather than a one-time hardening chore.</p>
+          <p>The maintenance loop should be boring: track upstream versions, open reviewable update pull requests, read release notes for behavior changes, and keep the pinned SHA plus version comment together. If an action is no longer maintained or cannot be reviewed, replacing it may be cleaner than repeatedly updating it.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A first audit can start with every `uses:` line</h2>
+          <p>Search workflow YAML for `uses:` and separate local actions, first-party actions, third-party actions, reusable workflows, Docker actions, and branch or tag references. For each third-party reference, decide whether the workflow should use a full-length SHA, an allowlist, or a repository policy. <a href="#ref-workflow-syntax">[2]</a> <a href="#ref-repo-policy">[3]</a></p>
+          <p>For a local review queue, run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> against the repository and inspect unpinned-action findings beside token-permission, trigger, timeout, and shell-context findings.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, primary platform and project documentation, last reviewed 2026-06-07.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-secure-use">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
+            <li id="ref-workflow-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">Workflow syntax for GitHub Actions</a>.</li>
+            <li id="ref-repo-policy">GitHub Docs, <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository">Managing GitHub Actions settings for a repository</a>.</li>
+            <li id="ref-scorecard">OpenSSF Scorecard, <a href="https://github.com/ossf/scorecard/blob/main/docs/checks.md#pinned-dependencies">checks documentation: Pinned-Dependencies</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
