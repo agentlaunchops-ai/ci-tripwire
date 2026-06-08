@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-docker-build-secrets | https://commons.wikimedia.org/wiki/File:Container_Ship_on_the_Savannah_River_(33710156935).jpg | Stephen Rahn from Macon, GA, USA | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-workflow-commands-security | https://commons.wikimedia.org/wiki/File:Mkdir_terminal.png | Desshi | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-service-containers-security | https://commons.wikimedia.org/wiki/File:Container_port_(1).jpg | Andrew McMillan | Public domain | 2026-06-08 |
 | github-actions-matrix-builds | https://commons.wikimedia.org/wiki/File:Patchpanel2.JPG | Pcpeggs | Public domain | 2026-06-08 |
