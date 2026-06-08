@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Concurrency: Cancel Stale CI/CD Jobs</title>
+  <meta name="description" content="Use GitHub Actions concurrency groups to cancel stale workflow runs, reduce deploy races, and make queued CI/CD jobs easier for maintainers to review.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-concurrency/">
+  <meta property="og:title" content="GitHub Actions Concurrency: Cancel Stale CI/CD Jobs">
+  <meta property="og:description" content="How to use concurrency groups and cancellation without hiding real CI failures.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-concurrency/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-concurrency.jpg">
+  <meta property="article:published_time" content="2026-06-08T03:16:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T03:16:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="concurrency">
+  <meta property="article:tag" content="workflow cancellation">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-concurrency.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions Concurrency: Cancel Stale CI/CD Jobs",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T03:16:00-06:00",
+    "dateModified": "2026-06-08T03:16:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions concurrency", "cancel-in-progress", "workflow queues", "CI/CD cancellation"],
+    "wordCount": 1052,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-concurrency/",
+    "articleBody": "GitHub Actions concurrency groups can cancel stale workflow runs, but the group design decides whether cancellation improves safety or hides useful signal.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-concurrency.jpg", "width": 1200, "height": 1600},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Control the concurrency of workflows and jobs", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency"},
+      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#concurrency"},
+      {"@type": "CreativeWork", "name": "Contexts reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts"},
+      {"@type": "CreativeWork", "name": "REST API endpoints for workflow runs", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#cancel-a-workflow-run"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Concurrency: Cancel Stale CI/CD Jobs", "item": "https://dsotn.com/articles/github-actions-concurrency/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-concurrency.jpg" width="1200" height="1600" alt="Railway semaphore signal beside a station platform.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#group-design">Group design</a>
+        <a href="#cancellation">Cancellation</a>
+        <a href="#ordering">Ordering</a>
+        <a href="#contexts">Contexts</a>
+        <a href="#manual-cancel">Manual cancel</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions Concurrency: Cancel Stale CI/CD Jobs</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">Concurrency is a queueing control for workflows and jobs, but it becomes a security control when stale deploy or release runs should not keep authority after newer code arrives.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions concurrency</h2>
+          <ul>
+            <li>GitHub says <code>concurrency</code> can make only one workflow or job with the same group run at a time. <a href="#ref-concurrency">[1]</a></li>
+            <li>GitHub says a concurrency group has at most one running workflow or job at a time. <a href="#ref-concurrency">[1]</a></li>
+            <li>GitHub states that, by default, a newly queued run in the same group cancels any existing pending run in that group. <a href="#ref-concurrency">[1]</a></li>
+            <li>GitHub documents <code>cancel-in-progress: true</code> as the option that also cancels a currently running item in the same group. <a href="#ref-syntax">[2]</a></li>
+            <li>GitHub says concurrency group names are case insensitive and that ordering is not guaranteed for queued items in the same group. <a href="#ref-concurrency">[1]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Concurrency is a stale-run control</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Use GitHub Actions concurrency to keep stale CI, deploy, and release runs from racing newer work. Scope each group narrowly enough that cancellation removes noise without suppressing independent checks.
+          </div>
+          <p>GitHub's concurrency documentation says a concurrency group allows only one workflow or job using that group to run at a time. <a href="#ref-concurrency">[1]</a></p>
+          <p>That matters for security review because the oldest run in a queue may be attached to outdated code, outdated approvals, or an old view of branch state. A controlled cancellation path keeps maintainers focused on the run that still represents the current change.</p>
+        </section>
+
+        <section id="group-design">
+          <h2>Group design decides what gets canceled</h2>
+          <p>GitHub documents <code>concurrency</code> at both workflow and job level. <a href="#ref-syntax">[2]</a></p>
+          <p>A workflow-level group is useful when the whole pipeline should serialize by branch, environment, or release channel. A job-level group is better when only a deploy, migration, publish, or expensive integration test needs the queueing rule.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> Put the smallest risky unit in the concurrency group. A release job can be serialized without forcing lint, unit tests, and documentation checks to wait behind it.
+          </div>
+          <p>GitHub says concurrency group names are case insensitive, so <code>Prod</code> and <code>prod</code> are treated as the same group. <a href="#ref-concurrency">[1]</a></p>
+        </section>
+
+        <section id="cancellation">
+          <h2>Cancel-in-progress is stronger than pending cleanup</h2>
+          <p>GitHub states that a concurrency group can have at most one running workflow or job, and that the default queue behavior allows at most one pending item in that group. <a href="#ref-concurrency">[1]</a></p>
+          <p>Under that default behavior, GitHub says the newest queued item replaces an existing pending item from the same group. <a href="#ref-concurrency">[1]</a></p>
+          <p>That default removes stale pending work, but it does not necessarily stop the active run. GitHub's workflow syntax documents <code>cancel-in-progress: true</code> as the option to cancel any currently running workflow or job in the same concurrency group. <a href="#ref-syntax">[2]</a></p>
+          <p>For deployment jobs, that difference is material. A pending test run may be harmless queue noise, while a running deploy job may still hold environment approval, cloud credentials, or production rollout authority.</p>
+        </section>
+
+        <section id="ordering">
+          <h2>Concurrency is not a first-in-first-out release queue</h2>
+          <p>GitHub says ordering is not guaranteed for workflows or jobs queued within the same concurrency group. <a href="#ref-concurrency">[1]</a></p>
+          <p>Do not use concurrency as a release ordering ledger. If a team needs strict release ordering, keep that state in a deployment system, environment gate, or release process that records the intended order and approver decision.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> A production deploy workflow uses one broad group for every branch and assumes the oldest queued run will execute next.
+          </div>
+        </section>
+
+        <section id="contexts">
+          <h2>Context expressions make groups specific</h2>
+          <p>GitHub's workflow syntax page lists supported expression contexts for <code>concurrency</code>, including <code>github</code>, <code>inputs</code>, <code>vars</code>, <code>needs</code>, <code>strategy</code>, and <code>matrix</code>. <a href="#ref-syntax">[2]</a></p>
+          <p>The contexts reference says the <code>github</code> context includes information about the workflow run and the event that triggered it. <a href="#ref-contexts">[3]</a></p>
+          <p>A practical group often combines workflow identity with branch, pull request, environment, or matrix value. The goal is to cancel stale duplicates while avoiding accidental collisions between unrelated jobs.</p>
+        </section>
+
+        <section id="manual-cancel">
+          <h2>The REST API can cancel a run explicitly</h2>
+          <p>GitHub's REST API documentation includes an endpoint to cancel a workflow run. <a href="#ref-rest">[4]</a></p>
+          <p>That API is useful for dashboards and internal tools, but it should not replace a clear workflow-level policy. If manual or API cancellation happens often, the workflow probably needs better group keys, narrower deploy jobs, or explicit <code>cancel-in-progress</code> rules.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast concurrency audit starts with deploy authority</h2>
+          <p>Start by listing jobs that deploy, publish packages, assume cloud roles, write to repositories, upload release artifacts, or call incident tooling. Those jobs are the strongest candidates for specific concurrency groups.</p>
+          <p>Next, check whether every group key is narrow enough to avoid unrelated cancellation and broad enough to catch stale duplicates. Review <code>cancel-in-progress</code> separately for tests, deploys, and release jobs because the right answer can differ by risk.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so concurrency review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, and fork-approval audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, primary GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-concurrency">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency">Control the concurrency of workflows and jobs</a>.</li>
+            <li id="ref-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#concurrency">Workflow syntax for GitHub Actions</a>.</li>
+            <li id="ref-contexts">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/contexts">Contexts reference</a>.</li>
+            <li id="ref-rest">GitHub Docs, <a href="https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#cancel-a-workflow-run">REST API endpoints for workflow runs</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

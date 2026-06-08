@@ -21,3 +21,4 @@
 | github-actions-allowed-actions-policy | https://commons.wikimedia.org/wiki/File:3Com_OfficeConnect_ADSL_Wireless_11g_Firewall_Router_2012-10-28-0868.jpg | Slick | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-artifact-retention | https://commons.wikimedia.org/wiki/File:Harvest_(20130920-OC-LSC-0112).jpg | USDAgov / Lance Cheung | Public domain | 2026-06-08 |
 | github-actions-fork-workflow-approvals | https://commons.wikimedia.org/wiki/File:Transportation_Security_Administration_Checkpoint_at_John_Glenn_Columbus_International_Airport.jpg | Michael Ball | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
+| github-actions-concurrency | https://commons.wikimedia.org/wiki/File:Billingshurst_Railway_Station_(July_2007)_(Semaphore_Signal_BT12).JPG | Hassocks5489 | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |

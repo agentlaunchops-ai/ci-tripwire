@@ -13,6 +13,14 @@
     <lastmod>2026-06-08</lastmod>
   </url>
   <url>
+    <loc>https://dsotn.com/articles/github-actions-concurrency/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/github-actions-concurrency.jpg</image:loc>
+      <image:title>Railway semaphore signal beside a station platform</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dsotn.com/articles/github-actions-fork-workflow-approvals/</loc>
     <lastmod>2026-06-08</lastmod>
     <image:image>
