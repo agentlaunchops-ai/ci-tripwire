@@ -16,11 +16,18 @@
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "CI Tripwire Articles",
-    "itemListElement": [{
-      "@type": "ListItem",
-      "position": 1,
-      "url": "https://dsotn.com/articles/github-actions-security-risks/"
-    }]
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://dsotn.com/articles/pull-request-target-security/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://dsotn.com/articles/github-actions-security-risks/"
+      }
+    ]
   }
   </script>
 </head>
@@ -50,8 +57,17 @@
       <div class="notice">
         <strong>Editorial posture:</strong> Articles are informational, source-linked, and written for engineering teams evaluating CI/CD workflow risk.
       </div>
-      <h2>Latest article</h2>
+      <h2>Latest articles</h2>
       <div class="article-list">
+        <article class="card">
+          <img src="/public/images/articles/pull-request-target-security.jpg" width="3507" height="2480" alt="Illustrated data room with connected servers.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/pull-request-target-security/">pull_request_target Security: Safer GitHub Actions</a></h3>
+            <p>When the privileged pull-request trigger fits, when it risks secrets, and what to audit before merging PR automation.</p>
+            <p class="article-meta">7 min read</p>
+          </div>
+        </article>
         <article class="card">
           <img src="/public/images/articles/github-actions-security-risks.jpg" width="4288" height="2848" alt="Server racks in a computing facility.">
           <div class="card-body">

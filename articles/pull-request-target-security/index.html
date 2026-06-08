@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>pull_request_target Security: Safer GitHub Actions</title>
+  <meta name="description" content="Use pull_request_target safely in GitHub Actions: when it fits, when it risks repository secrets, and what to audit before merging PR automation.">
+  <link rel="canonical" href="https://dsotn.com/articles/pull-request-target-security/">
+  <meta property="og:title" content="pull_request_target Security: Safer GitHub Actions">
+  <meta property="og:description" content="When pull_request_target fits, when it risks repository secrets, and what to audit before merging PR automation.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/pull-request-target-security/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/pull-request-target-security.jpg">
+  <meta property="article:published_time" content="2026-06-07T21:05:00-06:00">
+  <meta property="article:modified_time" content="2026-06-07T21:05:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="pull_request_target">
+  <meta property="article:tag" content="workflow security">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/pull-request-target-security.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "pull_request_target Security: Safer GitHub Actions",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-07T21:05:00-06:00",
+    "dateModified": "2026-06-07T21:05:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["pull_request_target", "GitHub Actions security", "workflow security", "untrusted pull requests"],
+    "wordCount": 1285,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/pull-request-target-security/",
+    "articleBody": "Use pull_request_target for privileged pull-request metadata work, not for building untrusted pull-request code.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/pull-request-target-security.jpg", "width": 3507, "height": 2480},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Events that trigger workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows"},
+      {"@type": "CreativeWork", "name": "Preventing pwn requests", "publisher": "GitHub Security Lab", "url": "https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/"},
+      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"},
+      {"@type": "CreativeWork", "name": "OpenSSF Scorecard checks", "publisher": "OpenSSF", "url": "https://github.com/ossf/scorecard/blob/main/docs/checks.md"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "pull_request_target Security: Safer GitHub Actions", "item": "https://dsotn.com/articles/pull-request-target-security/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/pull-request-target-security.jpg" width="3507" height="2480" alt="Illustrated data room with connected servers, used as a visual metaphor for privileged CI context.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#safe-use">Safe use</a>
+        <a href="#dangerous-pattern">Dangerous pattern</a>
+        <a href="#split-workflows">Split workflows</a>
+        <a href="#permissions">Permissions</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>pull_request_target Security: Safer GitHub Actions</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-07 · 7 min read</p>
+        <p id="editorial-summary">Use `pull_request_target` for privileged pull-request metadata work, not for building untrusted pull-request code. The trigger is useful, but it moves the workflow into a more sensitive trust boundary.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for `pull_request_target` workflows</h2>
+          <ul>
+            <li>GitHub says `pull_request_target` runs in the base repository context instead of the merge commit context used by ordinary pull-request automation. <a href="#ref-github-events">[1]</a></li>
+            <li>GitHub warns against using `pull_request_target` when a workflow builds or runs code from the pull request. <a href="#ref-github-events">[1]</a></li>
+            <li>GitHub Security Lab describes combining `pull_request_target` with explicit checkout of an untrusted pull request as a practice that can lead to repository compromise. <a href="#ref-securitylab">[2]</a></li>
+            <li>GitHub documents `permissions` as the control for `GITHUB_TOKEN` access, including `read-all`, `write-all`, `{}`, and per-scope `read`, `write`, or `none`. <a href="#ref-workflow-syntax">[3]</a></li>
+            <li>OpenSSF Scorecard flags `pull_request_target` or `workflow_run` combined with explicit pull-request checkout as a dangerous workflow pattern. <a href="#ref-scorecard">[4]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Keep privileged PR automation away from untrusted code</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> `pull_request_target` is best reserved for PR metadata tasks such as labeling or commenting. If a workflow needs to install dependencies, build, test, or execute code from a fork, use an unprivileged path for that work and pass only safe results to any privileged follow-up.
+          </div>
+          <p>GitHub’s event reference says `pull_request_target` runs in the context of the base repository and describes it as useful for activity such as labeling or commenting on pull requests from forks. <a href="#ref-github-events">[1]</a> The same section warns that the trigger should not be used when a workflow needs to build or run pull-request code. <a href="#ref-github-events">[1]</a></p>
+          <p>The risk is not that the trigger is always wrong. The risk is mixing a privileged repository context with code or artifacts controlled by a pull-request author.</p>
+        </section>
+
+        <section id="safe-use">
+          <h2>`pull_request_target` fits metadata work that does not run PR code</h2>
+          <p>GitHub Security Lab explains that `pull_request_target` was introduced for scenarios where a workflow needs elevated access to process a pull request, such as labeling or commenting, without checking out and executing the pull-request content. <a href="#ref-securitylab">[2]</a></p>
+          <p>That distinction creates a simple review rule: a `pull_request_target` job should read pull-request metadata, apply labels, post comments, request reviews, or update status with carefully handled data. It should not run package install scripts, build scripts, test commands, repository-local tooling from the PR branch, or binaries produced by the PR branch.</p>
+          <ul class="risk-list">
+            <li><strong>Safer shape:</strong> label or comment using base-repository workflow code and bounded event fields.</li>
+            <li><strong>Risky shape:</strong> check out a fork branch and run its install, build, test, or generation commands in the privileged job.</li>
+          </ul>
+        </section>
+
+        <section id="dangerous-pattern">
+          <h2>Explicit PR checkout changes the trust boundary</h2>
+          <p>GitHub Security Lab’s warning is narrow and important: combining `pull_request_target` with an explicit checkout of an untrusted pull request is dangerous because it can expose repository write permissions or secrets to attacker-controlled code. <a href="#ref-securitylab">[2]</a></p>
+          <p>OpenSSF Scorecard encodes the same family of risk in its Dangerous-Workflow check, which looks for `pull_request_target` or `workflow_run` used with explicit pull-request checkout. <a href="#ref-scorecard">[4]</a> Scorecard says those workflows can have write permission and target-repository secrets, and that pull-request authors may compromise the repository when their code is checked out and run in that context. <a href="#ref-scorecard">[4]</a></p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Caution:</strong> `actions/checkout` is not the only clue. Any step that fetches a fork ref, downloads a PR artifact, runs generated code, or executes files influenced by the PR deserves the same review.
+          </div>
+        </section>
+
+        <section id="split-workflows">
+          <h2>Split untrusted work from privileged follow-up</h2>
+          <p>GitHub Security Lab describes a safer pattern for cases that need both untrusted pull-request processing and privileged follow-up: run the untrusted code with `pull_request`, store narrow results as artifacts, then use `workflow_run` for the privileged step that comments or reports status. <a href="#ref-securitylab">[2]</a></p>
+          <p>GitHub’s events reference also warns that running untrusted code on `workflow_run` may create vulnerabilities such as cache poisoning or unintended access to write privileges or secrets. <a href="#ref-github-events">[1]</a> That means the split-workflow pattern is not a license to run PR-built binaries later. Treat artifacts from untrusted work as data, validate what is inside them, and keep privileged follow-up jobs small.</p>
+          <ul class="risk-list">
+            <li><strong>Untrusted workflow:</strong> build or test the fork PR with reduced permissions and no repository secrets.</li>
+            <li><strong>Privileged workflow:</strong> read a constrained artifact such as a PR number, coverage summary, or status file, then comment or update status.</li>
+          </ul>
+        </section>
+
+        <section id="permissions">
+          <h2>Token permissions should make privilege visible</h2>
+          <p>GitHub documents `permissions` as the workflow syntax for modifying default `GITHUB_TOKEN` access, including `read-all`, `write-all`, `{}`, and per-permission `read`, `write`, or `none`. <a href="#ref-workflow-syntax">[3]</a> GitHub also documents that unspecified permissions are set to `none` once a workflow specifies any permission. <a href="#ref-workflow-syntax">[3]</a></p>
+          <p>OpenSSF Scorecard awards its highest Token-Permissions result when workflows declare read-only permissions at the top level and put required write permissions at the run level. <a href="#ref-scorecard">[4]</a> That is a useful review posture for `pull_request_target`: the workflow should show exactly which job needs write access and why.</p>
+          <p>When a `pull_request_target` job has write access, the job name and steps should explain the need. If the job only comments, it should not also have package, deployment, contents write, or broader scopes.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A first audit can start with six searches</h2>
+          <p>Search workflow YAML for `pull_request_target`, `workflow_run`, `actions/checkout`, `github.event.pull_request.head`, `permissions:`, and `secrets.`. Those strings map to the source-backed risk areas in this guide: privileged PR triggers, explicit PR checkout, token scope, and secret access. <a href="#ref-github-events">[1]</a> <a href="#ref-securitylab">[2]</a> <a href="#ref-workflow-syntax">[3]</a> <a href="#ref-scorecard">[4]</a></p>
+          <p>For a local review queue, run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> against the repository and inspect any `pull_request_target`, permissions, checkout, timeout, or shell-context findings before merging workflow changes.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, primary platform, security-lab, and project documentation, last reviewed 2026-06-07.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-github-events">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows">Events that trigger workflows</a>.</li>
+            <li id="ref-securitylab">GitHub Security Lab, <a href="https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/">Keeping your GitHub Actions and workflows secure Part 1: Preventing pwn requests</a>.</li>
+            <li id="ref-workflow-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">Workflow syntax for GitHub Actions</a>.</li>
+            <li id="ref-scorecard">OpenSSF Scorecard, <a href="https://github.com/ossf/scorecard/blob/main/docs/checks.md">checks documentation</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
