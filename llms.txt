@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (2)
+### GitHub Actions (3)
 
+- [GITHUB_TOKEN Permissions: Least Privilege for Actions](https://dsotn.com/articles/github-token-permissions/)
 - [GitHub pull_request_target Security: Safe PR Workflows](https://dsotn.com/articles/pull-request-target-security/)
 - [GitHub Actions Security: 5 CI Risks to Fix Right Now](https://dsotn.com/articles/github-actions-security-risks/)
 
