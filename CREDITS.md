@@ -12,3 +12,4 @@
 | oidc-trust-policy-footguns | https://commons.wikimedia.org/wiki/File:ISS-66_Clouds_above_the_north_Atlantic_Ocean.jpg | NASA | Public domain | 2026-06-07 |
 | reusable-workflows-security | https://commons.wikimedia.org/wiki/File:Conveyor_system_in_a_factory.jpg | falco | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | self-hosted-runners-security | https://commons.wikimedia.org/wiki/File:Data_center_infrastructure_in_the_United_States.jpg | DOE / National Renewable Energy Laboratory (NREL) | Public domain | 2026-06-08 |
+| artifact-attestations-github-actions | https://commons.wikimedia.org/wiki/File:Rows_of_Franklin_Cray_XT4_racks.jpg | Derrick Coetzee from Berkeley, CA, USA | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |

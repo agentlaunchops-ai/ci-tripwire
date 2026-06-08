@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (10)
+### GitHub Actions (11)
 
+- [Artifact Attestations: Verify GitHub Actions Builds](https://dsotn.com/articles/artifact-attestations-github-actions/)
 - [Self-Hosted Runners: Secure GitHub Actions CI Builds](https://dsotn.com/articles/self-hosted-runners-security/)
 - [Reusable Workflows: Secure GitHub Actions Pipelines](https://dsotn.com/articles/reusable-workflows-security/)
 - [OIDC Trust Policies: Secure GitHub Actions Cloud Deploys](https://dsotn.com/articles/oidc-trust-policy-footguns/)

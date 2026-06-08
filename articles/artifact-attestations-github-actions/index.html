@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Artifact Attestations: Verify GitHub Actions Builds</title>
+  <meta name="description" content="Use GitHub Actions artifact attestations to connect releases to workflow provenance, verify build outputs, and avoid signing artifacts nobody checks.">
+  <link rel="canonical" href="https://dsotn.com/articles/artifact-attestations-github-actions/">
+  <meta property="og:title" content="Artifact Attestations: Verify GitHub Actions Builds">
+  <meta property="og:description" content="How to add GitHub Actions artifact attestations without turning release provenance into unchecked paperwork.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/artifact-attestations-github-actions/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/artifact-attestations-github-actions.jpg">
+  <meta property="article:published_time" content="2026-06-08T00:00:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T00:00:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="artifact attestations">
+  <meta property="article:tag" content="build provenance">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/artifact-attestations-github-actions.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Artifact Attestations: Verify GitHub Actions Builds",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T00:00:00-06:00",
+    "dateModified": "2026-06-08T00:00:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions artifact attestations", "build provenance", "gh attestation verify", "SLSA GitHub Actions"],
+    "wordCount": 997,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/artifact-attestations-github-actions/",
+    "articleBody": "Artifact attestations connect a released file or image to the workflow that built it.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/artifact-attestations-github-actions.jpg", "width": 4288, "height": 2848},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Artifact attestations", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/security/artifact-attestations"},
+      {"@type": "CreativeWork", "name": "Using artifact attestations to establish provenance for builds", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations"},
+      {"@type": "CreativeWork", "name": "Using artifact attestations and reusable workflows to achieve SLSA v1 Build Level 3", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/increase-security-rating"},
+      {"@type": "CreativeWork", "name": "gh attestation verify", "publisher": "GitHub CLI Manual", "url": "https://cli.github.com/manual/gh_attestation_verify"},
+      {"@type": "CreativeWork", "name": "Verifying attestations offline", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/verify-attestations-offline"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "Artifact Attestations: Verify GitHub Actions Builds", "item": "https://dsotn.com/articles/artifact-attestations-github-actions/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/artifact-attestations-github-actions.jpg" width="4288" height="2848" alt="Rows of high-performance computing racks in a data center.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#what-they-prove">What they prove</a>
+        <a href="#permissions">Permissions</a>
+        <a href="#verification">Verification</a>
+        <a href="#reusable-workflows">Reusable workflows</a>
+        <a href="#offline">Offline checks</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>Artifact Attestations: Verify GitHub Actions Builds</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">Artifact attestations can make a release easier to verify, but only when the workflow signs the right output and consumers actually check the provenance before trusting it.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for artifact attestation security</h2>
+          <ul>
+            <li>GitHub says artifact attestations create signed claims that establish build provenance and include workflow, repository, commit SHA, environment, and triggering-event information. <a href="#ref-concepts">[1]</a></li>
+            <li>GitHub says generating attestations alone does not provide a security benefit unless the attestations are verified. <a href="#ref-concepts">[1]</a></li>
+            <li>GitHub's build-provenance guide requires <code>id-token: write</code>, <code>contents: read</code>, and <code>attestations: write</code> permissions for binary attestations. <a href="#ref-generate">[2]</a></li>
+            <li>GitHub says artifact attestations by themselves provide SLSA v1.0 Build Level 2, while reusable workflows can help reach Build Level 3. <a href="#ref-concepts">[1]</a> <a href="#ref-slsa">[3]</a></li>
+            <li>The GitHub CLI manual documents <code>gh attestation verify</code> for verifying a file path or OCI image with owner, repository, and signer constraints. <a href="#ref-cli">[4]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Attestations are useful only when release verification exists</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Add artifact attestations to release workflows after the build output is final, then publish a verification path that checks repository, signer, workflow, and digest before anyone treats the artifact as trusted.
+          </div>
+          <p>GitHub describes artifact attestations as cryptographically signed claims that establish where and how software was built. <a href="#ref-concepts">[1]</a> That makes them a release-control tool, not a general test badge.</p>
+          <p>The practical question is whether a human, script, deployment controller, or downstream package consumer verifies the attestation. GitHub's own concept page says generating an attestation alone has no security benefit unless the attestation is verified. <a href="#ref-concepts">[1]</a></p>
+        </section>
+
+        <section id="what-they-prove">
+          <h2>An attestation links the artifact to workflow provenance</h2>
+          <p>GitHub says an artifact attestation includes a link to the workflow, repository, organization, environment, commit SHA, triggering event, and other information from the OIDC token used for provenance. <a href="#ref-concepts">[1]</a> That evidence helps answer whether a binary, image, or manifest came from the expected automation path.</p>
+          <p>The attestation does not mean the artifact is bug-free or malware-free. GitHub warns that artifact attestations are not a guarantee that an artifact is secure, and that consumers must define policy criteria and make a risk decision. <a href="#ref-concepts">[1]</a></p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> Sign released assets that consumers can verify, not every temporary file created during a CI run.
+          </div>
+        </section>
+
+        <section id="permissions">
+          <h2>The attestation job needs narrow explicit permissions</h2>
+          <p>For binary provenance, GitHub's guide lists three required workflow scopes before the <code>actions/attest</code> step runs: OIDC token access, repository content read access, and attestation write access. <a href="#ref-generate">[2]</a></p>
+          <p>Container-image attestations add <code>packages: write</code> when the attestation is pushed with the image. <a href="#ref-generate">[2]</a> Keep that permission on the release job that truly needs registry write access, not on broad test jobs or pull-request checks.</p>
+          <p>The attestation step should run after the artifact is final. GitHub's guide says the <code>subject-path</code> parameter should point to the binary being attested, and container attestations use a fully qualified image name plus a SHA-256 subject digest. <a href="#ref-generate">[2]</a></p>
+        </section>
+
+        <section id="verification">
+          <h2>Verification should enforce the expected source and signer</h2>
+          <p>GitHub's documentation says consumers can use the GitHub CLI to verify artifact attestations and use the information to create and enforce supply-chain policies. <a href="#ref-concepts">[1]</a> The CLI manual documents <code>gh attestation verify</code> for file paths and OCI images, with required owner or repository scope. <a href="#ref-cli">[4]</a></p>
+          <p>Verification should be specific. The CLI manual includes flags for repository, owner, signer repository, signer workflow, source repository, source ref, and subject digest. <a href="#ref-cli">[4]</a> Those checks are where a loose provenance signal becomes an enforceable release rule.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> A release workflow signs an asset, but the README, install script, deployment job, and downstream consumers never run a verification command.
+          </div>
+        </section>
+
+        <section id="reusable-workflows">
+          <h2>Reusable workflows can make signing policy more consistent</h2>
+          <p>GitHub maps standalone artifact attestations to SLSA v1.0 Build Level 2 because they connect the artifact with its build instructions. <a href="#ref-concepts">[1]</a> GitHub's reusable-workflow guide says combining reusable workflows with attestations can help a build reach SLSA v1.0 Build Level 3. <a href="#ref-slsa">[3]</a></p>
+          <p>The reusable-workflow guide says both the calling workflow and the reusable workflow need <code>attestations: write</code>, <code>contents: read</code>, and <code>id-token: write</code>, and that container-image builds also need <code>packages: write</code>. <a href="#ref-slsa">[3]</a> That means central signing workflows still need permission review at both edges.</p>
+          <p>Use reusable workflows when many repositories should build and sign through the same vetted process. Then verify the signer workflow in the consumer path so a lookalike workflow cannot satisfy the same release policy. <a href="#ref-cli">[4]</a></p>
+        </section>
+
+        <section id="offline">
+          <h2>Offline verification needs a maintained trusted root</h2>
+          <p>GitHub documents an offline verification path that downloads an attestation bundle, fetches trusted root material, and then verifies with <code>--bundle</code> and <code>--custom-trusted-root</code>. <a href="#ref-offline">[5]</a></p>
+          <p>GitHub's offline guide says it is best practice to generate a new <code>trusted_root.jsonl</code> whenever new signed material is imported into an offline environment. <a href="#ref-offline">[5]</a> Offline provenance is still an operational process, not a file you can set once and forget.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit starts with release workflows and install docs</h2>
+          <p>Search release workflows for <code>actions/attest</code>, <code>attestations: write</code>, <code>id-token: write</code>, container-image digests, and release upload steps. GitHub's build-provenance guide ties those permissions and subject fields directly to attestation generation. <a href="#ref-generate">[2]</a></p>
+          <p>Then inspect the consumer path: release notes, install docs, deploy scripts, admission controllers, and package verification steps. Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so attestation findings sit beside pinned-action, token-permission, timeout, reusable-workflow, OIDC, runner, and shell-context checks.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, primary platform documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-concepts">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/security/artifact-attestations">Artifact attestations</a>.</li>
+            <li id="ref-generate">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations">Using artifact attestations to establish provenance for builds</a>.</li>
+            <li id="ref-slsa">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/increase-security-rating">Using artifact attestations and reusable workflows to achieve SLSA v1 Build Level 3</a>.</li>
+            <li id="ref-cli">GitHub CLI Manual, <a href="https://cli.github.com/manual/gh_attestation_verify">gh attestation verify</a>.</li>
+            <li id="ref-offline">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/verify-attestations-offline">Verifying attestations offline</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
