@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CODEOWNERS for GitHub Actions: Secure Workflow Reviews</title>
+  <meta name="description" content="Use CODEOWNERS and protected branches to require the right reviewers before GitHub Actions workflow files change CI/CD permissions, secrets, and release paths.">
+  <link rel="canonical" href="https://dsotn.com/articles/codeowners-github-actions-workflows/">
+  <meta property="og:title" content="CODEOWNERS for GitHub Actions: Secure Workflow Reviews">
+  <meta property="og:description" content="How to review CODEOWNERS coverage before workflow-file changes alter CI/CD authority.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/codeowners-github-actions-workflows/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/codeowners-github-actions-workflows.jpg">
+  <meta property="article:published_time" content="2026-06-08T13:05:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T13:05:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="CODEOWNERS">
+  <meta property="article:tag" content="workflow review">
+  <meta property="article:tag" content="CI security">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/codeowners-github-actions-workflows.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "CODEOWNERS for GitHub Actions: Secure Workflow Reviews",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T13:05:00-06:00",
+    "dateModified": "2026-06-08T13:05:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["CODEOWNERS GitHub Actions", "workflow file review", "branch protection", "CI security", "workflow governance"],
+    "wordCount": 1137,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/codeowners-github-actions-workflows/",
+    "articleBody": "CODEOWNERS coverage makes workflow-file changes visible to designated reviewers before GitHub Actions automation changes repository, token, secret, or deployment behavior.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/codeowners-github-actions-workflows.jpg", "width": 1600, "height": 1067},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
+      {"@type": "CreativeWork", "name": "About code owners", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"},
+      {"@type": "CreativeWork", "name": "About protected branches", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches"},
+      {"@type": "CreativeWork", "name": "Workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/workflows-and-actions/workflows"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "CODEOWNERS for GitHub Actions: Secure Workflow Reviews", "item": "https://dsotn.com/articles/codeowners-github-actions-workflows/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/codeowners-github-actions-workflows.jpg" width="1600" height="1067" alt="Documents, laptop, calculator, and handwritten checklist arranged on a work surface.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#workflow-files">Workflow files</a>
+        <a href="#codeowners">CODEOWNERS</a>
+        <a href="#branch-protection">Branch protection</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>CODEOWNERS for GitHub Actions: Secure Workflow Reviews</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">Use CODEOWNERS as a review control for GitHub Actions workflow files, then pair it with branch protection so CI/CD changes cannot quietly bypass the people who understand the risk.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for CODEOWNERS workflow review</h2>
+          <ul>
+            <li>GitHub Docs says workflows are defined in the <code>.github/workflows</code> directory in a repository. <a href="#ref-workflows">[4]</a></li>
+            <li>GitHub's secure-use reference says teams can add the workflow-files directory to CODEOWNERS so proposed workflow changes first require approval from a designated reviewer. <a href="#ref-secure">[1]</a></li>
+            <li>GitHub Docs says code owners must have write permissions, and repository admins or owners can require code-owner approval before merge. <a href="#ref-codeowners">[2]</a></li>
+            <li>GitHub Docs says branch protection can require review from Code Owners for changed files. <a href="#ref-codeowners">[2]</a></li>
+            <li>GitHub Docs says required pull-request reviews are a branch-protection setting, which makes CODEOWNERS useful only when the target branch enforces review. <a href="#ref-protected">[3]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Workflow-file changes need named reviewers</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Put <code>.github/workflows/</code> under CODEOWNERS, protect the branches that accept workflow changes, and verify that the listed reviewers actually understand token, secret, runner, and release authority.
+          </div>
+          <p>GitHub Docs says workflows are defined in <code>.github/workflows</code>, and a repository can contain multiple workflow files that build pull requests, deploy releases, or automate issue work. <a href="#ref-workflows">[4]</a></p>
+          <p>That placement makes workflow governance reviewable as ordinary repository content. A workflow file can still change CI/CD authority, so the review rule should match the workflow's operational reach.</p>
+        </section>
+
+        <section id="workflow-files">
+          <h2>Workflow files can alter CI/CD authority</h2>
+          <p>GitHub Docs says a workflow is a configurable automated process that runs one or more jobs. <a href="#ref-workflows">[4]</a></p>
+          <p>The same workflow concept page says workflows can build and test pull requests, deploy applications when releases are created, and add labels when issues open. <a href="#ref-workflows">[4]</a></p>
+          <p>Those examples are intentionally broad. In real repositories, workflow files often control package publishing, cloud deployment, repository writes, security scanning uploads, issue comments, and access to environment secrets.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> Treat workflow YAML as operational code, not only build configuration, when deciding who must approve changes.
+          </div>
+        </section>
+
+        <section id="codeowners">
+          <h2>CODEOWNERS turns workflow review into a routing rule</h2>
+          <p>GitHub's secure-use reference says that if workflow files are stored in <code>.github/workflows</code>, teams can add that directory to the code owners list so proposed changes first require approval from a designated reviewer. <a href="#ref-secure">[1]</a></p>
+          <p>GitHub Docs says CODEOWNERS can define people or teams responsible for code in a repository. <a href="#ref-codeowners">[2]</a></p>
+          <p>GitHub Docs also says the chosen code owners must have write permissions, and a team listed as a code owner must be visible and have write permissions. <a href="#ref-codeowners">[2]</a></p>
+          <p>A practical workflow entry is narrow and explicit: <code>/.github/workflows/ @org/security-team @org/platform-team</code>. The exact owners should be the people who can review event triggers, token scope, third-party actions, self-hosted runner use, and deployment side effects.</p>
+        </section>
+
+        <section id="branch-protection">
+          <h2>Branch protection decides whether CODEOWNERS blocks merge</h2>
+          <p>GitHub Docs says repository owners can update branch protection rules and enable "Require review from Code Owners" so changed code is reviewed by the owners of changed files. <a href="#ref-codeowners">[2]</a></p>
+          <p>GitHub Docs also says required pull-request reviews can be enabled as part of branch protection. <a href="#ref-protected">[3]</a></p>
+          <p>CODEOWNERS without branch protection is still useful for review requests, but it is weaker as a control. The merge gate depends on the protected branch or ruleset that requires code-owner approval for the target branch.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid verdict:</strong> Do not assume a CODEOWNERS line protects workflow files until the default branch, release branches, and any deployment branches enforce the matching review rule.
+          </div>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit starts with the workflow directory</h2>
+          <p>First, list every workflow path under <code>.github/workflows</code>, because GitHub says that is where repository workflow files are defined. <a href="#ref-workflows">[4]</a></p>
+          <p>Second, inspect the CODEOWNERS file. GitHub Docs says CODEOWNERS can live in <code>.github/</code>, the repository root, or <code>docs/</code>, and path case matters because GitHub evaluates CODEOWNERS on a case-sensitive file system. <a href="#ref-codeowners">[2]</a></p>
+          <p>Third, confirm that workflow owners still have write permission. GitHub Docs says owners without enough access will not be assigned. <a href="#ref-codeowners">[2]</a></p>
+          <p>Fourth, check branch protection or rulesets for the branches that receive workflow changes. The review request is not the same thing as an enforced merge block; required code-owner review needs the branch rule behind it. <a href="#ref-codeowners">[2]</a> <a href="#ref-protected">[3]</a></p>
+          <p>Finally, combine reviewer routing with workflow linting. Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so CODEOWNERS review sits beside pinned-action, token-permission, timeout, dispatch-input, pull-request-target, OIDC, reusable-workflow, self-hosted runner, runner-group, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, <code>workflow_run</code>, checkout-credential, npm trusted-publishing, SARIF upload, log-secret, ruleset, secret-scanning, trigger-filter, matrix, service-container, workflow-command, Docker build-secret, deployment branch-rule, runner-label, repository-dispatch, job-output, GitHub App token, scheduled-workflow, and <code>pull_request</code> audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
+            <li id="ref-codeowners">GitHub Docs, <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners">About code owners</a>.</li>
+            <li id="ref-protected">GitHub Docs, <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches">About protected branches</a>.</li>
+            <li id="ref-workflows">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/workflows-and-actions/workflows">Workflows</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

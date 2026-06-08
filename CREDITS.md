@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| codeowners-github-actions-workflows | https://unsplash.com/photos/person-reviewing-documents-with-calculator-and-laptop-tLqtcDZltPs | Kelly Sikkema | Unsplash License | 2026-06-08 |
 | github-actions-pull-request-security | https://commons.wikimedia.org/wiki/File:Code_review_Sign-offs_tested.png | Wikinaut | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-scheduled-workflows-security | https://commons.wikimedia.org/wiki/File:Alarm_Clock_crossed_out.jpg | Wilfredor | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-app-tokens-github-actions | https://commons.wikimedia.org/wiki/File:Restricted_Area_Sign.jpg | MarkBuckawicki | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
