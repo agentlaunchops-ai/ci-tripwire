@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (40)
+### GitHub Actions (41)
 
+- [GitHub Actions pull_request: Safer PR CI Workflows](https://dsotn.com/articles/github-actions-pull-request-security/)
 - [GitHub Actions Schedules: Secure Cron CI Workflows](https://dsotn.com/articles/github-actions-scheduled-workflows-security/)
 - [GitHub App Tokens: Safer GitHub Actions Automation](https://dsotn.com/articles/github-app-tokens-github-actions/)
 - [GitHub Job Outputs: Safer GitHub Actions Data Flow](https://dsotn.com/articles/github-actions-job-outputs-security/)

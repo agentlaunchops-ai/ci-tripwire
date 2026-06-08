@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-pull-request-security | https://commons.wikimedia.org/wiki/File:Code_review_Sign-offs_tested.png | Wikinaut | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-scheduled-workflows-security | https://commons.wikimedia.org/wiki/File:Alarm_Clock_crossed_out.jpg | Wilfredor | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-app-tokens-github-actions | https://commons.wikimedia.org/wiki/File:Restricted_Area_Sign.jpg | MarkBuckawicki | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-job-outputs-security | https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg | Derrick Coetzee from Berkeley, CA, USA | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |

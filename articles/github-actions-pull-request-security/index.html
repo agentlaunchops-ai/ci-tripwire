@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions pull_request: Safer PR CI Workflows</title>
+  <meta name="description" content="Review pull_request workflows before forked or untrusted changes reach GitHub Actions CI, tokens, secrets, artifacts, and shell steps.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-pull-request-security/">
+  <meta property="og:title" content="GitHub Actions pull_request: Safer PR CI Workflows">
+  <meta property="og:description" content="How to review pull_request workflows before untrusted changes shape GitHub Actions CI behavior.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-pull-request-security/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-pull-request-security.png">
+  <meta property="article:published_time" content="2026-06-08T12:44:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T12:44:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="pull_request">
+  <meta property="article:tag" content="forked pull requests">
+  <meta property="article:tag" content="CI security">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-pull-request-security.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions pull_request: Safer PR CI Workflows",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T12:44:00-06:00",
+    "dateModified": "2026-06-08T12:44:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions pull_request", "forked pull requests", "PR CI security", "GITHUB_TOKEN permissions", "untrusted code"],
+    "wordCount": 1152,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-pull-request-security/",
+    "articleBody": "pull_request workflows are safer than privileged pull_request_target workflows, but they still run CI on proposed changes and need tight review around triggers, tokens, secrets, artifacts, and shell steps.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-pull-request-security.png", "width": 906, "height": 232},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Events that trigger workflows: pull_request", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#pull_request"},
+      {"@type": "CreativeWork", "name": "Approving workflow runs from public forks", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/approve-runs-from-forks"},
+      {"@type": "CreativeWork", "name": "Use GITHUB_TOKEN for authentication in workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"},
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions pull_request: Safer PR CI Workflows", "item": "https://dsotn.com/articles/github-actions-pull-request-security/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-pull-request-security.png" width="906" height="232" alt="Code review interface showing sign-off and follow-up sections.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#trigger">Trigger shape</a>
+        <a href="#forks">Fork controls</a>
+        <a href="#token">Token scope</a>
+        <a href="#untrusted">Untrusted data</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions pull_request: Safer PR CI Workflows</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary"><code>pull_request</code> workflows are the ordinary CI path for proposed changes, so their security review should focus on untrusted code, fork behavior, token scope, secrets, artifacts, and shell steps.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for pull_request workflow security</h2>
+          <ul>
+            <li>GitHub Docs says <code>pull_request</code> workflows run when pull-request activity occurs and can be filtered by activity types, branches, and paths. <a href="#ref-events">[1]</a></li>
+            <li>GitHub Docs says workflows do not run on forked repositories by default and must be enabled in the fork's Actions tab. <a href="#ref-events">[1]</a></li>
+            <li>GitHub Docs says a public repository may require approval before workflow runs from outside collaborators execute. <a href="#ref-forks">[2]</a></li>
+            <li>GitHub Docs says workflows should grant <code>GITHUB_TOKEN</code> the least required access with the <code>permissions</code> key. <a href="#ref-token">[3]</a></li>
+            <li>GitHub's secure-use reference says some contexts should be treated as untrusted input because an attacker can insert malicious content. <a href="#ref-secure">[4]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>pull_request CI still runs around untrusted changes</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Use <code>pull_request</code> for unprivileged PR checks, but do not treat it as risk-free. Constrain when it runs, who can start forked runs, what token access jobs receive, and how workflow steps handle PR-controlled data.
+          </div>
+          <p>GitHub Docs says the <code>pull_request</code> event runs workflows when activity on a pull request happens. <a href="#ref-events">[1]</a></p>
+          <p>The same event reference says teams can use <code>types</code>, branch filters, path filters, and combinations of branch and path filters to narrow when <code>pull_request</code> workflows run. <a href="#ref-events">[1]</a></p>
+        </section>
+
+        <section id="trigger">
+          <h2>Trigger filters define which PRs get CI attention</h2>
+          <p>GitHub Docs says <code>pull_request</code> workflows can run for specific activity types such as <code>opened</code>, <code>synchronize</code>, and <code>reopened</code>. <a href="#ref-events">[1]</a></p>
+          <p>GitHub Docs says branch filters for <code>pull_request</code> evaluate the base branch of the pull request. <a href="#ref-events">[1]</a></p>
+          <p>GitHub Docs also says path filters can include or exclude changed file paths, and that workflows only run when both branch and path filters match if both are configured. <a href="#ref-events">[1]</a></p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A PR workflow is easier to reason about when its activity types, base branches, and paths match the repository areas the job actually protects.
+          </div>
+        </section>
+
+        <section id="forks">
+          <h2>Forked pull requests need an explicit run posture</h2>
+          <p>GitHub Docs says workflows do not run on forked repositories by default and must be enabled in the fork's Actions tab. <a href="#ref-events">[1]</a></p>
+          <p>GitHub's fork-approval guide says public repositories can require approval before workflow runs from first-time contributors, all outside collaborators, or other configured outside-contributor groups execute. <a href="#ref-forks">[2]</a></p>
+          <p>The same guide says a maintainer with write access can approve or reject a workflow run from a public fork. <a href="#ref-forks">[2]</a></p>
+          <p>That approval step is not only a queue-management choice. It is a security boundary around running CI that may build, test, or package code submitted by someone outside the trusted maintainer set.</p>
+        </section>
+
+        <section id="token">
+          <h2>PR jobs should start from narrow token permissions</h2>
+          <p>GitHub Docs says the <code>permissions</code> key can modify <code>GITHUB_TOKEN</code> permissions for the entire workflow or for individual jobs. <a href="#ref-token">[3]</a></p>
+          <p>GitHub Docs says teams should grant the <code>GITHUB_TOKEN</code> the least required access. <a href="#ref-token">[3]</a></p>
+          <p>GitHub Docs also says an action can access the <code>GITHUB_TOKEN</code> through the <code>github.token</code> context even if the workflow does not explicitly pass it as an input. <a href="#ref-token">[3]</a></p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid verdict:</strong> Do not let a broad default token ride along in a PR workflow just because the workflow appears to be a simple test job.
+          </div>
+        </section>
+
+        <section id="untrusted">
+          <h2>PR-controlled data should not flow straight into shell</h2>
+          <p>GitHub's secure-use reference says certain contexts should be treated as untrusted input because an attacker could insert malicious content. <a href="#ref-secure">[4]</a></p>
+          <p>The secure-use reference shows a script-injection pattern where pull-request title data is used directly inside a shell script. <a href="#ref-secure">[4]</a></p>
+          <p>The same reference recommends an intermediate environment variable for handling potentially untrusted expression values in shell scripts. <a href="#ref-secure">[4]</a></p>
+          <p>That matters for <code>pull_request</code> workflows because a contributor can influence fields such as titles, branch names, commit data, file paths, and changed content that workflow steps may later consume.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit treats pull_request as untrusted CI</h2>
+          <p>Start with the trigger. Check whether <code>types</code>, base-branch filters, and path filters match the jobs the workflow performs, because GitHub documents each of those narrowing controls for <code>pull_request</code>. <a href="#ref-events">[1]</a></p>
+          <p>Then review fork handling. Confirm whether outside-collaborator runs need approval, and make sure maintainers understand that approving a run allows CI to execute submitted workflow-relevant changes. <a href="#ref-forks">[2]</a></p>
+          <p>Next, shrink credentials. Prefer job-level <code>permissions</code>, remove unused secrets, and avoid token access in jobs that only lint, test, or build untrusted code. GitHub's token guide specifically recommends least required access. <a href="#ref-token">[3]</a></p>
+          <p>Finally, trace PR-controlled data. Move titles, branch names, labels, paths, and other pull-request context values through safer handling before shell execution, especially when a job runs code from an outside contributor. <a href="#ref-secure">[4]</a></p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so PR workflow review sits beside pinned-action, token-permission, timeout, dispatch-input, pull-request-target, OIDC, reusable-workflow, self-hosted runner, runner-group, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, <code>workflow_run</code>, checkout-credential, npm trusted-publishing, SARIF upload, log-secret, ruleset, secret-scanning, trigger-filter, matrix, service-container, workflow-command, Docker build-secret, deployment branch-rule, runner-label, repository-dispatch, job-output, GitHub App token, and scheduled-workflow audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-events">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#pull_request">Events that trigger workflows: pull_request</a>.</li>
+            <li id="ref-forks">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/manage-workflow-runs/approve-runs-from-forks">Approving workflow runs from public forks</a>.</li>
+            <li id="ref-token">GitHub Docs, <a href="https://docs.github.com/en/actions/tutorials/authenticate-with-github_token">Use GITHUB_TOKEN for authentication in workflows</a>.</li>
+            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

@@ -13,6 +13,14 @@
     <lastmod>2026-06-08</lastmod>
   </url>
   <url>
+    <loc>https://dsotn.com/articles/github-actions-pull-request-security/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/github-actions-pull-request-security.png</image:loc>
+      <image:title>Code review interface showing sign-off and follow-up sections</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dsotn.com/articles/github-actions-scheduled-workflows-security/</loc>
     <lastmod>2026-06-08</lastmod>
     <image:image>
