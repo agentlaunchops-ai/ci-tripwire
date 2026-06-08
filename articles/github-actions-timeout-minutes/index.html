@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Timeouts: Safer CI/CD Runtime Limits</title>
+  <meta name="description" content="Set GitHub Actions timeout-minutes for jobs and steps, understand 360-minute defaults, and use concurrency to keep CI/CD jobs from hanging safely.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-timeout-minutes/">
+  <meta property="og:title" content="GitHub Actions Timeouts: Safer CI/CD Runtime Limits">
+  <meta property="og:description" content="How to set job and step timeouts before long-running CI/CD jobs waste runner time or hold deployment authority.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-timeout-minutes/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-timeout-minutes.jpg">
+  <meta property="article:published_time" content="2026-06-07T22:10:00-06:00">
+  <meta property="article:modified_time" content="2026-06-07T22:10:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="timeout-minutes">
+  <meta property="article:tag" content="CI/CD reliability">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-timeout-minutes.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions Timeouts: Safer CI/CD Runtime Limits",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-07T22:10:00-06:00",
+    "dateModified": "2026-06-07T22:10:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions timeouts", "timeout-minutes", "CI/CD reliability", "workflow concurrency"],
+    "wordCount": 1323,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-timeout-minutes/",
+    "articleBody": "A timeout is a small workflow control that keeps CI/CD jobs from running longer than the work deserves.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-timeout-minutes.jpg", "width": 1146, "height": 1347},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idtimeout-minutes"},
+      {"@type": "CreativeWork", "name": "Workflow syntax for step timeout-minutes", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idstepstimeout-minutes"},
+      {"@type": "CreativeWork", "name": "Actions limits", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/limits"},
+      {"@type": "CreativeWork", "name": "Control workflow and job concurrency", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/using-jobs/using-concurrency"},
+      {"@type": "CreativeWork", "name": "Use GITHUB_TOKEN for authentication in workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Timeouts: Safer CI/CD Runtime Limits", "item": "https://dsotn.com/articles/github-actions-timeout-minutes/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-timeout-minutes.jpg" width="1146" height="1347" alt="Digital stopwatch stopped at thirteen minutes and thirty-seven seconds, used as a visual metaphor for CI job time limits.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#default-window">Default window</a>
+        <a href="#step-bounds">Step bounds</a>
+        <a href="#runner-limits">Runner limits</a>
+        <a href="#concurrency">Concurrency</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions Timeouts: Safer CI/CD Runtime Limits</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-07 · 7 min read</p>
+        <p id="editorial-summary">Timeouts are not just cost controls. In release, deploy, and security workflows, they are a guardrail against jobs that keep credentials, locks, or deployment authority alive longer than intended.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions timeouts</h2>
+          <ul>
+            <li>GitHub documents `jobs.&lt;job_id&gt;.timeout-minutes` as the maximum number of minutes before GitHub automatically cancels a job, with a default of 360 minutes. <a href="#ref-job-timeout">[1]</a></li>
+            <li>GitHub documents `jobs.&lt;job_id&gt;.steps[*].timeout-minutes` for individual steps, with a maximum of 360 minutes on both GitHub-hosted and self-hosted runners. <a href="#ref-step-timeout">[2]</a></li>
+            <li>GitHub's Actions limits page says a workflow run can last up to 35 days, including execution time and time spent waiting for approval. <a href="#ref-actions-limits">[3]</a></li>
+            <li>The same limits table says each GitHub-hosted runner job can run for up to 6 hours, while each self-hosted runner job can run for up to 5 days. <a href="#ref-actions-limits">[3]</a></li>
+            <li>GitHub documents `concurrency` as a way to keep one workflow or job in a group running at a time, and `cancel-in-progress: true` can cancel a currently running item in that group. <a href="#ref-concurrency">[4]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Timeouts should be explicit in privileged workflows</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Set job-level timeouts for every deploy, release, scanner, and integration job, then add shorter step-level timeouts around network calls, package installs, and remote commands.
+          </div>
+          <p>A missing timeout lets a job keep running until GitHub's default or platform limit stops it. GitHub's syntax reference says `jobs.&lt;job_id&gt;.timeout-minutes` controls how long a job can run before GitHub automatically cancels it, and the documented default is 360 minutes. <a href="#ref-job-timeout">[1]</a></p>
+          <p>That default is broad for ordinary pull-request tests and too broad for many jobs that deploy, publish, call cloud APIs, run remote shell commands, or hold scarce self-hosted runner capacity.</p>
+        </section>
+
+        <section id="default-window">
+          <h2>The 360-minute default is a fallback, not a plan</h2>
+          <p>GitHub's job timeout setting is a positive integer in minutes. <a href="#ref-job-timeout">[1]</a> Treat the value as a budget for expected work, not as a copy-pasted constant. A lint job might deserve 10 minutes, a test matrix leg might deserve 20, and a production deploy may deserve a tight window plus an operator-visible failure.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Review target:</strong> Any workflow with secrets, deployment environments, package publishing, repository writes, or self-hosted runners should declare `timeout-minutes`.
+          </div>
+          <p>The security reason is simple: a job that keeps running can keep its granted token, environment, remote session, or runner slot longer than the team expected. GitHub's token guidance says an action can access `GITHUB_TOKEN` through the `github.token` context even when the workflow does not explicitly pass it, and recommends limiting token permissions to the minimum required access. <a href="#ref-token">[5]</a></p>
+        </section>
+
+        <section id="step-bounds">
+          <h2>Step timeouts catch the command that actually hangs</h2>
+          <p>Job-level timeouts are the outer boundary. Step-level timeouts make the failure closer to the risky operation. GitHub documents `jobs.&lt;job_id&gt;.steps[*].timeout-minutes` as the maximum minutes to run a step before killing its process, with a maximum of 360 minutes for GitHub-hosted and self-hosted runners. <a href="#ref-step-timeout">[2]</a></p>
+          <ul class="risk-list">
+            <li><strong>Use short step limits:</strong> package installs, curl calls, SSH deploys, smoke checks, and security scanners that can hang on network or service failures.</li>
+            <li><strong>Use job limits:</strong> the full expected envelope for a matrix leg, deploy job, release job, or scheduled maintenance workflow.</li>
+            <li><strong>Keep failures visible:</strong> a timeout should fail loudly enough that the team sees the stuck dependency, remote host, or runner problem.</li>
+          </ul>
+          <p>Step limits also make incident review cleaner. Instead of reading a six-hour log to discover the first frozen command, the failed step names the point where the workflow exceeded its time budget.</p>
+        </section>
+
+        <section id="runner-limits">
+          <h2>Platform limits are wider than many workflows need</h2>
+          <p>GitHub's Actions limits page says a workflow run can last up to 35 days, including time spent waiting and approval, and that a workflow or job is usually canceled when a listed limit is reached. <a href="#ref-actions-limits">[3]</a> That protects the platform, but it is not a team-specific control.</p>
+          <p>The same table says each GitHub-hosted runner job can run for up to 6 hours, while a self-hosted runner job can run for up to 5 days. <a href="#ref-actions-limits">[3]</a> Self-hosted runner jobs deserve special attention because a stuck job can tie up hardware, local network access, mounted tools, or deployment credentials controlled outside GitHub's hosted runner boundary.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> "GitHub will eventually stop it" is weaker than declaring the runtime your workflow actually needs.
+          </div>
+        </section>
+
+        <section id="concurrency">
+          <h2>Timeouts pair well with concurrency groups</h2>
+          <p>Timeouts stop long-running jobs. Concurrency controls stop duplicate runs from piling up. GitHub's concurrency guide says `jobs.&lt;job_id&gt;.concurrency` can ensure only a single job or workflow using the same group runs at a time, and workflow-level concurrency is also available. <a href="#ref-concurrency">[4]</a></p>
+          <p>For deploy workflows, use a group such as the workflow name plus branch, environment, or release channel. GitHub documents `cancel-in-progress: true` for canceling a currently running job or workflow in the same concurrency group. <a href="#ref-concurrency">[4]</a> That can keep stale deploy attempts from racing newer commits, but release branches and migrations may need queueing instead of cancellation.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit starts with missing timeout-minutes</h2>
+          <p>Search `.github/workflows` for jobs without `timeout-minutes`, then prioritize jobs that use secrets, environments, publish commands, repository writes, self-hosted runners, or remote shells. Add job-level budgets first, then step-level budgets around commands that call external services or wait on infrastructure. <a href="#ref-job-timeout">[1]</a> <a href="#ref-step-timeout">[2]</a></p>
+          <p>For a local review queue, run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> and inspect timeout findings beside token-permission, pinned-action, manual-trigger, and shell-context findings.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, primary platform documentation, last reviewed 2026-06-07.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-job-timeout">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idtimeout-minutes">Workflow syntax for GitHub Actions: `jobs.&lt;job_id&gt;.timeout-minutes`</a>.</li>
+            <li id="ref-step-timeout">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idstepstimeout-minutes">Workflow syntax for GitHub Actions: step `timeout-minutes`</a>.</li>
+            <li id="ref-actions-limits">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/limits">Actions limits</a>.</li>
+            <li id="ref-concurrency">GitHub Docs, <a href="https://docs.github.com/en/actions/using-jobs/using-concurrency">Control the concurrency of workflows and jobs</a>.</li>
+            <li id="ref-token">GitHub Docs, <a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication">Use GITHUB_TOKEN for authentication in workflows</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

@@ -7,3 +7,4 @@
 | github-token-permissions | https://commons.wikimedia.org/wiki/File:SeeThruPadlockOpenKey.JPG | Simon Speed | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-07 |
 | pin-github-actions-sha | https://commons.wikimedia.org/wiki/File:Locks_on_a_fence.jpg | MarkBuckawicki | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-07 |
 | workflow-dispatch-input-safety | https://unsplash.com/photos/control-panel-with-multiple-switches-and-emergency-stop-button-0bzRtF2fs74 | Sebastian Schuster | Unsplash License | 2026-06-07 |
+| github-actions-timeout-minutes | https://commons.wikimedia.org/wiki/File:Leet_stopwatch.JPG | TheJosh | Public domain | 2026-06-07 |
