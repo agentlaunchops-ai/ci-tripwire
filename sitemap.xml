@@ -13,6 +13,14 @@
     <lastmod>2026-06-08</lastmod>
   </url>
   <url>
+    <loc>https://dsotn.com/articles/repository-dispatch-security/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/repository-dispatch-security.jpg</image:loc>
+      <image:title>A small push button mounted on an electronics board</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dsotn.com/articles/github-actions-runner-labels-routing/</loc>
     <lastmod>2026-06-08</lastmod>
     <image:image>
