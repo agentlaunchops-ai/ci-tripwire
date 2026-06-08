@@ -27,3 +27,4 @@
 | actions-checkout-credentials-security | https://commons.wikimedia.org/wiki/File:Self_service_checkout_counter.jpg | Unnerving duck | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | npm-trusted-publishing-github-actions | https://commons.wikimedia.org/wiki/File:Corrugated_cardboard_on_conveyor.jpg | Streetsoda | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-sarif-code-scanning | https://commons.wikimedia.org/wiki/File:Scanning_machine.jpg | Salaha mahmood | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
+| github-actions-log-secret-leaks | https://commons.wikimedia.org/wiki/File:Redacted_documents.png | Natural RX | Public domain | 2026-06-08 |

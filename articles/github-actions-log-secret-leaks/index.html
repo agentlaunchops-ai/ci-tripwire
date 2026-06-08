@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Logs: Prevent CI Secret Leaks Safely</title>
+  <meta name="description" content="Prevent GitHub Actions secret leaks in logs with masked runtime values, safer shell output, fork-aware secrets, and rotation after exposure.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-log-secret-leaks/">
+  <meta property="og:title" content="GitHub Actions Logs: Prevent CI Secret Leaks Safely">
+  <meta property="og:description" content="How to keep CI logs useful without turning them into credential exposure records.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-log-secret-leaks/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-log-secret-leaks.png">
+  <meta property="article:published_time" content="2026-06-08T05:50:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T05:50:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="secrets">
+  <meta property="article:tag" content="workflow logs">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-log-secret-leaks.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions Logs: Prevent CI Secret Leaks Safely",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T05:50:00-06:00",
+    "dateModified": "2026-06-08T05:50:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions logs", "secret masking", "add-mask", "CI secrets"],
+    "wordCount": 958,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-log-secret-leaks/",
+    "articleBody": "GitHub Actions can redact many secrets from workflow logs, but runtime values, verbose shell output, and exposed credentials still need explicit workflow review.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-log-secret-leaks.png", "width": 410, "height": 527},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Secrets", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/security/secrets"},
+      {"@type": "CreativeWork", "name": "Secrets reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secrets"},
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
+      {"@type": "CreativeWork", "name": "Workflow commands for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands"},
+      {"@type": "CreativeWork", "name": "Using secrets in GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Logs: Prevent CI Secret Leaks Safely", "item": "https://dsotn.com/articles/github-actions-log-secret-leaks/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-log-secret-leaks.png" width="410" height="527" alt="Redacted document pages with black bars over sensitive lines.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#redaction">Redaction scope</a>
+        <a href="#runtime">Runtime secrets</a>
+        <a href="#forks">Forked PRs</a>
+        <a href="#exposure">Exposure response</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions Logs: Prevent CI Secret Leaks Safely</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">Workflow logs are a debugging surface and an exposure surface, so secret handling needs to be reviewed before verbose CI output becomes normal.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions secret logs</h2>
+          <ul>
+            <li>GitHub Docs says Actions secrets are encrypted before reaching GitHub and can only be read by a workflow when explicitly included. <a href="#ref-concepts">[1]</a></li>
+            <li>GitHub Docs lists sensitive values that are automatically redacted from workflow logs, including GitHub tokens, npm tokens, JWTs, database connection strings, and HTTP Bearer token headers. <a href="#ref-reference">[2]</a></li>
+            <li>GitHub Docs advises avoiding structured data as secret values so log redaction works correctly. <a href="#ref-reference">[2]</a></li>
+            <li>GitHub Docs says to mask sensitive information that is not a GitHub secret with <code>::add-mask::VALUE</code>. <a href="#ref-secure-use">[3]</a></li>
+            <li>GitHub Docs says secrets, except <code>GITHUB_TOKEN</code>, are not passed to a runner when a workflow is triggered from a forked repository. <a href="#ref-using-secrets">[5]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Log safety starts before the first debug rerun</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Treat workflow logs as semi-sensitive output: rely on GitHub's built-in redaction where it applies, add masks for runtime values before they print, keep shell tracing away from secrets, and rotate any credential that reaches a log unredacted.
+          </div>
+          <p>GitHub Docs says secrets are encrypted before they reach GitHub and are injected into workflow runtime only when a workflow explicitly includes them. <a href="#ref-concepts">[1]</a></p>
+          <p>That storage model helps, but it does not make every log line safe. Workflow steps still choose which commands run, which variables get echoed, and how much error output a failed deploy or test command prints.</p>
+        </section>
+
+        <section id="redaction">
+          <h2>Automatic redaction covers many values, not every shape</h2>
+          <p>The GitHub Actions secrets reference identifies built-in log redaction for common credential formats such as GitHub token prefixes, npm publishing tokens, JSON web tokens, connection strings, and bearer authorization headers. <a href="#ref-reference">[2]</a></p>
+          <p>That same reference warns against packing structured data into one secret value because masking depends on the value shape GitHub can recognize. <a href="#ref-reference">[2]</a></p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid verdict:</strong> Do not store a large JSON blob as one secret and assume every derived field, escaped copy, or transformed substring will be redacted in every command's output.
+          </div>
+        </section>
+
+        <section id="runtime">
+          <h2>Runtime credentials need masks before they touch output</h2>
+          <p>GitHub's secure-use reference points teams to <code>::add-mask::VALUE</code> for sensitive runtime data that was not stored as a GitHub Actions secret. <a href="#ref-secure-use">[3]</a></p>
+          <p>The workflow commands reference says masking a value prevents that string or variable from being printed in the log, and warns to register the mask before outputting the secret in build logs or other workflow commands. <a href="#ref-commands">[4]</a></p>
+          <p>This matters when a job obtains a credential from a vault, cloud CLI, package registry, or deployment command after the run has started. Add the mask immediately after retrieving the value, before any debug echo, grouped log output, or command that may include the value in an error trace.</p>
+        </section>
+
+        <section id="forks">
+          <h2>Forked pull requests change which secrets exist</h2>
+          <p>The using-secrets guide says secrets are not passed to the runner for workflows triggered from a forked repository, except for <code>GITHUB_TOKEN</code>. <a href="#ref-using-secrets">[5]</a></p>
+          <p>That default reduces exposure in untrusted pull-request runs. It also means a workflow can fail differently on a fork because the secret context is empty, so log-safe error handling needs to be tested on both trusted branches and fork-style pull requests.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> Keep fork PR jobs from printing secret-dependent configuration, and split trusted deployment or publish jobs onto protected triggers.
+          </div>
+        </section>
+
+        <section id="exposure">
+          <h2>An unredacted log secret is a rotation event</h2>
+          <p>GitHub's secure-use reference says that if an unredacted secret is sent to a workflow run log, the log should be deleted and the secret should be rotated. <a href="#ref-secure-use">[3]</a></p>
+          <p>Make that response path explicit before an incident: identify who can delete workflow logs, who owns each deploy or registry credential, and which downstream services need revocation after a leak. A log cleanup without rotation only hides evidence; it does not invalidate the exposed value.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast log-leak audit starts in workflow YAML</h2>
+          <p>Review each workflow that uses secrets. Look for <code>set -x</code>, verbose CLI modes, commands that echo environment variables, generated credentials that are not masked immediately, structured secrets, fork PR paths, and failure handlers that dump full configuration.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so log review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, <code>workflow_run</code>, checkout-credential, npm trusted-publishing, and SARIF upload audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, primary GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-concepts">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/security/secrets">Secrets</a>.</li>
+            <li id="ref-reference">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secrets">Secrets reference</a>.</li>
+            <li id="ref-secure-use">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
+            <li id="ref-commands">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands">Workflow commands for GitHub Actions</a>.</li>
+            <li id="ref-using-secrets">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets">Using secrets in GitHub Actions</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

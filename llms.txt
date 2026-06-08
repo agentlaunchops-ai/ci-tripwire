@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (25)
+### GitHub Actions (26)
 
+- [GitHub Actions Logs: Prevent CI Secret Leaks Safely](https://dsotn.com/articles/github-actions-log-secret-leaks/)
 - [SARIF Uploads: Secure GitHub Actions Code Scanning](https://dsotn.com/articles/github-actions-sarif-code-scanning/)
 - [npm Trusted Publishing: Safer GitHub Actions Releases](https://dsotn.com/articles/npm-trusted-publishing-github-actions/)
 - [actions/checkout Credentials: Safer GitHub Actions Clones](https://dsotn.com/articles/actions-checkout-credentials-security/)
