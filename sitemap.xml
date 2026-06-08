@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://dsotn.com/</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-06-08</lastmod>
   </url>
   <url>
     <loc>https://dsotn.com/about/</loc>
@@ -10,7 +10,15 @@
   </url>
   <url>
     <loc>https://dsotn.com/articles/</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-06-08</lastmod>
+  </url>
+  <url>
+    <loc>https://dsotn.com/articles/reusable-workflows-security/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/reusable-workflows-security.jpg</image:loc>
+      <image:title>Industrial conveyor system inside a factory</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://dsotn.com/articles/oidc-trust-policy-footguns/</loc>

@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (8)
+### GitHub Actions (9)
 
+- [Reusable Workflows: Secure GitHub Actions Pipelines](https://dsotn.com/articles/reusable-workflows-security/)
 - [OIDC Trust Policies: Secure GitHub Actions Cloud Deploys](https://dsotn.com/articles/oidc-trust-policy-footguns/)
 - [GitHub Actions Secrets: Safer Deployment Workflows](https://dsotn.com/articles/github-actions-secrets-deployment-workflows/)
 - [GitHub Actions Timeouts: Safer CI/CD Runtime Limits](https://dsotn.com/articles/github-actions-timeout-minutes/)
