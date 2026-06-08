@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (29)
+### GitHub Actions (30)
 
+- [GitHub Actions Filters: Safer CI/CD Trigger Scopes](https://dsotn.com/articles/github-actions-trigger-filters/)
 - [GitHub Runner Groups: Secure Self-Hosted CI Access](https://dsotn.com/articles/github-actions-runner-groups-access/)
 - [GitHub Secret Scanning: Prevent CI/CD Token Leaks Now](https://dsotn.com/articles/github-secret-scanning-ci-token-leaks/)
 - [GitHub Rulesets: Safer GitHub Actions CI Merge Gates](https://dsotn.com/articles/github-actions-rulesets-merge-gates/)
