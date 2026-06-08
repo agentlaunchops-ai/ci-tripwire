@@ -1,0 +1,5 @@
+site: CI Tripwire
+url: https://dsotn.com/
+usage: training=allow, search=allow, citation=allow, attribution=preferred
+publisher: CI Tripwire Editorial
+contact: https://dsotn.com/about/#corrections

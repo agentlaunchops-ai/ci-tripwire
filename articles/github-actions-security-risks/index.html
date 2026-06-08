@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Security: 5 CI Risks to Fix Right Now</title>
+  <meta name="description" content="Five cited GitHub Actions security checks to prioritize fast: SHA pins, token permissions, pull_request_target, shell injection, and timeouts.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-security-risks/">
+  <meta property="og:title" content="GitHub Actions Security: 5 CI Risks to Fix Right Now">
+  <meta property="og:description" content="Five cited GitHub Actions security checks to prioritize before release automation expands risk.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-security-risks/">
+  <meta property="og:image" content="https://dsotn.com/og/articles/github-actions-security-risks.png">
+  <meta property="article:published_time" content="2026-06-07T20:39:00-06:00">
+  <meta property="article:modified_time" content="2026-06-07T20:39:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="CI/CD">
+  <meta property="article:tag" content="GitHub Actions security">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/github-actions-security-risks.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions Security: 5 CI Risks to Fix Right Now",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-07T20:39:00-06:00",
+    "dateModified": "2026-06-07T20:39:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions security", "CI/CD security", "workflow hardening", "GITHUB_TOKEN"],
+    "wordCount": 1315,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-security-risks/",
+    "articleBody": "Start with workflow risk that can change code, touch secrets, or run untrusted pull-request input.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/og/articles/github-actions-security-risks.png", "width": 1200, "height": 630},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
+      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"},
+      {"@type": "CreativeWork", "name": "Events that trigger workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows"},
+      {"@type": "CreativeWork", "name": "OpenSSF Scorecard checks", "publisher": "OpenSSF", "url": "https://github.com/ossf/scorecard/blob/main/docs/checks.md"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Security: 5 CI Risks to Fix Right Now", "item": "https://dsotn.com/articles/github-actions-security-risks/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/github-actions-security-risks/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-security-risks.jpg" width="4288" height="2848" alt="Server racks in a computing facility, used as a visual metaphor for CI infrastructure.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#sha-pins">Full SHA pins</a>
+        <a href="#token-permissions">Token permissions</a>
+        <a href="#pull-request-target">pull_request_target</a>
+        <a href="#shell-input">Shell input</a>
+        <a href="#timeouts">Timeouts</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions Security: 5 CI Risks to Fix Right Now</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-07 · 7 min read</p>
+        <p id="editorial-summary">Start with workflow risk that can change code, touch secrets, or run untrusted pull-request input. Those are the CI/CD failures most likely to turn a small workflow mistake into repository compromise.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions hardening</h2>
+          <ul>
+            <li>Pin third-party actions to a full-length commit SHA because GitHub describes that as the only current way to use an action as an immutable release. <a href="#ref-github-secure">[1]</a></li>
+            <li>Declare `GITHUB_TOKEN` permissions explicitly; GitHub sets unspecified permissions to `none` once any permission is listed. <a href="#ref-github-workflow">[2]</a></li>
+            <li>Treat `pull_request_target` as a sharp tool: GitHub says it runs in the base repository context and warns against building or running pull-request code with that trigger. <a href="#ref-github-events">[3]</a></li>
+            <li>Set job-level `timeout-minutes`; GitHub documents a 360-minute default for jobs without an explicit timeout. <a href="#ref-github-workflow">[2]</a></li>
+            <li>OpenSSF Scorecard labels Dangerous-Workflow risk as critical and Token-Permissions risk as high, which makes them sensible first-pass audit targets. <a href="#ref-scorecard">[4]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Fix CI risks that can write, leak, or execute first</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> prioritize the checks that restrict what a workflow can fetch, write, and execute. Start with SHA-pinned third-party actions, least-privilege token scopes, safe pull-request triggers, quoted shell input, and short job timeouts.
+          </div>
+          <p>That ordering is practical because a compromised third-party action can affect later jobs, shared files, secrets, and the `GITHUB_TOKEN` that a workflow uses. GitHub’s own secure-use reference says a compromised action can be significant because it may reach repository secrets and use `GITHUB_TOKEN` write access. <a href="#ref-github-secure">[1]</a></p>
+          <p>The five checks below are intentionally boring. They are the controls a maintainer can inspect in YAML before changing build systems, cloud deploy code, or release automation.</p>
+        </section>
+
+        <section id="sha-pins">
+          <h2>Full-length SHA pins make third-party actions immutable</h2>
+          <p>GitHub’s secure-use reference recommends pinning actions to a full-length commit SHA and says this is currently the only way to use an action as an immutable release. <a href="#ref-github-secure">[1]</a></p>
+          <p>Tags are convenient, but GitHub also notes that a tag can be moved or deleted if an attacker gains access to the action’s repository. <a href="#ref-github-secure">[1]</a> That does not mean every tagged action is malicious; it means a tag leaves more trust in future repository control than a reviewed commit SHA does.</p>
+          <ul class="risk-list">
+            <li><strong>Check:</strong> every external `uses: owner/repo@...` line resolves to a full commit SHA, or the exception is intentional and documented.</li>
+            <li><strong>Follow-up:</strong> verify the selected SHA belongs to the action’s repository rather than a fork, matching GitHub’s guidance. <a href="#ref-github-secure">[1]</a></li>
+          </ul>
+        </section>
+
+        <section id="token-permissions">
+          <h2>Explicit token scopes stop accidental write access</h2>
+          <p>GitHub lets workflows define `GITHUB_TOKEN` access with `read`, `write`, or `none` for available permissions. <a href="#ref-github-workflow">[2]</a> GitHub also documents `read-all`, `write-all`, and `{}` syntaxes for broad read, broad write, or disabled permissions. <a href="#ref-github-workflow">[2]</a></p>
+          <p>The important rule is easy to miss: once a workflow specifies any permission, permissions that are not specified are set to `none`. <a href="#ref-github-workflow">[2]</a> That behavior makes a top-level `permissions: contents: read` baseline useful, with job-level write scopes only where a job needs them.</p>
+          <p>OpenSSF Scorecard gives its highest Token-Permissions score when workflow YAML sets read-only permissions at the top level and declares required write permissions at the run level. <a href="#ref-scorecard">[4]</a></p>
+          <ul class="risk-list">
+            <li><strong>Check:</strong> top-level permissions are read-only or narrower.</li>
+            <li><strong>Check:</strong> release, Pages, package, issue, or pull-request write scopes appear only on jobs that need those capabilities.</li>
+          </ul>
+        </section>
+
+        <section id="pull-request-target">
+          <h2>`pull_request_target` should not build untrusted PR code</h2>
+          <p>GitHub documents that `pull_request_target` runs in the context of the default branch of the base repository, not the merge commit used by `pull_request`. <a href="#ref-github-events">[3]</a> The same GitHub section says the event is useful for labeling or commenting on fork pull requests, but says to avoid it when you need to build or run code from the pull request. <a href="#ref-github-events">[3]</a></p>
+          <p>GitHub’s warning is direct: running untrusted code on `pull_request_target` can lead to cache poisoning and unintended access to write privileges or secrets. <a href="#ref-github-events">[3]</a> OpenSSF Scorecard’s Dangerous-Workflow check also flags `pull_request_target` or `workflow_run` combined with explicit pull-request checkout because those workflows can have write permission and target-repository secrets. <a href="#ref-scorecard">[4]</a></p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Caution:</strong> if a workflow checks out the pull request head and then runs build scripts, tests, package hooks, or shell commands, `pull_request_target` deserves a line-by-line review.
+          </div>
+        </section>
+
+        <section id="shell-input">
+          <h2>Untrusted context values should not flow into shell</h2>
+          <p>OpenSSF Scorecard describes script injection with untrusted context variables as a pattern where attacker-controlled strings can be interpreted as code on a runner. <a href="#ref-scorecard">[4]</a> Scorecard gives issue titles as an example of a GitHub context value that can be untrusted. <a href="#ref-scorecard">[4]</a></p>
+          <p>The practical review is simple: search inline `run:` blocks for `${{ github.event.* }}`, branch names, PR titles, issue titles, labels, comments, and file paths. Move those values into environment variables, quote them, or handle them in a script that treats them as data rather than shell syntax.</p>
+        </section>
+
+        <section id="timeouts">
+          <h2>Short timeouts reduce runaway workflow blast radius</h2>
+          <p>GitHub documents `jobs.&lt;job_id&gt;.timeout-minutes` as the maximum minutes a job can run before GitHub cancels it, and the documented default is 360 minutes. <a href="#ref-github-workflow">[2]</a> GitHub also documents a 360-minute maximum for step-level `timeout-minutes`. <a href="#ref-github-workflow">[2]</a></p>
+          <p>A six-hour default is rarely the intended budget for lint, test, dependency review, or pull-request automation. Set short job timeouts near the expected runtime, then give long-running release or integration jobs explicit exceptions.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast first audit can be mechanical</h2>
+          <p>Start by scanning workflow files for five strings: `uses:`, `permissions:`, `pull_request_target`, `${{ github.event`, and `timeout-minutes`. Those searches map directly to the source-backed risk areas above: immutable action references, token scopes, dangerous pull-request context, script injection, and runaway jobs. <a href="#ref-github-secure">[1]</a> <a href="#ref-github-workflow">[2]</a> <a href="#ref-github-events">[3]</a> <a href="#ref-scorecard">[4]</a></p>
+          <p>For a local pass, run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> against a repository and use the results as a review queue, not as the final security verdict.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, primary project and platform documentation, last reviewed 2026-06-07.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-github-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
+            <li id="ref-github-workflow">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">Workflow syntax for GitHub Actions</a>.</li>
+            <li id="ref-github-events">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows">Events that trigger workflows</a>.</li>
+            <li id="ref-scorecard">OpenSSF Scorecard, <a href="https://github.com/ossf/scorecard/blob/main/docs/checks.md">checks documentation</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
