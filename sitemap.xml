@@ -13,6 +13,14 @@
     <lastmod>2026-06-08</lastmod>
   </url>
   <url>
+    <loc>https://dsotn.com/articles/github-secret-scanning-ci-token-leaks/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/github-secret-scanning-ci-token-leaks.jpg</image:loc>
+      <image:title>Water dripping from a faucet</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dsotn.com/articles/github-actions-rulesets-merge-gates/</loc>
     <lastmod>2026-06-08</lastmod>
     <image:image>

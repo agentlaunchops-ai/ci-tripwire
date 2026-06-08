@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (27)
+### GitHub Actions (28)
 
+- [GitHub Secret Scanning: Prevent CI/CD Token Leaks Now](https://dsotn.com/articles/github-secret-scanning-ci-token-leaks/)
 - [GitHub Rulesets: Safer GitHub Actions CI Merge Gates](https://dsotn.com/articles/github-actions-rulesets-merge-gates/)
 - [GitHub Actions Logs: Prevent CI Secret Leaks Safely](https://dsotn.com/articles/github-actions-log-secret-leaks/)
 - [SARIF Uploads: Secure GitHub Actions Code Scanning](https://dsotn.com/articles/github-actions-sarif-code-scanning/)
