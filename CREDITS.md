@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-runner-labels-routing | https://commons.wikimedia.org/wiki/File:KFC_label_peeling_machine.jpg | Fumikas Sagisavas | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-deployment-branch-rules | https://commons.wikimedia.org/wiki/File:Safety_Valve,_Rocket_Engine,_Liquid_Fuel,_R.H._Goddard_-_DPLA_-_23699f0da2c9e960e3bc1311adc935ca_(page_1).jpg | Eric Long / Smithsonian National Air and Space Museum | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-docker-build-secrets | https://commons.wikimedia.org/wiki/File:Container_Ship_on_the_Savannah_River_(33710156935).jpg | Stephen Rahn from Macon, GA, USA | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-workflow-commands-security | https://commons.wikimedia.org/wiki/File:Mkdir_terminal.png | Desshi | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |

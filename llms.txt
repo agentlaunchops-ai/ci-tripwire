@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (35)
+### GitHub Actions (36)
 
+- [GitHub Runner Labels: Safer Self-Hosted CI Routing](https://dsotn.com/articles/github-actions-runner-labels-routing/)
 - [GitHub Deployment Branch Rules: Safer Release Gates](https://dsotn.com/articles/github-actions-deployment-branch-rules/)
 - [GitHub Actions Docker Build Secrets: Safer Container CI](https://dsotn.com/articles/github-actions-docker-build-secrets/)
 - [GitHub Actions Workflow Commands: Secure CI Output](https://dsotn.com/articles/github-actions-workflow-commands-security/)
