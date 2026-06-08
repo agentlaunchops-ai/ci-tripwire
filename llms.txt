@@ -12,7 +12,7 @@
 
 ### GitHub Actions (2)
 
-- [pull_request_target Security: Safer GitHub Actions](https://dsotn.com/articles/pull-request-target-security/)
+- [GitHub pull_request_target Security: Safe PR Workflows](https://dsotn.com/articles/pull-request-target-security/)
 - [GitHub Actions Security: 5 CI Risks to Fix Right Now](https://dsotn.com/articles/github-actions-security-risks/)
 
 ## Auxiliary Resources
