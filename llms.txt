@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (18)
+### GitHub Actions (19)
 
+- [GitHub Actions Fork Approvals: Safer PR CI Workflows](https://dsotn.com/articles/github-actions-fork-workflow-approvals/)
 - [GitHub Actions Artifacts: Retention and Access](https://dsotn.com/articles/github-actions-artifact-retention/)
 - [GitHub Actions Allowlist: Control Third-Party Actions](https://dsotn.com/articles/github-actions-allowed-actions-policy/)
 - [GitHub Actions Script Injection: Safer Shell Steps](https://dsotn.com/articles/github-actions-script-injection/)

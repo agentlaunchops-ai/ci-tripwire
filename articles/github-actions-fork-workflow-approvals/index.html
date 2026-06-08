@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Fork Approvals: Safer PR CI Workflows</title>
+  <meta name="description" content="Use GitHub Actions fork approval settings to review untrusted pull-request workflows, protect tokens, and approve only safe CI runs in public repos.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-fork-workflow-approvals/">
+  <meta property="og:title" content="GitHub Actions Fork Approvals: Safer PR CI Workflows">
+  <meta property="og:description" content="How to review forked pull-request workflow runs before maintainers approve untrusted CI.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-fork-workflow-approvals/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-fork-workflow-approvals.jpg">
+  <meta property="article:published_time" content="2026-06-08T03:00:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T03:00:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="fork pull requests">
+  <meta property="article:tag" content="workflow approvals">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-fork-workflow-approvals.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions Fork Approvals: Safer PR CI Workflows",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T03:00:00-06:00",
+    "dateModified": "2026-06-08T03:00:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions fork approvals", "pull request workflows", "workflow approvals", "fork pull requests"],
+    "wordCount": 1034,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-fork-workflow-approvals/",
+    "articleBody": "GitHub Actions fork approval settings help maintainers review untrusted pull-request workflow runs before running CI.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-fork-workflow-approvals.jpg", "width": 5184, "height": 3456},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Approving workflow runs from forks", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/approve-runs-from-forks?apiVersion=2022-11-28"},
+      {"@type": "CreativeWork", "name": "Managing GitHub Actions settings for a repository", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository?apiVersion=2022-11-28"},
+      {"@type": "CreativeWork", "name": "Events that trigger workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows"},
+      {"@type": "CreativeWork", "name": "REST API endpoints for workflow runs", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2026-03-10#approve-a-workflow-run-for-a-fork-pull-request"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Fork Approvals: Safer PR CI Workflows", "item": "https://dsotn.com/articles/github-actions-fork-workflow-approvals/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-fork-workflow-approvals.jpg" width="5184" height="3456" alt="Security checkpoint agent reviewing passenger identification.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#approval-gate">Approval gate</a>
+        <a href="#settings">Settings</a>
+        <a href="#review">Review checklist</a>
+        <a href="#tokens">Tokens</a>
+        <a href="#automation">Automation</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions Fork Approvals: Safer PR CI Workflows</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">Fork pull requests are useful collaboration paths, but they can also ask your CI to run code from a branch your maintainers do not control.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for fork workflow approvals</h2>
+          <ul>
+            <li>GitHub says workflow runs triggered by contributor pull requests from forks may require approval from a maintainer with write access. <a href="#ref-approve">[1]</a></li>
+            <li>GitHub says approval requirements can be configured at repository, organization, or enterprise level. <a href="#ref-approve">[1]</a></li>
+            <li>GitHub's repository settings include a mode that requires approval for fork pull-request workflows from collaborators without write permission. <a href="#ref-settings">[2]</a></li>
+            <li>GitHub says waiting workflow runs are automatically deleted after more than 30 days. <a href="#ref-approve">[1]</a></li>
+            <li>GitHub Docs state that forked-repository pull requests receive a read-only <code>GITHUB_TOKEN</code>. <a href="#ref-events">[3]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Fork approval is a CI trust decision</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Treat a fork-workflow approval as permission to run untrusted pull-request code through your CI. Review workflow-file changes, token posture, and secrets exposure before clicking approve.
+          </div>
+          <p>GitHub's approval documentation says maintainers with write access can approve workflow runs triggered by a contributor's pull request from a public fork. <a href="#ref-approve">[1]</a></p>
+          <p>That approval is not just queue management. It decides whether the repository's workflow definitions, runners, caches, artifacts, and job permissions should process code that came from outside the trusted branch set.</p>
+        </section>
+
+        <section id="approval-gate">
+          <h2>Approval gates should slow down risky first runs</h2>
+          <p>GitHub states that fork pull-request workflow runs may require manual approval from a maintainer with write access, and that approval requirements can be configured for a repository, organization, or enterprise. <a href="#ref-approve">[1]</a></p>
+          <p>GitHub also says runs awaiting approval for more than 30 days are automatically deleted. <a href="#ref-approve">[1]</a></p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A queued fork run is a review checkpoint, not a nuisance. If nobody can explain why the run is safe, letting it expire is a valid outcome.
+          </div>
+          <p>The practical review question is simple: would this workflow still be acceptable if every checked-out file, test fixture, build script, and package hook came from an untrusted contributor branch?</p>
+        </section>
+
+        <section id="settings">
+          <h2>Repository settings decide who gets the prompt</h2>
+          <p>GitHub's repository settings documentation says anyone can fork a public repository and submit a pull request that proposes changes to the repository's GitHub Actions workflows. <a href="#ref-settings">[2]</a></p>
+          <p>The same settings page documents fork pull-request workflow approval choices, including approval for first-time contributors, first-time contributors who are new to GitHub, and collaborators without write permission. <a href="#ref-settings">[2]</a></p>
+          <p>For public projects with meaningful release automation, the collaborator-without-write-permission setting is easier to reason about than a narrow first-time-only gate, because prior contribution history does not automatically mean the next CI run is safe.</p>
+        </section>
+
+        <section id="review">
+          <h2>Review workflow-file changes before approval</h2>
+          <p>GitHub's approval steps tell maintainers to inspect the pull request's changed files and be especially alert to proposed changes under <code>.github/workflows/</code>. <a href="#ref-approve">[1]</a></p>
+          <p>That warning deserves a concrete checklist. Look for new triggers, broader <code>permissions</code>, new <code>pull_request_target</code> paths, shell steps that interpolate pull-request text, third-party actions that are not pinned, new artifact uploads, and jobs that reach deployment environments.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> A maintainer approves a fork run after reading only the application diff, while the workflow diff quietly changes tokens, scripts, or release-adjacent jobs.
+          </div>
+        </section>
+
+        <section id="tokens">
+          <h2>Read-only fork tokens are not a complete boundary</h2>
+          <p>GitHub Docs say the <code>GITHUB_TOKEN</code> has read-only permissions in pull requests from forked repositories. <a href="#ref-events">[3]</a></p>
+          <p>Read-only token posture reduces one common write path, but it does not make every job harmless. CI can still execute build scripts, run package lifecycle hooks, upload logs and artifacts, consume caches, and exercise networked test paths.</p>
+          <p>If a workflow needs secrets, cloud credentials, write permissions, or deployment authority, keep that work outside untrusted fork execution and behind a trusted event or a separate maintainer-controlled promotion path.</p>
+        </section>
+
+        <section id="automation">
+          <h2>The API can approve a fork run deliberately</h2>
+          <p>GitHub's REST API documentation includes an endpoint to approve a workflow run for a fork pull request from a public fork. <a href="#ref-api">[4]</a></p>
+          <p>That endpoint is useful for internal tooling only when the tool preserves the same review standard as the web UI. An automated approval path should record the pull request, workflow file changes, run identifier, approver authority, and reason for approval.</p>
+          <p>Do not turn API approval into a rubber stamp. If the approval decision is automated, the policy should be narrow enough that a maintainer can audit why one fork run passed and another stayed queued.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast fork-approval audit starts with settings and workflow diffs</h2>
+          <p>First, review repository and organization Actions settings for fork pull-request approval requirements. Then inspect recent fork pull requests that changed <code>.github/workflows/</code>, broadened tokens, added unpinned actions, or introduced jobs that handle artifacts, caches, secrets, or deployments.</p>
+          <p>Next, check whether maintainers have a written approval checklist. The useful checklist is short: workflow diff, token permissions, secret access, runner exposure, cache and artifact handling, third-party actions, shell interpolation, and deployment reach.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so fork approval review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, and artifact-retention audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, primary GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-approve">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/manage-workflow-runs/approve-runs-from-forks?apiVersion=2022-11-28">Approving workflow runs from forks</a>.</li>
+            <li id="ref-settings">GitHub Docs, <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository?apiVersion=2022-11-28">Managing GitHub Actions settings for a repository</a>.</li>
+            <li id="ref-events">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows">Events that trigger workflows</a>.</li>
+            <li id="ref-api">GitHub Docs, <a href="https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2026-03-10#approve-a-workflow-run-for-a-fork-pull-request">REST API endpoints for workflow runs</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
