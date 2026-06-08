@@ -13,6 +13,14 @@
     <lastmod>2026-06-08</lastmod>
   </url>
   <url>
+    <loc>https://dsotn.com/articles/actions-checkout-credentials-security/</loc>
+    <lastmod>2026-06-08</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/actions-checkout-credentials-security.jpg</image:loc>
+      <image:title>Self-service checkout counter inside a public library</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dsotn.com/articles/github-actions-workflow-run-security/</loc>
     <lastmod>2026-06-08</lastmod>
     <image:image>

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>actions/checkout Credentials: Safer GitHub Actions Clones</title>
+  <meta name="description" content="Secure actions/checkout credentials by limiting token persistence, PAT use, fetch depth, submodules, and GITHUB_TOKEN scopes in GitHub Actions CI.">
+  <link rel="canonical" href="https://dsotn.com/articles/actions-checkout-credentials-security/">
+  <meta property="og:title" content="actions/checkout Credentials: Safer GitHub Actions Clones">
+  <meta property="og:description" content="How to keep checkout credentials useful without leaving broad repository access inside CI scripts.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/actions-checkout-credentials-security/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/actions-checkout-credentials-security.jpg">
+  <meta property="article:published_time" content="2026-06-08T04:37:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T04:37:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="actions checkout">
+  <meta property="article:tag" content="GITHUB_TOKEN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/actions-checkout-credentials-security.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "actions/checkout Credentials: Safer GitHub Actions Clones",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T04:37:00-06:00",
+    "dateModified": "2026-06-08T04:37:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["actions/checkout credentials", "GitHub Actions token persistence", "GITHUB_TOKEN permissions", "CI clone security"],
+    "wordCount": 1040,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/actions-checkout-credentials-security/",
+    "articleBody": "actions/checkout is usually the first privileged step in a workflow, so its credentials and clone settings deserve explicit review.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/actions-checkout-credentials-security.jpg", "width": 3000, "height": 4000},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "actions/checkout README", "publisher": "GitHub actions/checkout", "url": "https://github.com/actions/checkout"},
+      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"},
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
+      {"@type": "CreativeWork", "name": "Use GITHUB_TOKEN for authentication in workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "actions/checkout Credentials: Safer GitHub Actions Clones", "item": "https://dsotn.com/articles/actions-checkout-credentials-security/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/actions-checkout-credentials-security.jpg" width="3000" height="4000" alt="Self-service checkout counter inside a public library.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#persistence">Credential persistence</a>
+        <a href="#token-scope">Token scope</a>
+        <a href="#private-repos">Private repositories</a>
+        <a href="#history">Clone history</a>
+        <a href="#submodules">Submodules</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>actions/checkout Credentials: Safer GitHub Actions Clones</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary"><code>actions/checkout</code> is often treated as harmless setup, but its token, SSH, submodule, and fetch settings decide what later steps can read or write.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for actions/checkout credentials</h2>
+          <ul>
+            <li>The <code>actions/checkout</code> README says a single commit is fetched by default, and <code>fetch-depth: 0</code> fetches all history for all branches and tags. <a href="#ref-checkout">[1]</a></li>
+            <li>The README says the auth token is persisted for authenticated git commands and removed during post-job cleanup; <code>persist-credentials: false</code> opts out. <a href="#ref-checkout">[1]</a></li>
+            <li>The README says the default token input is <code>${{ github.token }}</code>. <a href="#ref-checkout">[1]</a></li>
+            <li>GitHub's workflow syntax reference says unspecified <code>GITHUB_TOKEN</code> permissions become <code>none</code> once any permission is specified. <a href="#ref-syntax">[2]</a></li>
+            <li>GitHub's secure-use reference warns that compromised third-party actions can access configured secrets and may use <code>GITHUB_TOKEN</code> to write to the repository. <a href="#ref-secure-use">[3]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Checkout credentials should match the job's real job</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Treat <code>actions/checkout</code> as the step that hands later commands repository access. Keep persisted credentials off for read-only jobs, give the job only <code>contents: read</code> unless it must write, and avoid broad PATs for ordinary clones.
+          </div>
+          <p>The checkout action's README says the default token input is <code>${{ github.token }}</code>, which means checkout normally receives the workflow's built-in repository token. <a href="#ref-checkout">[1]</a></p>
+          <p>That is convenient, but it also means every script after checkout should be reviewed against the token and credential settings that checkout prepared for the workspace.</p>
+        </section>
+
+        <section id="persistence">
+          <h2>Persisted credentials are useful only for later git writes</h2>
+          <p>The checkout README says the auth token is persisted so scripts can run authenticated git commands, and that post-job cleanup removes the token. <a href="#ref-checkout">[1]</a></p>
+          <p>The same README documents <code>persist-credentials: false</code> as the opt-out setting. <a href="#ref-checkout">[1]</a></p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> Test, lint, build, and scan jobs usually need the source tree, not a reusable git credential. Leave credentials unpersisted unless a later step must push, tag, fetch a private dependency, or update repository state.
+          </div>
+        </section>
+
+        <section id="token-scope">
+          <h2>The checkout token should be narrowed at the job level</h2>
+          <p>GitHub's workflow syntax reference says <code>jobs.&lt;job_id&gt;.permissions</code> can modify the default <code>GITHUB_TOKEN</code> permissions for a specific job so the workflow allows only the minimum required access. <a href="#ref-syntax">[2]</a></p>
+          <p>The same reference says that when any permission is specified, unspecified permissions are set to <code>none</code>. <a href="#ref-syntax">[2]</a></p>
+          <p>A checkout-only test job usually starts with <code>permissions: contents: read</code>. A release or documentation update job may need write scopes, but those jobs should be separate from untrusted pull-request work and easier to inspect.</p>
+        </section>
+
+        <section id="private-repos">
+          <h2>Personal access tokens expand the blast radius</h2>
+          <p>The checkout README notes that <code>${{ github.token }}</code> is scoped to the current repository and that checking out a different private repository requires a personal access token. <a href="#ref-checkout">[1]</a></p>
+          <p>That is a real boundary. A PAT can cross repository lines, so it should live only in workflows that need the second private repository, with environment protection or review where the repository makes that possible.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> A general pull-request test workflow carries a broad PAT just because one historical step once fetched a private helper repository.
+          </div>
+        </section>
+
+        <section id="history">
+          <h2>Fetch depth changes what later commands can inspect</h2>
+          <p>The checkout README says only one commit is fetched by default for the triggering ref or SHA, and <code>fetch-depth: 0</code> fetches all history for all branches and tags. <a href="#ref-checkout">[1]</a></p>
+          <p>That default is often safer and faster for ordinary builds. Jobs that compute changelogs, compare merge bases, generate release notes, or inspect tags may need deeper history, but the reason should be visible in the workflow.</p>
+        </section>
+
+        <section id="submodules">
+          <h2>Submodules turn checkout into a dependency fetch</h2>
+          <p>The checkout README documents <code>submodules</code> values of <code>true</code> and <code>recursive</code>, and says SSH URLs are converted to HTTPS when an SSH key is not provided. <a href="#ref-checkout">[1]</a></p>
+          <p>If submodules are enabled, checkout is no longer just reading one repository. Review which repositories are fetched, whether they are pinned to expected commits, and whether the token or SSH key can reach more code than the job needs.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast checkout audit follows the credential path</h2>
+          <p>List every <code>uses: actions/checkout</code> step. For each one, record the token or SSH input, whether credentials persist, the job's <code>permissions</code> block, the fetch depth, submodule mode, and whether later steps run shell commands from pull-request data.</p>
+          <p>GitHub's secure-use reference warns that a compromised third-party action can access repository secrets and may use <code>GITHUB_TOKEN</code> to write to the repository. <a href="#ref-secure-use">[3]</a></p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so checkout review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, and <code>workflow_run</code> audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, primary GitHub documentation plus the official checkout action README, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-checkout">GitHub actions/checkout, <a href="https://github.com/actions/checkout">README</a>.</li>
+            <li id="ref-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">Workflow syntax for GitHub Actions</a>.</li>
+            <li id="ref-secure-use">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
+            <li id="ref-token">GitHub Docs, <a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication">Use GITHUB_TOKEN for authentication in workflows</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
