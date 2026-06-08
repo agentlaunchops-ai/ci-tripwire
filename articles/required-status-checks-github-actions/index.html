@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Required Status Checks: Secure GitHub Actions Merges</title>
+  <meta name="description" content="Use required status checks with GitHub Actions to block risky merges, avoid skipped-check traps, and keep branch protection aligned with CI security.">
+  <link rel="canonical" href="https://dsotn.com/articles/required-status-checks-github-actions/">
+  <meta property="og:title" content="Required Status Checks: Secure GitHub Actions Merges">
+  <meta property="og:description" content="How to make required checks a real merge gate instead of a stale green box.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/required-status-checks-github-actions/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/required-status-checks-github-actions.jpg">
+  <meta property="article:published_time" content="2026-06-08T01:47:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T01:47:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="required status checks">
+  <meta property="article:tag" content="branch protection">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/required-status-checks-github-actions.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Required Status Checks: Secure GitHub Actions Merges",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T01:47:00-06:00",
+    "dateModified": "2026-06-08T01:47:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["required status checks", "GitHub Actions branch protection", "protected branches", "merge queue"],
+    "wordCount": 1092,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/required-status-checks-github-actions/",
+    "articleBody": "Required status checks are useful merge gates only when the checks are current, unambiguous, and backed by branch protection that matches the repository's CI risk.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/required-status-checks-github-actions.jpg", "width": 4032, "height": 3024},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "About protected branches", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches"},
+      {"@type": "CreativeWork", "name": "About status checks", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks"},
+      {"@type": "CreativeWork", "name": "Managing a branch protection rule", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "Required Status Checks: Secure GitHub Actions Merges", "item": "https://dsotn.com/articles/required-status-checks-github-actions/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/required-status-checks-github-actions.jpg" width="4032" height="3024" alt="Traffic light showing a red stop signal.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#merge-gate">Merge gate</a>
+        <a href="#freshness">Freshness</a>
+        <a href="#names">Check names</a>
+        <a href="#admin-bypass">Bypass paths</a>
+        <a href="#coverage">Coverage</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>Required Status Checks: Secure GitHub Actions Merges</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">Required status checks protect a branch only when the required jobs are the jobs that actually carry release, test, and policy authority.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for required status checks</h2>
+          <ul>
+            <li>GitHub says protected branches can block merges until the selected required status checks are successful. <a href="#ref-protected">[1]</a></li>
+            <li>GitHub says status checks can be checks or commit statuses, and strict required checks force the head branch to incorporate the current base before merge. <a href="#ref-protected">[1]</a></li>
+            <li>GitHub says skipped checks report success, while checks skipped because of path filtering or branch filtering can leave a pull request blocked in a pending state. <a href="#ref-status">[2]</a></li>
+            <li>GitHub lets maintainers choose required checks from recently completed checks and can restrict a required check to a specific GitHub App source. <a href="#ref-manage">[3]</a></li>
+            <li>GitHub says administrators and custom roles with bypass permission can bypass branch protections unless the rule includes administrators. <a href="#ref-protected">[1]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Required checks are merge gates, not complete CI security</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Require the exact Actions jobs that decide whether code can merge, keep them fresh against the base branch, remove ambiguous duplicate check names, and audit who can bypass the rule.
+          </div>
+          <p>GitHub describes branch protection rules as a way to enforce requirements before collaborators can push or merge into a protected branch. One of those requirements is passing status checks before merge. <a href="#ref-protected">[1]</a></p>
+          <p>That makes required checks a useful control for tests, policy gates, dependency review, code scanning, and release preflight jobs. It does not make every workflow safe. A required green check can still come from a broadly privileged workflow, an obsolete job name, or a job that never ran on the risky files.</p>
+        </section>
+
+        <section id="merge-gate">
+          <h2>The protected branch should require the jobs that matter</h2>
+          <p>GitHub says required status checks can be either checks or commit statuses, and protected-branch merges wait on the required checks before collaborators can merge. <a href="#ref-protected">[1]</a> That requirement is only as strong as the selected checks.</p>
+          <p>For GitHub Actions, require the jobs whose failure should stop a merge: test suites, build verification, dependency review, code scanning, workflow security checks, and release-policy checks. Leave optional observability, benchmark, or notification jobs outside the required set unless their failure is truly merge-blocking.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A pull request cannot merge until the same policy jobs a maintainer would enforce manually have passed under branch protection.
+          </div>
+        </section>
+
+        <section id="freshness">
+          <h2>Stale green checks should not approve changed merge bases</h2>
+          <p>GitHub documents a strict required-check mode where the head branch has to include the latest base-branch changes before merge is allowed. <a href="#ref-protected">[1]</a></p>
+          <p>Use that setting when the required check result depends on integration with the latest target branch. It is especially important for dependency locks, generated code, migration order, deployment manifests, and release branches where the base can change underneath an approved pull request.</p>
+        </section>
+
+        <section id="names">
+          <h2>Duplicate check names make enforcement harder to read</h2>
+          <p>GitHub recommends making job names unique across workflows because using the same job name in multiple workflows can cause ambiguous status check results and block pull requests. <a href="#ref-protected">[1]</a></p>
+          <p>Check names become part of the branch-protection contract. Rename duplicate jobs, remove retired checks from the required list, and make sure matrix jobs produce names that maintainers can map back to the workflow file and risk decision.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> Two workflows publish a check called <code>build</code>, only one is required, and nobody can tell which workflow branch protection is enforcing during review.
+          </div>
+        </section>
+
+        <section id="admin-bypass">
+          <h2>Bypass rules decide whether the gate is real in an emergency</h2>
+          <p>GitHub says branch protection rules do not apply to people with admin permissions or custom roles with bypass permission by default, but repository owners can choose to include administrators in a protection rule. <a href="#ref-protected">[1]</a></p>
+          <p>Review that bypass posture deliberately. Production repositories often need an emergency path, but an unlogged or broadly available bypass turns required checks into advice. Pair bypass access with narrow membership, review expectations, and a reason trail outside the workflow log.</p>
+        </section>
+
+        <section id="coverage">
+          <h2>Skipped and pending checks need separate review</h2>
+          <p>GitHub says skipped checks report a successful status and do not prevent a pull request from merging, but checks skipped because of path filtering, branch filtering, or a commit-message skip can remain pending and block merging. <a href="#ref-status">[2]</a></p>
+          <p>That distinction matters for security gates. A path-filtered test may be fine; a path-filtered workflow-security job may miss a risky workflow edit if the filter excludes <code>.github/workflows/</code>. Review each required workflow trigger and path filter beside the files it is supposed to protect.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast required-check audit starts in branch settings</h2>
+          <p>Open the branch protection rule and list every required check. GitHub's management guide says required checks can be selected from recently completed checks, and a selected check can be associated with a specific app to require that app as the expected source of future status updates. <a href="#ref-manage">[3]</a></p>
+          <p>Then open the workflow files behind those checks. Confirm unique job names, narrow workflow permissions, pinned third-party actions, safe trigger choices, bounded runtimes, and coverage for workflow files, dependency manifests, release manifests, and deployment code.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so required status checks sit beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, and shell-context checks.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 3 entries, primary GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-protected">GitHub Docs, <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches">About protected branches</a>.</li>
+            <li id="ref-status">GitHub Docs, <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks">About status checks</a>.</li>
+            <li id="ref-manage">GitHub Docs, <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule">Managing a branch protection rule</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

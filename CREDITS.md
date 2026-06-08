@@ -16,3 +16,4 @@
 | github-actions-cache-security | https://commons.wikimedia.org/wiki/File:Industrial_shelves.jpg | FIONASUN | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | dependency-review-action-github-actions | https://unsplash.com/photos/checking-items-off-a-list-on-a-notepad-VKnmszzzTig | Jakub Zerdzicki | Unsplash License | 2026-06-08 |
 | github-actions-environment-protection-rules | https://commons.wikimedia.org/wiki/File:Turnstile_for_disabled_people_and_standard_one.jpg | Tangopaso | Public domain | 2026-06-08 |
+| required-status-checks-github-actions | https://commons.wikimedia.org/wiki/File:Traffic_light.jpg | Raizkgh | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
