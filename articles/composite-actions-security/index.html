@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Composite Actions Security: Safer GitHub Actions Reuse</title>
+  <meta name="description" content="Review composite GitHub Actions before reusable step bundles inherit runner shell access, inputs, local scripts, third-party actions, and workflow trust.">
+  <link rel="canonical" href="https://dsotn.com/articles/composite-actions-security/">
+  <meta property="og:title" content="Composite Actions Security: Safer GitHub Actions Reuse">
+  <meta property="og:description" content="How to review composite action inputs, scripts, nested actions, and shell execution before reuse.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/composite-actions-security/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/composite-actions-security.jpg">
+  <meta property="article:published_time" content="2026-06-08T13:23:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T13:23:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="composite actions">
+  <meta property="article:tag" content="custom actions">
+  <meta property="article:tag" content="workflow security">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/composite-actions-security.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Composite Actions Security: Safer GitHub Actions Reuse",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T13:23:00-06:00",
+    "dateModified": "2026-06-08T13:23:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["composite actions security", "GitHub Actions custom actions", "action.yml review", "workflow reuse", "CI security"],
+    "wordCount": 1001,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/composite-actions-security/",
+    "articleBody": "Composite actions package multiple workflow steps behind one uses line, so reviewers need to inspect action metadata, shell commands, inputs, and nested action references before reuse.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/composite-actions-security.jpg", "width": 4448, "height": 1088},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Creating a composite action", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/tutorials/create-actions/create-a-composite-action"},
+      {"@type": "CreativeWork", "name": "Metadata syntax reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax"},
+      {"@type": "CreativeWork", "name": "Contexts reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts"},
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "Composite Actions Security: Safer GitHub Actions Reuse", "item": "https://dsotn.com/articles/composite-actions-security/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/composite-actions-security.jpg" width="4448" height="1088" alt="Rows of small electronic components arranged on a work surface.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#metadata">Action metadata</a>
+        <a href="#inputs">Inputs and contexts</a>
+        <a href="#nested-actions">Nested actions</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>Composite Actions Security: Safer GitHub Actions Reuse</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">Composite actions make repeated workflow steps easier to share, but the security review still has to follow every shell command, input, nested action, and local script inside the bundle.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for composite action security</h2>
+          <ul>
+            <li>GitHub Docs says composite actions collect a series of workflow job steps into a single action that can run as one job step in multiple workflows. <a href="#ref-composite">[1]</a></li>
+            <li>GitHub Docs says a composite action metadata file uses <code>runs.using: "composite"</code> and required <code>runs.steps</code>. <a href="#ref-metadata">[2]</a></li>
+            <li>GitHub Docs says composite action steps can be <code>run</code> steps or <code>uses</code> steps, and <code>shell</code> is required when <code>run</code> is set. <a href="#ref-metadata">[2]</a></li>
+            <li>GitHub Docs warns that workflows and actions should consider whether code might execute untrusted input from attackers. <a href="#ref-contexts">[3]</a></li>
+            <li>GitHub Docs recommends pinning third-party action references, and says a released action commit SHA is safest for stability and security. <a href="#ref-metadata">[2]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Composite actions hide several steps behind one line</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Review a composite action like a small workflow: inspect <code>action.yml</code>, every <code>run</code> command, every nested <code>uses</code> dependency, and every path where caller input reaches a shell.
+          </div>
+          <p>GitHub Docs says composite actions collect a series of workflow job steps into a single action that can then run as a single job step in multiple workflows. <a href="#ref-composite">[1]</a></p>
+          <p>That reuse is useful, but it also concentrates review. A workflow may show one <code>uses:</code> line while the action metadata starts scripts, changes environment variables, invokes other actions, and maps outputs.</p>
+        </section>
+
+        <section id="metadata">
+          <h2>The action.yml file is the trust boundary</h2>
+          <p>GitHub Docs says custom actions require a metadata file that uses YAML syntax. <a href="#ref-metadata">[2]</a></p>
+          <p>For composite actions, GitHub Docs says <code>runs.using</code> must be set to <code>'composite'</code>, and <code>runs.steps</code> is required. <a href="#ref-metadata">[2]</a></p>
+          <p>GitHub Docs says those planned steps can be either <code>run</code> steps or <code>uses</code> steps. <a href="#ref-metadata">[2]</a></p>
+          <p>Start review at the metadata file, not at the workflow that calls it. The caller decides when and where the action runs; the composite action decides which commands and nested actions execute after that decision.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A composite action deserves the same review attention as the workflow snippets it replaced.
+          </div>
+        </section>
+
+        <section id="inputs">
+          <h2>Inputs and contexts should not jump straight into shell</h2>
+          <p>GitHub Docs says the <code>inputs</code> context contains input properties passed to an action, to a reusable workflow, or to a manually triggered workflow. <a href="#ref-contexts">[3]</a></p>
+          <p>GitHub's composite action tutorial defines a <code>who-to-greet</code> input, then maps it through an environment variable before a Bash command uses it. <a href="#ref-composite">[1]</a></p>
+          <p>GitHub Docs warns that when creating workflows and actions, you should consider whether code might execute untrusted input from possible attackers. <a href="#ref-contexts">[3]</a></p>
+          <p>GitHub's secure-use reference says the preferred approach for inline scripts handling untrusted input is to set expression values to an intermediate environment variable. <a href="#ref-secure">[4]</a></p>
+          <p>That advice applies inside composite actions too. If the composite action turns issue titles, pull-request metadata, dispatch inputs, or user-provided action inputs into a command line, reviewers should check quoting, shell choice, and whether the action can avoid shell interpolation entirely.</p>
+        </section>
+
+        <section id="nested-actions">
+          <h2>Nested uses lines carry dependency risk</h2>
+          <p>GitHub Docs says <code>runs.steps[*].uses</code> selects an action to run as part of a step and can reference an action in the same repository, a public repository, or a published Docker container image. <a href="#ref-metadata">[2]</a></p>
+          <p>GitHub Docs strongly recommends including the version of the action by specifying a Git ref, SHA, or Docker tag, and says not specifying a version can break workflows or cause unexpected behavior when the action owner publishes an update. <a href="#ref-metadata">[2]</a></p>
+          <p>The same metadata reference says using the commit SHA of a released action version is safest for stability and security. <a href="#ref-metadata">[2]</a></p>
+          <p>Composite action callers may not see those nested dependencies in the workflow file. Reviewers should open the action metadata and treat every internal <code>uses:</code> line as part of the consuming workflow's supply chain.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid verdict:</strong> Do not approve a composite action because the caller workflow looks short; inspect the action's internal dependency and shell surface first.
+          </div>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit follows metadata, inputs, and dependencies</h2>
+          <p>First, locate the composite action directory and open its metadata file. GitHub's tutorial uses <code>action.yml</code> for the composite action metadata file, and the metadata reference defines the composite <code>runs</code> syntax. <a href="#ref-composite">[1]</a> <a href="#ref-metadata">[2]</a></p>
+          <p>Second, review every <code>run</code> step. GitHub Docs says <code>runs.steps[*].shell</code> is required when <code>run</code> is set, so shell choice is explicit review material. <a href="#ref-metadata">[2]</a></p>
+          <p>Third, trace every input and context expression into commands, environment variables, outputs, and files. GitHub warns that some contexts should be treated as untrusted input because attackers could insert malicious content. <a href="#ref-contexts">[3]</a></p>
+          <p>Fourth, review every nested <code>uses:</code> step for pinning and ownership. GitHub Docs says third-party action references should include a version, and the released commit SHA is safest for stability and security. <a href="#ref-metadata">[2]</a></p>
+          <p>Finally, combine metadata review with workflow linting. Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so composite-action review sits beside pinned-action, token-permission, timeout, dispatch-input, pull-request-target, OIDC, reusable-workflow, self-hosted runner, runner-group, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, <code>workflow_run</code>, checkout-credential, npm trusted-publishing, SARIF upload, log-secret, ruleset, secret-scanning, trigger-filter, matrix, service-container, workflow-command, Docker build-secret, deployment branch-rule, runner-label, repository-dispatch, job-output, GitHub App token, scheduled-workflow, <code>pull_request</code>, and CODEOWNERS audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-composite">GitHub Docs, <a href="https://docs.github.com/en/actions/tutorials/create-actions/create-a-composite-action">Creating a composite action</a>.</li>
+            <li id="ref-metadata">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax">Metadata syntax reference</a>.</li>
+            <li id="ref-contexts">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/contexts">Contexts reference</a>.</li>
+            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
