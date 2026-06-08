@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (16)
+### GitHub Actions (17)
 
+- [GitHub Actions Allowlist: Control Third-Party Actions](https://dsotn.com/articles/github-actions-allowed-actions-policy/)
 - [GitHub Actions Script Injection: Safer Shell Steps](https://dsotn.com/articles/github-actions-script-injection/)
 - [Required Status Checks: Secure GitHub Actions Merges](https://dsotn.com/articles/required-status-checks-github-actions/)
 - [GitHub Actions Environments: Safer Deployment Gates](https://dsotn.com/articles/github-actions-environment-protection-rules/)

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Allowlist: Control Third-Party Actions</title>
+  <meta name="description" content="Use GitHub Actions allowed-actions policy to restrict third-party actions, require full SHA pins, and keep reusable workflow access reviewable in CI.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-allowed-actions-policy/">
+  <meta property="og:title" content="GitHub Actions Allowlist: Control Third-Party Actions">
+  <meta property="og:description" content="How to make GitHub Actions allowlists a practical control for third-party actions and reusable workflows.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-allowed-actions-policy/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-allowed-actions-policy.jpg">
+  <meta property="article:published_time" content="2026-06-08T02:29:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T02:29:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="allowed actions">
+  <meta property="article:tag" content="third-party actions">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-allowed-actions-policy.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions Allowlist: Control Third-Party Actions",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T02:29:00-06:00",
+    "dateModified": "2026-06-08T02:29:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions allowed actions", "third-party actions", "reusable workflows", "SHA pinning"],
+    "wordCount": 1006,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-allowed-actions-policy/",
+    "articleBody": "GitHub Actions allowed-actions policy limits which actions and reusable workflows may run in a repository or organization.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-allowed-actions-policy.jpg", "width": 4752, "height": 3168},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Managing GitHub Actions settings for a repository", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository"},
+      {"@type": "CreativeWork", "name": "Disabling or limiting GitHub Actions for your organization", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization"},
+      {"@type": "CreativeWork", "name": "REST API endpoints for GitHub Actions permissions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/rest/actions/permissions?apiVersion=2026-03-10"},
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Allowlist: Control Third-Party Actions", "item": "https://dsotn.com/articles/github-actions-allowed-actions-policy/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-allowed-actions-policy.jpg" width="4752" height="3168" alt="Circuit board inside a firewall router.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#policy">Policy</a>
+        <a href="#scope">Scope</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#sha">SHA pins</a>
+        <a href="#api">API audit</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions Allowlist: Control Third-Party Actions</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">An Actions allowlist is useful when it turns third-party automation from a default permission into an explicit dependency decision.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions allowed-actions policy</h2>
+          <ul>
+            <li>Repository settings can limit GitHub Actions to all actions, local-only actions, or selected actions and reusable workflows. <a href="#ref-repo">[1]</a></li>
+            <li>GitHub says selected-action entries can target an action by owner, repository, tag, or commit SHA, and can use wildcard patterns. <a href="#ref-repo">[1]</a></li>
+            <li>Organization owners can enable, disable, and limit GitHub Actions for an organization, including which repositories may run Actions. <a href="#ref-org">[2]</a></li>
+            <li>The Actions permissions REST API exposes repository policy fields including <code>allowed_actions</code> and <code>sha_pinning_required</code>. <a href="#ref-api">[3]</a></li>
+            <li>GitHub's secure-use reference recommends pinning third-party actions to a full-length commit SHA when workflows depend on external actions. <a href="#ref-secure">[4]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Allowed-actions policy makes external automation reviewable</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Start with selected actions, keep local and trusted internal workflows easy to use, and make every outside action or reusable workflow earn a place on the allowlist.
+          </div>
+          <p>GitHub lets repository administrators manage which actions and reusable workflows can run in a repository. The documented options include allowing all actions, allowing only local actions and reusable workflows, or allowing selected actions and reusable workflows. <a href="#ref-repo">[1]</a></p>
+          <p>That setting is a supply-chain control because a workflow dependency can execute code during CI. The useful posture is not "block everything forever"; it is "new automation needs a review path before it runs with repository context, tokens, caches, artifacts, or deployment credentials."</p>
+        </section>
+
+        <section id="policy">
+          <h2>Selected actions create an explicit dependency boundary</h2>
+          <p>When selected actions are used at the repository level, GitHub documents separate choices for GitHub-created actions, Marketplace actions by verified creators, and specified actions or reusable workflows. <a href="#ref-repo">[1]</a></p>
+          <p>This helps reviewers separate three cases: first-party actions such as common GitHub-owned workflow building blocks, trusted organization-owned workflows, and outside dependencies that need owner, version, and permission review.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A repository can still run approved automation while unknown third-party actions fail policy instead of quietly becoming part of CI.
+          </div>
+        </section>
+
+        <section id="scope">
+          <h2>Organization policy prevents repository drift</h2>
+          <p>GitHub documents organization-level controls for enabling, disabling, and limiting GitHub Actions, including policies that restrict which repositories can use Actions. <a href="#ref-org">[2]</a></p>
+          <p>That matters when repository administrators make local changes under deadline pressure. If the organization owns the baseline, teams can grant exceptions through a deliberate process instead of discovering later that one repository allowed all actions while another used selected actions.</p>
+          <p>GitHub also notes that workflow approval policies are intended to restrict users who can execute workflows that could cause unexpected resource and compute consumption, and that self-hosted runners add risk if user-controlled workflow code is allowed to execute. <a href="#ref-org">[2]</a></p>
+        </section>
+
+        <section id="patterns">
+          <h2>Allow patterns should be narrow enough to explain</h2>
+          <p>GitHub says specified actions cannot exceed 1000 entries, and it documents the syntax for targeting an action by <code>OWNER/REPOSITORY@TAG-OR-SHA</code>. It also documents wildcard matching and a <code>!</code> prefix for blocking patterns. <a href="#ref-repo">[1]</a></p>
+          <p>Use patterns as policy language, not as a way to recreate "allow all" with extra punctuation. A short list of named repositories and pinned versions is easier to review than broad owner wildcards that include tools nobody has evaluated.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> A selected-actions policy allows a broad wildcard for a vendor namespace without recording which actions, versions, and permissions the workflows actually use.
+          </div>
+        </section>
+
+        <section id="sha">
+          <h2>Full SHA pinning narrows version-change risk</h2>
+          <p>GitHub's repository settings documentation says the "Require actions to be pinned to a full-length commit SHA" setting requires all actions, including organization-owned and GitHub-authored actions, to be pinned to a full-length commit SHA; reusable workflows can still be referenced by tag. <a href="#ref-repo">[1]</a></p>
+          <p>The secure-use reference also recommends pinning third-party actions to a full-length commit SHA because it is the only way to use an action as an immutable release. <a href="#ref-secure">[4]</a></p>
+          <p>Pinning does not prove an action is safe. It makes the reviewed code identity stable. Pair it with an allowlist, dependency review, permission review, and a routine update process so old SHAs do not become abandoned trust anchors.</p>
+        </section>
+
+        <section id="api">
+          <h2>The REST API makes policy drift auditable</h2>
+          <p>GitHub's Actions permissions REST API documents repository policy fields for whether Actions is enabled, whether allowed actions are <code>all</code>, <code>local_only</code>, or <code>selected</code>, and whether SHA pinning is required. <a href="#ref-api">[3]</a></p>
+          <p>The same REST documentation includes selected-action endpoints where policy can represent whether GitHub-owned actions are allowed, whether verified Marketplace actions are allowed, and which action patterns are permitted. <a href="#ref-api">[3]</a></p>
+          <p>Those endpoints are useful for periodic checks across many repositories. A policy review can flag repositories that reverted to all actions, selected-action lists that grew too broad, or repos where SHA pinning is not enabled.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast allowlist audit starts with every uses line</h2>
+          <p>Search workflow files for <code>uses:</code>, then sort each dependency into local action, reusable workflow, GitHub-owned action, verified Marketplace action, and other third-party action. For each outside dependency, record the business purpose, repository owner, pinning style, token permissions, and whether the action touches secrets or deployment jobs.</p>
+          <p>Next, compare that inventory with repository and organization policy. Selected actions should match actual workflow needs, broad wildcards should have an owner, and full SHA pins should be expected for third-party actions where the secure-use recommendation applies.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so allowlist review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, required-check, and script-injection audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, primary GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-repo">GitHub Docs, <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository">Managing GitHub Actions settings for a repository</a>.</li>
+            <li id="ref-org">GitHub Docs, <a href="https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization">Disabling or limiting GitHub Actions for your organization</a>.</li>
+            <li id="ref-api">GitHub Docs, <a href="https://docs.github.com/en/rest/actions/permissions?apiVersion=2026-03-10">REST API endpoints for GitHub Actions permissions</a>.</li>
+            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

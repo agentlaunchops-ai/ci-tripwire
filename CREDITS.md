@@ -18,3 +18,4 @@
 | github-actions-environment-protection-rules | https://commons.wikimedia.org/wiki/File:Turnstile_for_disabled_people_and_standard_one.jpg | Tangopaso | Public domain | 2026-06-08 |
 | required-status-checks-github-actions | https://commons.wikimedia.org/wiki/File:Traffic_light.jpg | Raizkgh | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-script-injection | https://commons.wikimedia.org/wiki/File:Code_on_computer_monitor_(Unsplash).jpg | Markus Spiske | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
+| github-actions-allowed-actions-policy | https://commons.wikimedia.org/wiki/File:3Com_OfficeConnect_ADSL_Wireless_11g_Firewall_Router_2012-10-28-0868.jpg | Slick | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
