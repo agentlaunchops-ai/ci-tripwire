@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (4)
+### GitHub Actions (5)
 
+- [workflow_dispatch Inputs: Safer Manual GitHub Actions](https://dsotn.com/articles/workflow-dispatch-input-safety/)
 - [Pin GitHub Actions to SHAs: Secure CI/CD Pipelines](https://dsotn.com/articles/pin-github-actions-sha/)
 - [GITHUB_TOKEN Permissions: Safer GitHub Actions CI/CD](https://dsotn.com/articles/github-token-permissions/)
 - [GitHub pull_request_target Security: Safe PR Workflows](https://dsotn.com/articles/pull-request-target-security/)

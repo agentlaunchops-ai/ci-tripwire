@@ -13,6 +13,14 @@
     <lastmod>2026-06-07</lastmod>
   </url>
   <url>
+    <loc>https://dsotn.com/articles/workflow-dispatch-input-safety/</loc>
+    <lastmod>2026-06-07</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/workflow-dispatch-input-safety.jpg</image:loc>
+      <image:title>Industrial control panel with emergency stop button</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://dsotn.com/articles/pin-github-actions-sha/</loc>
     <lastmod>2026-06-07</lastmod>
     <image:image>

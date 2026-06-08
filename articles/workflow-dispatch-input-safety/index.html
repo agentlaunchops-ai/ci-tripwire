@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>workflow_dispatch Inputs: Safer Manual GitHub Actions</title>
+  <meta name="description" content="Secure workflow_dispatch inputs in GitHub Actions with typed choices, environment approvals, safe shell handling, and narrow deploy permissions.">
+  <link rel="canonical" href="https://dsotn.com/articles/workflow-dispatch-input-safety/">
+  <meta property="og:title" content="workflow_dispatch Inputs: Safer Manual GitHub Actions">
+  <meta property="og:description" content="How to make manually triggered GitHub Actions safer before they run deploy or release jobs.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/workflow-dispatch-input-safety/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/workflow-dispatch-input-safety.jpg">
+  <meta property="article:published_time" content="2026-06-07T22:05:00-06:00">
+  <meta property="article:modified_time" content="2026-06-07T22:05:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="workflow_dispatch">
+  <meta property="article:tag" content="manual deploys">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/workflow-dispatch-input-safety.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "workflow_dispatch Inputs: Safer Manual GitHub Actions",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-07T22:05:00-06:00",
+    "dateModified": "2026-06-07T22:05:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["workflow_dispatch security", "GitHub Actions inputs", "manual deploys", "script injection"],
+    "wordCount": 970,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/workflow-dispatch-input-safety/",
+    "articleBody": "Manual GitHub Actions are production controls when they choose deploy targets, release modes, or rollback behavior.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/workflow-dispatch-input-safety.jpg", "width": 2400, "height": 3783},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onworkflow_dispatchinputs"},
+      {"@type": "CreativeWork", "name": "Inputs context", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#inputs-context"},
+      {"@type": "CreativeWork", "name": "Script injections", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/security/script-injections"},
+      {"@type": "CreativeWork", "name": "Using an intermediate environment variable", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable"},
+      {"@type": "CreativeWork", "name": "Using environments for deployment", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "workflow_dispatch Inputs: Safer Manual GitHub Actions", "item": "https://dsotn.com/articles/workflow-dispatch-input-safety/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/workflow-dispatch-input-safety.jpg" width="2400" height="3783" alt="Industrial control panel with switches and an emergency stop button, used as a visual metaphor for manual workflow controls.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#manual-controls">Manual controls</a>
+        <a href="#input-shape">Input shape</a>
+        <a href="#shell-boundary">Shell boundary</a>
+        <a href="#environment-gate">Environment gate</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>workflow_dispatch Inputs: Safer Manual GitHub Actions</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-07 · 7 min read</p>
+        <p id="editorial-summary">A manual workflow is not automatically safer because a human clicks the run button. Treat `workflow_dispatch` inputs as a small control surface that can still select targets, modes, and shell values.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for workflow_dispatch input safety</h2>
+          <ul>
+            <li>GitHub documents `workflow_dispatch` as a manual trigger that can define inputs passed to the workflow, and it only receives events when the workflow file is on the default branch. <a href="#ref-workflow-syntax">[1]</a></li>
+            <li>`workflow_dispatch` inputs support `boolean`, `choice`, `number`, `environment`, and `string` types; GitHub also documents a 25-property limit and a 65,535-character input payload limit. <a href="#ref-workflow-syntax">[1]</a></li>
+            <li>The `inputs` context is available to jobs and steps in manually triggered workflows, and GitHub says its values can be strings, numbers, booleans, or choices. <a href="#ref-inputs-context">[2]</a></li>
+            <li>GitHub warns that direct expression expansion inside shell scripts can create script-injection risk, and its hardening guide recommends routing untrusted values through intermediate environment variables. <a href="#ref-script-injections">[3]</a> <a href="#ref-intermediate-env">[4]</a></li>
+            <li>Environment protection rules can require reviewers before a job proceeds, and environment secrets are only available after configured rules pass. <a href="#ref-environments">[5]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Manual workflow inputs should be constrained first</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Use `choice`, `boolean`, and `environment` inputs where possible, keep free-form strings away from inline shell expansion, and put production deploys behind environment protection.
+          </div>
+          <p>Manual runs are common for releases, hotfix deploys, database tasks, and rollback jobs. That makes the input form part of the release control plane. GitHub's syntax reference says `workflow_dispatch` can define inputs passed to a workflow, and that those events only arrive when the workflow file is on the default branch. <a href="#ref-workflow-syntax">[1]</a></p>
+          <p>The security goal is not to remove manual workflows. The goal is to make each manual decision narrow, typed, reviewable, and hard to accidentally route into a privileged shell command.</p>
+        </section>
+
+        <section id="manual-controls">
+          <h2>A run button can still launch a privileged workflow</h2>
+          <p>A manually triggered workflow can publish a package, deploy to an environment, write to the repository, or reach cloud credentials if the job is configured that way. The click is only the trigger. The permissions, secrets, environment, and shell steps still decide the blast radius.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Control surface:</strong> Review `workflow_dispatch` inputs beside `permissions`, `environment`, secret use, and every `run:` block.
+          </div>
+          <p>GitHub's inputs context reference describes the `inputs` object as available in reusable workflows and in workflows triggered by `workflow_dispatch`, and says it can be accessed from any job or step. <a href="#ref-inputs-context">[2]</a> That is useful, but it also means a single input can influence conditions, commands, action arguments, deployment targets, and job names.</p>
+        </section>
+
+        <section id="input-shape">
+          <h2>Typed inputs reduce free-form release choices</h2>
+          <p>GitHub documents five `workflow_dispatch` input types: `boolean`, `choice`, `number`, `environment`, and `string`. <a href="#ref-workflow-syntax">[1]</a> Prefer finite choices for deploy targets and release modes, booleans for toggles, and environment inputs where the workflow should connect a selection to GitHub environment controls.</p>
+          <ul class="risk-list">
+            <li><strong>Good fit for `choice`:</strong> `staging`, `canary`, or `production` target names with a fixed option list.</li>
+            <li><strong>Good fit for `boolean`:</strong> a dry-run toggle that gates publish or deploy steps.</li>
+            <li><strong>Good fit for `environment`:</strong> a manual deploy that should bind to environment protection and environment-scoped secrets.</li>
+            <li><strong>Use `string` carefully:</strong> branch names, image tags, ticket IDs, and migration names need validation before they reach commands.</li>
+          </ul>
+          <p>The syntax reference also documents operational limits: a maximum of 25 top-level input properties and a maximum input payload of 65,535 characters. <a href="#ref-workflow-syntax">[1]</a> Those limits are not validation rules. They only bound the shape of the payload GitHub accepts.</p>
+        </section>
+
+        <section id="shell-boundary">
+          <h2>Inline shell expansion is the risky input boundary</h2>
+          <p>GitHub's script-injection documentation explains that workflow scripts can become vulnerable when untrusted values are evaluated inside generated shell code. <a href="#ref-script-injections">[3]</a> Manual inputs should be treated with the same care as issue titles, branch names, and pull-request metadata when they are interpolated into `run:` steps.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this pattern:</strong> `run: deploy --target "${{ inputs.deploy_target }}"` gives expression expansion a direct path into shell text.
+          </div>
+          <p>GitHub's hardening guide recommends using an intermediate environment variable for untrusted input in inline scripts. <a href="#ref-intermediate-env">[4]</a> The safer pattern is to assign the expression under `env:`, then reference the native shell variable inside the script. That keeps the workflow expression engine from splicing the input directly into the script body.</p>
+        </section>
+
+        <section id="environment-gate">
+          <h2>Production choices need environment gates</h2>
+          <p>For deploy workflows, a typed input should not be the only guard. GitHub documents environment protection rules with required reviewers, including an option to prevent users from approving workflow runs they triggered. <a href="#ref-environments">[5]</a></p>
+          <p>GitHub also says jobs that use an environment can access environment secrets only after configured rules, such as required reviewers, pass. <a href="#ref-environments">[5]</a> That makes the environment boundary a stronger place for production credentials than a broad repository secret used by every manual run.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit starts with every manual trigger</h2>
+          <p>Search `.github/workflows` for `workflow_dispatch`, then review each input name, type, default, and every use of `inputs.` or `github.event.inputs`. Check whether free-form strings reach `run:` blocks, whether deploy targets use finite choices, whether production jobs use environment protection, and whether the job has narrower permissions than the repository default. <a href="#ref-workflow-syntax">[1]</a> <a href="#ref-inputs-context">[2]</a> <a href="#ref-environments">[5]</a></p>
+          <p>For a local review queue, run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> and inspect manual-trigger findings beside token-permission, pinned-action, timeout, and shell-context findings.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, primary platform documentation, last reviewed 2026-06-07.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-workflow-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onworkflow_dispatchinputs">Workflow syntax for GitHub Actions: `workflow_dispatch` inputs</a>.</li>
+            <li id="ref-inputs-context">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#inputs-context">Contexts reference: `inputs` context</a>.</li>
+            <li id="ref-script-injections">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/security/script-injections">Script injections</a>.</li>
+            <li id="ref-intermediate-env">GitHub Docs, <a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable">Security hardening for GitHub Actions: using an intermediate environment variable</a>.</li>
+            <li id="ref-environments">GitHub Docs, <a href="https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment">Using environments for deployment</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
