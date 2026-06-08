@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (6)
+### GitHub Actions (7)
 
+- [GitHub Actions Secrets: Safer Deployment Workflows](https://dsotn.com/articles/github-actions-secrets-deployment-workflows/)
 - [GitHub Actions Timeouts: Safer CI/CD Runtime Limits](https://dsotn.com/articles/github-actions-timeout-minutes/)
 - [workflow_dispatch Inputs: Safer Manual GitHub Actions](https://dsotn.com/articles/workflow-dispatch-input-safety/)
 - [Pin GitHub Actions to SHAs: Secure CI/CD Pipelines](https://dsotn.com/articles/pin-github-actions-sha/)

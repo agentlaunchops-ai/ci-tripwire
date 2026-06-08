@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Secrets: Safer Deployment Workflows</title>
+  <meta name="description" content="Protect GitHub Actions deployment secrets with environment scoping, fork limits, OIDC, and explicit token permissions before release jobs run.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-secrets-deployment-workflows/">
+  <meta property="og:title" content="GitHub Actions Secrets: Safer Deployment Workflows">
+  <meta property="og:description" content="How to scope deployment secrets so release jobs expose credentials only where the workflow actually needs them.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-secrets-deployment-workflows/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-secrets-deployment-workflows.jpg">
+  <meta property="article:published_time" content="2026-06-07T23:20:00-06:00">
+  <meta property="article:modified_time" content="2026-06-07T23:20:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="GitHub Actions secrets">
+  <meta property="article:tag" content="deployment security">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-secrets-deployment-workflows.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions Secrets: Safer Deployment Workflows",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-07T23:20:00-06:00",
+    "dateModified": "2026-06-07T23:20:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions secrets", "deployment secrets", "environment secrets", "OIDC deployments"],
+    "wordCount": 1013,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-secrets-deployment-workflows/",
+    "articleBody": "Deployment secrets should be scoped to the narrowest job, environment, and identity boundary that still lets a release complete.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-secrets-deployment-workflows.jpg", "width": 2448, "height": 3264},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Secrets", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/security/secrets"},
+      {"@type": "CreativeWork", "name": "Events that trigger workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows"},
+      {"@type": "CreativeWork", "name": "Deployments and environments", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments"},
+      {"@type": "CreativeWork", "name": "OpenID Connect", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/security/openid-connect"},
+      {"@type": "CreativeWork", "name": "Use GITHUB_TOKEN for authentication in workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Secrets: Safer Deployment Workflows", "item": "https://dsotn.com/articles/github-actions-secrets-deployment-workflows/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-secrets-deployment-workflows.jpg" width="2448" height="3264" alt="Close-up photograph of a combination safe lock on a metal door.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#secret-scope">Secret scope</a>
+        <a href="#forks">Fork limits</a>
+        <a href="#environments">Environments</a>
+        <a href="#oidc">OIDC</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions Secrets: Safer Deployment Workflows</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-07 · 7 min read</p>
+        <p id="editorial-summary">Deployment jobs are where ordinary CI turns into production authority. Treat every secret in those jobs as a release credential, not as a convenient environment variable.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions deployment secrets</h2>
+          <ul>
+            <li>GitHub documents repository, environment, and organization secrets for Actions, with environment secrets scoped to jobs that reference that environment. <a href="#ref-secrets">[1]</a> <a href="#ref-environments">[3]</a></li>
+            <li>GitHub says secrets other than `GITHUB_TOKEN` are not passed to runners for workflows triggered from forked repositories. <a href="#ref-events">[2]</a></li>
+            <li>GitHub documents required reviewers, wait timers, deployment branch rules, and custom protection rules as environment deployment protections. <a href="#ref-environments">[3]</a></li>
+            <li>GitHub's OpenID Connect overview frames OIDC as a way to avoid keeping long-lived cloud credentials in GitHub secrets. <a href="#ref-oidc">[4]</a></li>
+            <li>GitHub recommends setting the minimum required `GITHUB_TOKEN` permissions, and documents workflow-level or job-level `permissions` controls. <a href="#ref-token">[5]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Deployment secrets belong behind explicit job boundaries</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Put production credentials in environment-scoped secrets, attach them only to deploy jobs, and make those jobs use narrow token permissions and deployment protections.
+          </div>
+          <p>GitHub Actions can store secrets at repository, environment, and organization levels. <a href="#ref-secrets">[1]</a> That flexibility is useful, but it also makes it easy for a workflow to expose a deploy credential to more jobs than the release path needs.</p>
+          <p>A safer pattern is to keep build, test, package, and deploy jobs separate. The deploy job should be the first point where production secrets, cloud identity, package-publish credentials, or environment approval become available.</p>
+        </section>
+
+        <section id="secret-scope">
+          <h2>Repository-wide secrets are blunt instruments for deploys</h2>
+          <p>A repository secret can be referenced from workflows in that repository. <a href="#ref-secrets">[1]</a> That makes it convenient for shared service tokens, but a production deploy key usually deserves a smaller boundary than "any workflow in this repo that names it."</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Review target:</strong> Any secret whose name contains production, deploy, cloud, publish, registry, signing, SSH, or kube should be tied to the smallest release job that needs it.
+          </div>
+          <p>Environment secrets are narrower because they are tied to an environment and become relevant when a workflow job references that environment. GitHub's environments reference describes environment secrets and variables as resources that apply to the environment used by a job. <a href="#ref-environments">[3]</a></p>
+          <p>That does not make the job safe by itself. It gives reviewers a cleaner place to check whether the workflow uses the right environment, whether the deploy job is separate from untrusted inputs, and whether a secret is still needed.</p>
+        </section>
+
+        <section id="forks">
+          <h2>Fork protection helps only when the workflow stays unprivileged</h2>
+          <p>GitHub's event reference says secrets, except `GITHUB_TOKEN`, are not passed to the runner when a workflow is triggered from a forked repository. <a href="#ref-events">[2]</a> That default is an important boundary for public repositories that run pull-request checks.</p>
+          <p>The risk returns when teams work around that boundary by moving privileged work into broader events, adding manual dispatch inputs that route directly into deployment commands, or combining untrusted pull-request context with a job that has release credentials.</p>
+          <ul class="risk-list">
+            <li><strong>Keep PR checks unprivileged:</strong> test untrusted code without production secrets, package publish tokens, signing keys, or cloud deploy authority.</li>
+            <li><strong>Split the handoff:</strong> move trusted release work into a workflow or job that runs after review, branch policy, and artifact selection.</li>
+            <li><strong>Audit event choice:</strong> confirm that any workflow with deployment secrets is not also executing attacker-controlled code or shell text.</li>
+          </ul>
+        </section>
+
+        <section id="environments">
+          <h2>Environment protections make secret access reviewable</h2>
+          <p>GitHub documents deployment protection rules for environments, including required reviewers, wait timers, deployment branches and tags, and custom protection rules. <a href="#ref-environments">[3]</a> These controls make a deploy job pause at a named boundary instead of treating secret access as just another shell step.</p>
+          <p>Required reviewers are especially useful for production jobs because approval happens at the environment boundary. GitHub's environments reference also documents an option that prevents the user who triggered a deployment from approving the same deployment when required reviewers are configured. <a href="#ref-environments">[3]</a></p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> A production secret stored as a repository-wide value and consumed by a mixed build-and-deploy job is hard to reason about during incident review.
+          </div>
+        </section>
+
+        <section id="oidc">
+          <h2>OIDC reduces long-lived cloud secrets in workflows</h2>
+          <p>GitHub's OpenID Connect overview says workflows can exchange short-lived tokens directly from cloud providers instead of storing long-lived credentials as secrets. <a href="#ref-oidc">[4]</a></p>
+          <p>OIDC is not automatic hardening. The cloud-side trust policy still has to match the repository, branch, tag, workflow, or environment that should receive credentials. A broad trust rule can recreate the same overexposure that a broad repository secret created.</p>
+          <p>Pair OIDC with explicit `permissions` in the workflow. GitHub recommends granting the `GITHUB_TOKEN` the least required access, and documents `permissions` controls at workflow and job level. <a href="#ref-token">[5]</a> A deploy job that only needs an OIDC token and repository read access should not also receive broad repository write authority by habit.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit starts with who can reach each secret</h2>
+          <p>List every deployment secret, then trace where it is referenced in `.github/workflows`. For each reference, record the trigger, branch filters, job environment, `permissions` block, and whether the job runs code from a pull request, manual input, artifact, or release tag. <a href="#ref-secrets">[1]</a> <a href="#ref-token">[5]</a></p>
+          <p>Move production values into environment secrets when they belong to a named deployment boundary, add protection rules where human or external approval is expected, and prefer OIDC for cloud deploys when the provider and trust policy can be configured narrowly. <a href="#ref-environments">[3]</a> <a href="#ref-oidc">[4]</a></p>
+          <p>For a local review queue, run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> and inspect secret-adjacent findings beside trigger, token-permission, timeout, pinned-action, and shell-context findings.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, primary platform documentation, last reviewed 2026-06-07.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-secrets">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/security/secrets">Secrets</a>.</li>
+            <li id="ref-events">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows">Events that trigger workflows</a>.</li>
+            <li id="ref-environments">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments">Deployments and environments</a>.</li>
+            <li id="ref-oidc">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/security/openid-connect">OpenID Connect</a>.</li>
+            <li id="ref-token">GitHub Docs, <a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication">Use GITHUB_TOKEN for authentication in workflows</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
