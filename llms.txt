@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (11)
+### GitHub Actions (12)
 
+- [GitHub Actions Cache Security: Avoid Poisoned Builds](https://dsotn.com/articles/github-actions-cache-security/)
 - [Artifact Attestations: Verify GitHub Actions Builds](https://dsotn.com/articles/artifact-attestations-github-actions/)
 - [Self-Hosted Runners: Secure GitHub Actions CI Builds](https://dsotn.com/articles/self-hosted-runners-security/)
 - [Reusable Workflows: Secure GitHub Actions Pipelines](https://dsotn.com/articles/reusable-workflows-security/)

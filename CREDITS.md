@@ -13,3 +13,4 @@
 | reusable-workflows-security | https://commons.wikimedia.org/wiki/File:Conveyor_system_in_a_factory.jpg | falco | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | self-hosted-runners-security | https://commons.wikimedia.org/wiki/File:Data_center_infrastructure_in_the_United_States.jpg | DOE / National Renewable Energy Laboratory (NREL) | Public domain | 2026-06-08 |
 | artifact-attestations-github-actions | https://commons.wikimedia.org/wiki/File:Rows_of_Franklin_Cray_XT4_racks.jpg | Derrick Coetzee from Berkeley, CA, USA | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
+| github-actions-cache-security | https://commons.wikimedia.org/wiki/File:Industrial_shelves.jpg | FIONASUN | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |

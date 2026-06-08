@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Cache Security: Avoid Poisoned Builds</title>
+  <meta name="description" content="Harden GitHub Actions cache usage with scoped keys, safe restore paths, fork-aware access, and checks for poisoned dependency restores in CI builds.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-cache-security/">
+  <meta property="og:title" content="GitHub Actions Cache Security: Avoid Poisoned Builds">
+  <meta property="og:description" content="How to use GitHub Actions caches without turning dependency restores into a hidden supply-chain trust path.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-cache-security/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-cache-security.jpg">
+  <meta property="article:published_time" content="2026-06-08T01:05:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T01:05:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="actions/cache">
+  <meta property="article:tag" content="cache poisoning">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-cache-security.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions Cache Security: Avoid Poisoned Builds",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T01:05:00-06:00",
+    "dateModified": "2026-06-08T01:05:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions cache security", "actions/cache", "cache poisoning", "dependency caching"],
+    "wordCount": 1058,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-cache-security/",
+    "articleBody": "GitHub Actions caches speed up dependency installs, but cache keys and restore scope can become part of a CI trust boundary.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-cache-security.jpg", "width": 1920, "height": 1280},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Dependency caching reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/dependency-caching-reference"},
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions"},
+      {"@type": "CreativeWork", "name": "GHSL-2024-148_GHSL-2024-149: Code Injection and Execution of Untrusted Code in Astro's Actions workflows", "publisher": "GitHub Security Lab", "url": "https://securitylab.github.com/advisories/GHSL-2024-148_GHSL-2024-149_Astro/"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Cache Security: Avoid Poisoned Builds", "item": "https://dsotn.com/articles/github-actions-cache-security/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-cache-security.jpg" width="1920" height="1280" alt="Industrial shelving with stacked storage boxes.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#trust-boundary">Trust boundary</a>
+        <a href="#keys">Cache keys</a>
+        <a href="#forks">Forks and branches</a>
+        <a href="#secrets">Secrets</a>
+        <a href="#poisoning">Poisoning signals</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions Cache Security: Avoid Poisoned Builds</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">Dependency caches are useful because they are invisible when they work. That same invisibility makes them worth auditing before a release workflow trusts restored dependencies.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions cache security</h2>
+          <ul>
+            <li>GitHub says <code>actions/cache</code> searches for an exact key, then partial key matches, then ordered <code>restore-keys</code> when they are provided. <a href="#ref-cache">[1]</a></li>
+            <li>GitHub says a cache miss creates a new cache if the job completes successfully, and existing cache contents cannot be changed under the same key. <a href="#ref-cache">[1]</a></li>
+            <li>GitHub warns not to store access tokens or login credentials in cached paths because pull requests and forks can access base-branch caches. <a href="#ref-cache">[1]</a></li>
+            <li>GitHub's cache documentation says pull-request runs can restore caches from the current branch, base branch, and default branch, subject to scope restrictions. <a href="#ref-cache">[1]</a></li>
+            <li>A GitHub Security Lab advisory on Astro described leaked cache-related credentials as a path to GitHub Actions cache poisoning and release poisoning. <a href="#ref-astro">[3]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Cache speed becomes risk when restored files are trusted</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Treat every dependency cache as reusable build input. Use narrow keys, avoid caching secrets, separate untrusted pull-request jobs from release jobs, and verify dependency state before publishing artifacts.
+          </div>
+          <p>GitHub Actions dependency caching restores files into a workflow before later steps run. GitHub documents the cache lookup order as exact key, partial key matches, and then ordered restore keys when configured. <a href="#ref-cache">[1]</a></p>
+          <p>That behavior is valuable for package managers, compilers, and build tools. It also means the cache can influence which dependency tree, compiled output, or tool state a later step sees. A cache audit should focus on where restored files flow next.</p>
+        </section>
+
+        <section id="trust-boundary">
+          <h2>A cache is build input, not disposable runner clutter</h2>
+          <p>GitHub says a cache miss automatically creates a new cache with the configured key and path when the job completes successfully. <a href="#ref-cache">[1]</a> It also says an existing cache cannot be changed; a workflow must create a new cache with a new key instead. <a href="#ref-cache">[1]</a></p>
+          <p>That immutability helps, but it does not remove the need to choose keys carefully. A broad restore key can still select the most recent partial match, and GitHub's reference says restore keys are checked sequentially for partial matches. <a href="#ref-cache">[1]</a></p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> Cache package-manager download stores freely; be much stricter with paths that contain installed dependencies, generated scripts, compiled tools, or publish inputs.
+          </div>
+        </section>
+
+        <section id="keys">
+          <h2>Cache keys should include the files that define dependencies</h2>
+          <p>GitHub's Node.js example builds a cache key from the runner operating system and a SHA-256 hash of <code>package-lock.json</code>. <a href="#ref-cache">[1]</a> The useful pattern is not the language; it is tying a cache to the lockfile or manifest that defines what should be restored.</p>
+          <p>For release workflows, avoid a generic key such as <code>linux-build</code> or a restore chain that falls back to an old dependency tree without a lockfile match. GitHub says partial restore-key matches return the most recently created cache when multiple matches exist. <a href="#ref-cache">[1]</a></p>
+          <p>Use separate key namespaces for test, benchmark, preview, and release jobs. A release job should not reuse a cache written by a workflow that runs untrusted code, comments, labels, or manual inputs unless the dependency manager revalidates the result from a lockfile.</p>
+        </section>
+
+        <section id="forks">
+          <h2>Fork and branch access changes the cache threat model</h2>
+          <p>GitHub documents that workflow runs can restore caches from the current branch or default branch. For pull-request runs, GitHub says the workflow can also restore caches created in the base branch, including base branches of forked repositories. <a href="#ref-cache">[1]</a></p>
+          <p>GitHub also says a cache created by a pull-request workflow is scoped to the pull request merge ref and cannot be restored by the base branch or by other pull requests targeting that base branch. <a href="#ref-cache">[1]</a> That is a helpful restriction, but it is not a reason to let privileged jobs consume loosely keyed caches.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid this posture:</strong> A fork-triggered workflow installs and builds untrusted code, writes broad dependency caches, and a later release workflow restores from the same namespace without lockfile verification.
+          </div>
+        </section>
+
+        <section id="secrets">
+          <h2>Secrets should never land inside cached paths</h2>
+          <p>GitHub recommends not storing sensitive information, including access tokens or login credentials, in a cache path. Its cache reference says anyone with read access can create a pull request and access cache contents, and forks can create pull requests that access base-branch caches. <a href="#ref-cache">[1]</a></p>
+          <p>GitHub's secure-use reference also recommends auditing how secrets are handled and checking that actions do not send secrets to unintended hosts or print them to logs. <a href="#ref-secure">[2]</a> Apply the same review to cache paths: package-manager config files, registry credentials, cloud CLIs, and generated auth files should stay out of restored directories.</p>
+        </section>
+
+        <section id="poisoning">
+          <h2>Cache poisoning appears when untrusted code shapes later builds</h2>
+          <p>GitHub Security Lab's Astro advisory reported workflows that checked out untrusted pull-request code and ran dependency installation commands. The advisory said the issue could leak a remote-cache token and lead to GitHub Actions cache poisoning, with possible release poisoning impact. <a href="#ref-astro">[3]</a></p>
+          <p>Do not overgeneralize one advisory into a claim that every cache is dangerous. The durable lesson is narrower: when untrusted code can run before dependency or build caches are trusted elsewhere, the cache becomes part of the supply-chain boundary.</p>
+          <p>GitHub's secure-use reference recommends using intermediate environment variables for untrusted values in inline scripts and warns that compromised actions can access secrets and the <code>GITHUB_TOKEN</code> available to the workflow. <a href="#ref-secure">[2]</a> Those controls reduce the chance that an attacker can reach cache-writing or publish-adjacent steps.</p>
+        </section>
+
+        <section id="audit">
+          <h2>A fast cache audit follows keys, paths, and consumers</h2>
+          <p>Start with <code>uses: actions/cache</code>, package-manager cache settings, and built-in setup-action caching. Check each <code>path</code>, exact <code>key</code>, and <code>restore-keys</code> chain against GitHub's documented matching behavior. <a href="#ref-cache">[1]</a></p>
+          <p>Then list who can write or influence the cached files: pull requests, scheduled jobs, manual dispatch inputs, reusable workflows, self-hosted runners, and third-party actions. Finally, list who consumes those files: tests, code generation, package publishing, Docker builds, deployment jobs, and artifact signing.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so cache review sits beside pinned-action, token-permission, timeout, OIDC, reusable-workflow, runner, attestation, and shell-context checks.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 3 entries, primary platform documentation and GitHub Security Lab, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-cache">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/dependency-caching-reference">Dependency caching reference</a>.</li>
+            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions">Secure use reference</a>.</li>
+            <li id="ref-astro">GitHub Security Lab, <a href="https://securitylab.github.com/advisories/GHSL-2024-148_GHSL-2024-149_Astro/">GHSL-2024-148_GHSL-2024-149: Code Injection and Execution of Untrusted Code in Astro's Actions workflows</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
