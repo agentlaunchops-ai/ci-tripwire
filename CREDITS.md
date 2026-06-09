@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-skip-ci-security | https://commons.wikimedia.org/wiki/File:Stop_sign_(1).jpg | Public-domain-image.com | Public domain | 2026-06-09 |
 | github-actions-continue-on-error-security | https://commons.wikimedia.org/wiki/File:EFTA00002519_-_Dark_server_rack_with_colorful_cables_and_a_glowing_power_indicator_light.jpg | Federal Bureau of Investigation | Public domain | 2026-06-09 |
 | github-actions-permissions-presets | https://commons.wikimedia.org/wiki/File:LaCuCa_card_reader_-_payment_terminal_at_supermarket_register.jpg | Syced | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-id-token-permission | https://commons.wikimedia.org/wiki/File:Hotel_key_card_holder.JPG | MKFI | Public domain | 2026-06-08 |

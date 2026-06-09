@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Skip CI: Avoid Silent Required Checks</title>
+  <meta name="description" content="Review GitHub Actions skip instructions before commit messages, branch filters, or path filters leave required CI checks pending or still running.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-skip-ci-security/">
+  <meta property="og:title" content="GitHub Actions Skip CI: Avoid Silent Required Checks">
+  <meta property="og:description" content="How to review skipped GitHub Actions runs before required CI checks surprise reviewers.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-skip-ci-security/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-skip-ci-security.jpg">
+  <meta property="article:published_time" content="2026-06-09T08:22:00-06:00">
+  <meta property="article:modified_time" content="2026-06-09T08:22:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="skip ci">
+  <meta property="article:tag" content="required checks">
+  <meta property="article:tag" content="workflow security">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-skip-ci-security.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions Skip CI: Avoid Silent Required Checks",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-09T08:22:00-06:00",
+    "dateModified": "2026-06-09T08:22:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions skip ci", "required checks", "path filters", "branch filters", "workflow security"],
+    "wordCount": 963,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-skip-ci-security/",
+    "articleBody": "GitHub Actions skip instructions should be reviewed before commit messages, branch filters, or path filters change which CI checks run or remain pending.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-skip-ci-security.jpg", "width": 3664, "height": 2748},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Skipping workflow runs", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/skip-workflow-runs"},
+      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"},
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Skip CI: Avoid Silent Required Checks", "item": "https://dsotn.com/articles/github-actions-skip-ci-security/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-skip-ci-security.jpg" width="3664" height="2748" alt="Red stop sign photographed outdoors against a blue sky.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#skip-scope">Skip scope</a>
+        <a href="#required-checks">Required checks</a>
+        <a href="#filters">Filters</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions Skip CI: Avoid Silent Required Checks</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-09 · 7 min read</p>
+        <p id="editorial-summary">GitHub Actions skip instructions are small commit-message controls, but they can still change whether reviewers see a fresh CI result.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions skip instructions</h2>
+          <ul>
+            <li>GitHub Docs says skip commands can skip workflow runs triggered by <code>push</code> and <code>pull_request</code> events. <a href="#ref-skip">[1]</a></li>
+            <li>GitHub Docs lists five skip strings: <code>[skip ci]</code>, <code>[ci skip]</code>, <code>[no ci]</code>, <code>[skip actions]</code>, and <code>[actions skip]</code>. <a href="#ref-skip">[1]</a></li>
+            <li>GitHub Docs says skipped workflows caused by path filtering, branch filtering, or commit messages leave associated checks in a <code>Pending</code> state. <a href="#ref-skip">[1]</a></li>
+            <li>GitHub Docs says skip instructions do not stop workflows triggered by <code>pull_request_target</code>. <a href="#ref-skip">[1]</a></li>
+            <li>GitHub's secure-use reference warns that some contexts contain untrusted input and recommends careful handling in scripts. <a href="#ref-secure">[3]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Skip CI should be an exception reviewers can explain</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Treat skip instructions as a reviewable bypass. They are useful for documentation-only commits, but risky when a change touches workflow files, release code, deploy inputs, or dependencies.
+          </div>
+          <p>GitHub Docs says workflow runs triggered by <code>push</code> and <code>pull_request</code> can be skipped when a commit message contains a supported skip command. <a href="#ref-skip">[1]</a></p>
+          <p>That makes the feature convenient, but it also moves a CI decision into text that many reviewers skim past. A repository should make the allowed use case narrow enough that a skipped run looks intentional instead of invisible.</p>
+        </section>
+
+        <section id="skip-scope">
+          <h2>Skip strings only cover part of the event surface</h2>
+          <p>GitHub Docs lists <code>[skip ci]</code>, <code>[ci skip]</code>, <code>[no ci]</code>, <code>[skip actions]</code>, and <code>[actions skip]</code> as commit-message strings that can prevent matching workflow runs. <a href="#ref-skip">[1]</a></p>
+          <p>GitHub Docs also documents a <code>skip-checks</code> trailer, with <code>skip-checks:true</code> or <code>skip-checks: true</code>, and says the trailer should be last when other trailers are present. <a href="#ref-skip">[1]</a></p>
+          <p>The event boundary matters. GitHub Docs says skip instructions apply to <code>push</code> and <code>pull_request</code>, and it gives <code>pull_request_target</code> as an event that is not stopped by <code>[skip ci]</code>. <a href="#ref-skip">[1]</a></p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A documentation-only commit that skips ordinary <code>push</code> CI is easier to defend than a repository where reviewers assume the same string controls privileged workflow events.
+          </div>
+        </section>
+
+        <section id="required-checks">
+          <h2>Required checks can remain pending instead of passing</h2>
+          <p>GitHub Docs says checks associated with a workflow stay in a <code>Pending</code> state when the workflow is skipped because of path filtering, branch filtering, or a commit message. <a href="#ref-skip">[1]</a></p>
+          <p>GitHub Docs also says a pull request that requires those checks to be successful is blocked from merging, and that pushing a new commit without the skip instruction can allow the pull request to merge once required checks pass. <a href="#ref-skip">[1]</a></p>
+          <p>That is better than a false green check, but it still creates review noise. A pending required check can make maintainers troubleshoot branch protection, rerun permissions, workflow names, or merge queues when the real cause is a small trailer in the latest commit.</p>
+          <p>For release branches, the safer posture is explicit: if a check protects merge, publish, or deploy, do not make its execution depend on commit-message etiquette alone.</p>
+        </section>
+
+        <section id="filters">
+          <h2>Branch and path filters create the same pending-check surprise</h2>
+          <p>GitHub Docs says workflow syntax supports <code>branches</code>, <code>branches-ignore</code>, <code>paths</code>, and <code>paths-ignore</code> filters for events such as <code>push</code> and <code>pull_request</code>. <a href="#ref-syntax">[2]</a></p>
+          <p>Those filters are not the same feature as skip strings, but GitHub Docs groups path and branch filtering with commit-message skips when it warns that associated checks can remain pending. <a href="#ref-skip">[1]</a></p>
+          <p>That means reviewers should audit skip behavior and filter behavior together. A workflow that only runs on <code>src/**</code> can be correct for unit tests, but it should not be the only required check when workflow, lockfile, package, Dockerfile, or deployment metadata changes need review.</p>
+          <p>GitHub's secure-use reference warns that some workflow contexts contain untrusted input and recommends careful script handling. <a href="#ref-secure">[3]</a></p>
+          <p>If a skipped or filtered workflow is the one that validates untrusted pull-request text, dispatch inputs, release notes, or branch names before later automation uses them, the repository has moved a security control out of the path where it is needed.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid verdict:</strong> Do not let path filters or skip strings suppress the only workflow that reviews CI configuration, privileged triggers, or release automation.
+          </div>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit starts with skip strings and filter gates</h2>
+          <p>Search commit history and branch-protection incidents for the five documented skip strings and the <code>skip-checks</code> trailer. GitHub Docs lists those exact controls for skipped workflow runs. <a href="#ref-skip">[1]</a></p>
+          <p>Then review workflow triggers for branch and path filters. GitHub's workflow syntax reference documents these filters, and the skip-workflow guide says filter-skipped workflows can leave associated checks pending. <a href="#ref-syntax">[2]</a> <a href="#ref-skip">[1]</a></p>
+          <p>Finally, compare the skipped or filtered workflow against the repository's required checks. If the workflow protects tests, scans, dependency review, release builds, deployment gates, or workflow-file review, reviewers should either make the exception explicit or split documentation-only checks from security-critical checks.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so skip-CI review sits beside pinned-action, token-permission, timeout, dispatch-input, pull-request-target, OIDC trust-policy, reusable-workflow, self-hosted runner, runner-group, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, <code>workflow_run</code>, checkout-credential, npm trusted-publishing, SARIF upload, log-secret, ruleset, secret-scanning, trigger-filter, matrix, service-container, workflow-command, Docker build-secret, deployment branch-rule, runner-label, repository-dispatch, job-output, GitHub App token, scheduled-workflow, <code>pull_request</code>, CODEOWNERS, composite-action, <code>defaults.run</code>, tag-release, variable, <code>id-token</code>, permissions-preset, and <code>continue-on-error</code> audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 3 entries, GitHub documentation, last reviewed 2026-06-09.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-skip">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/manage-workflow-runs/skip-workflow-runs">Skipping workflow runs</a>.</li>
+            <li id="ref-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">Workflow syntax for GitHub Actions</a>.</li>
+            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
