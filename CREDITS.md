@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-tag-release-workflows | https://commons.wikimedia.org/wiki/File:Lightning_over_Oradea_Romania_3.jpg | Mircea Madau | Public domain | 2026-06-08 |
 | github-actions-defaults-run-security | https://commons.wikimedia.org/wiki/File:Unix-ed-shellscript.png | Unbugged~commonswiki | Public domain | 2026-06-08 |
 | composite-actions-security | https://commons.wikimedia.org/wiki/File:Electronic_Circuit_Components.JPG | gunthercox | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | codeowners-github-actions-workflows | https://unsplash.com/photos/person-reviewing-documents-with-calculator-and-laptop-tLqtcDZltPs | Kelly Sikkema | Unsplash License | 2026-06-08 |
