@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (48)
+### GitHub Actions (49)
 
+- [GitHub Actions continue-on-error: Keep CI Failures Visible](https://dsotn.com/articles/github-actions-continue-on-error-security/)
 - [GitHub Actions Permissions: Avoid write-all CI Tokens](https://dsotn.com/articles/github-actions-permissions-presets/)
 - [GitHub Actions id-token: Secure OIDC Deploy Workflows](https://dsotn.com/articles/github-actions-id-token-permission/)
 - [GitHub Actions Variables: Safer CI/CD Configuration](https://dsotn.com/articles/github-actions-variables-security/)
