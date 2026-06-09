@@ -12,6 +12,18 @@
     <loc>https://dsotn.com/articles/</loc>
     <lastmod>2026-06-09</lastmod>
   </url>
+  <url>
+    <loc>https://dsotn.com/categories/stripe-billing/</loc>
+    <lastmod>2026-06-09</lastmod>
+  </url>
+  <url>
+    <loc>https://dsotn.com/articles/stripe-webhook-idempotency-node/</loc>
+    <lastmod>2026-06-09</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/stripe-webhook-idempotency-node.jpg</image:loc>
+      <image:title>Historical invoice document photographed flat on a light background</image:title>
+    </image:image>
+  </url>
 <url>
   <loc>https://dsotn.com/articles/github-actions-job-summary-security/</loc>
   <lastmod>2026-06-09</lastmod>
