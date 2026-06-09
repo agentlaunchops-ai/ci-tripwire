@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-job-summary-security | https://commons.wikimedia.org/wiki/File:EFTA00003026-Beach-House_-_Cluttered_office_desk_with_a_clipboard_holding_a_handwritten_list_of_tasks_and_a_calendar_showing_dates_and_notes.jpg | Federal Bureau of Investigation | Public domain | 2026-06-09 |
 | github-actions-merge-queue-security | https://unsplash.com/photos/a-long-line-of-cars-in-traffic-BntDJXvsacQ | James Lo | Unsplash License | 2026-06-09 |
 | github-actions-skip-ci-security | https://commons.wikimedia.org/wiki/File:Stop_sign_(1).jpg | Public-domain-image.com | Public domain | 2026-06-09 |
 | github-actions-continue-on-error-security | https://commons.wikimedia.org/wiki/File:EFTA00002519_-_Dark_server_rack_with_colorful_cables_and_a_glowing_power_indicator_light.jpg | Federal Bureau of Investigation | Public domain | 2026-06-09 |

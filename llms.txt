@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (51)
+### GitHub Actions (52)
 
+- [GitHub Job Summaries: Avoid CI Secret Leaks in Logs](https://dsotn.com/articles/github-actions-job-summary-security/)
 - [GitHub Merge Queue: Secure GitHub Actions CI Checks](https://dsotn.com/articles/github-actions-merge-queue-security/)
 - [GitHub Actions Skip CI: Avoid Silent Required Checks](https://dsotn.com/articles/github-actions-skip-ci-security/)
 - [GitHub Actions continue-on-error: Keep CI Failures Visible](https://dsotn.com/articles/github-actions-continue-on-error-security/)
