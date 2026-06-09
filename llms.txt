@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (47)
+### GitHub Actions (48)
 
+- [GitHub Actions Permissions: Avoid write-all CI Tokens](https://dsotn.com/articles/github-actions-permissions-presets/)
 - [GitHub Actions id-token: Secure OIDC Deploy Workflows](https://dsotn.com/articles/github-actions-id-token-permission/)
 - [GitHub Actions Variables: Safer CI/CD Configuration](https://dsotn.com/articles/github-actions-variables-security/)
 - [GitHub Actions Tag Releases: Secure CI/CD Triggers](https://dsotn.com/articles/github-actions-tag-release-workflows/)

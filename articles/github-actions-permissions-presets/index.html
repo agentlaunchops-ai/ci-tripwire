@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Permissions: Avoid write-all CI Tokens</title>
+  <meta name="description" content="Review GitHub Actions permissions presets before read-all, write-all, or empty token scopes change CI job access across workflows safely today.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-permissions-presets/">
+  <meta property="og:title" content="GitHub Actions Permissions: Avoid write-all CI Tokens">
+  <meta property="og:description" content="How to review GitHub Actions permissions presets before token scopes spread across CI jobs.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-permissions-presets/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-permissions-presets.jpg">
+  <meta property="article:published_time" content="2026-06-08T22:45:00-06:00">
+  <meta property="article:modified_time" content="2026-06-08T22:45:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="permissions">
+  <meta property="article:tag" content="GITHUB_TOKEN">
+  <meta property="article:tag" content="workflow security">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-permissions-presets.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions Permissions: Avoid write-all CI Tokens",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-08T22:45:00-06:00",
+    "dateModified": "2026-06-08T22:45:00-06:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions permissions", "write-all", "read-all", "GITHUB_TOKEN", "CI/CD security"],
+    "wordCount": 1048,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-permissions-presets/",
+    "articleBody": "GitHub Actions permissions presets should be reviewed before read-all, write-all, or empty token scopes change CI job access.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-permissions-presets.jpg", "width": 4080, "height": 3072},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions: permissions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions"},
+      {"@type": "CreativeWork", "name": "Use GITHUB_TOKEN for authentication in workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"},
+      {"@type": "CreativeWork", "name": "GitHub context", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#github-context"},
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Permissions: Avoid write-all CI Tokens", "item": "https://dsotn.com/articles/github-actions-permissions-presets/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-permissions-presets.jpg" width="4080" height="3072" alt="Payment card reader beside a checkout keypad.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#presets">Preset scopes</a>
+        <a href="#inheritance">Inheritance</a>
+        <a href="#untrusted">Untrusted data</a>
+        <a href="#audit">Fast audit</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions Permissions: Avoid write-all CI Tokens</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <p id="editorial-summary">GitHub Actions permissions presets make token scope readable, but <code>read-all</code>, <code>write-all</code>, and <code>{}</code> can also hide whether each job has the narrow access it actually needs.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions permissions presets</h2>
+          <ul>
+            <li>GitHub Docs says <code>permissions</code> can modify the default permissions granted to the <code>GITHUB_TOKEN</code>. <a href="#ref-syntax">[1]</a></li>
+            <li>GitHub Docs says <code>permissions</code> can be used at the workflow level or for individual jobs. <a href="#ref-syntax">[1]</a></li>
+            <li>GitHub Docs lists <code>read-all</code>, <code>write-all</code>, and <code>{}</code> as supported permission presets. <a href="#ref-syntax">[1]</a></li>
+            <li>GitHub Docs says unspecified permissions are set to <code>none</code> after you define access for any available permission. <a href="#ref-syntax">[1]</a></li>
+            <li>GitHub Docs says the <code>github</code> context includes sensitive information such as <code>github.token</code>. <a href="#ref-context">[3]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Permissions presets should start narrow, then prove exceptions</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Treat <code>write-all</code> as an exception, not a default. Prefer explicit job-level scopes so the job that comments, releases, scans, or deploys is the only job carrying that access.
+          </div>
+          <p>GitHub Docs says workflows can use <code>permissions</code> to modify the default permissions granted to the <code>GITHUB_TOKEN</code>, and it shows the key at workflow and job level. <a href="#ref-syntax">[1]</a></p>
+          <p>That makes permissions review possible in code. The trap is that a compact preset can look tidy while granting every current scope, denying everything, or spreading a broad default across jobs that only need read access.</p>
+        </section>
+
+        <section id="presets">
+          <h2>read-all, write-all, and empty permissions mean very different things</h2>
+          <p>The workflow syntax reference lists <code>read-all</code> to give read access to all available permissions and <code>write-all</code> to give write access to all available permissions. <a href="#ref-syntax">[1]</a></p>
+          <p>The same reference says <code>permissions: {}</code> disables permissions for all available scopes. <a href="#ref-syntax">[1]</a></p>
+          <p>Those three presets are useful review signals. <code>{}</code> can make a no-token job clear. <code>read-all</code> can be acceptable for broad inspection jobs. <code>write-all</code> should trigger a line-by-line explanation because it grants write access across the available token scopes.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A job with <code>permissions: contents: read</code> and one extra write scope is easier to defend than a workflow with <code>permissions: write-all</code> at the top.
+          </div>
+        </section>
+
+        <section id="inheritance">
+          <h2>Workflow-level permissions become every job's starting point</h2>
+          <p>GitHub Docs says <code>permissions</code> can be used either for all jobs in a workflow or within specific jobs. <a href="#ref-syntax">[1]</a></p>
+          <p>That placement changes the review question. A workflow-level preset sets the initial token posture for the whole file, while a job-level block explains why a particular job needs a particular scope.</p>
+          <p>GitHub Docs also says that after specifying access for any available permission, all unspecified permissions are set to <code>none</code>. <a href="#ref-syntax">[1]</a></p>
+          <p>That rule is a strong reason to write the scopes out. Explicit job blocks keep future readers from guessing whether a release job really needs package write access, whether a scan job needs security-events write access, or whether a test job needs anything beyond repository read access.</p>
+        </section>
+
+        <section id="untrusted">
+          <h2>Token scope matters more when jobs handle untrusted data</h2>
+          <p>GitHub's token tutorial says actions can access the <code>GITHUB_TOKEN</code> through the <code>github.token</code> context even when the workflow does not explicitly pass the token to the action. <a href="#ref-token">[2]</a></p>
+          <p>That implicit availability matters during review. GitHub Docs says the <code>github</code> context includes sensitive information, such as <code>github.token</code>. <a href="#ref-context">[3]</a></p>
+          <p>GitHub's secure-use reference warns that some workflow contexts contain untrusted input and should be treated carefully in scripts. <a href="#ref-secure">[4]</a></p>
+          <p>Put those points together before approving broad presets. If a job reads pull-request titles, issue text, release notes, dispatch inputs, or branch names into shell commands, its token scope determines how much damage a script-injection mistake can reach.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid verdict:</strong> Do not combine untrusted event data, shell execution, and <code>write-all</code> unless the job has a specific reason that survives review.
+          </div>
+        </section>
+
+        <section id="audit">
+          <h2>A fast audit starts by finding every permissions block</h2>
+          <p>Search workflow files for <code>permissions:</code>, <code>read-all</code>, <code>write-all</code>, and <code>permissions: {}</code>. GitHub Docs lists those presets and says the key controls <code>GITHUB_TOKEN</code> access, so each match should have a job-level reason. <a href="#ref-syntax">[1]</a></p>
+          <p>Then review whether the block sits at workflow level or job level. Jobs that only build, lint, or test usually deserve lower token access than jobs that publish packages, create releases, upload SARIF, comment on pull requests, or deploy infrastructure.</p>
+          <p>Finally, pair token scope with trigger and script review. A broad token on a trusted release path is different from a broad token on a workflow that processes untrusted issue, pull-request, or manual-dispatch data.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so permissions-preset review sits beside pinned-action, token-permission, timeout, dispatch-input, pull-request-target, OIDC trust-policy, reusable-workflow, self-hosted runner, runner-group, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, <code>workflow_run</code>, checkout-credential, npm trusted-publishing, SARIF upload, log-secret, ruleset, secret-scanning, trigger-filter, matrix, service-container, workflow-command, Docker build-secret, deployment branch-rule, runner-label, repository-dispatch, job-output, GitHub App token, scheduled-workflow, <code>pull_request</code>, CODEOWNERS, composite-action, <code>defaults.run</code>, tag-release, variable, and <code>id-token</code> audits.</p>
+          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions">Workflow syntax for GitHub Actions: permissions</a>.</li>
+            <li id="ref-token">GitHub Docs, <a href="https://docs.github.com/en/actions/tutorials/authenticate-with-github_token">Use GITHUB_TOKEN for authentication in workflows</a>.</li>
+            <li id="ref-context">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#github-context">GitHub context</a>.</li>
+            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-permissions-presets | https://commons.wikimedia.org/wiki/File:LaCuCa_card_reader_-_payment_terminal_at_supermarket_register.jpg | Syced | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-id-token-permission | https://commons.wikimedia.org/wiki/File:Hotel_key_card_holder.JPG | MKFI | Public domain | 2026-06-08 |
 | github-actions-variables-security | https://commons.wikimedia.org/wiki/File:Electronic-Component-Eight-Switch.jpg | Evan-Amos | Public domain | 2026-06-08 |
 | github-actions-tag-release-workflows | https://commons.wikimedia.org/wiki/File:Lightning_over_Oradea_Romania_3.jpg | Mircea Madau | Public domain | 2026-06-08 |
