@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stripe Per-Seat Billing in Node: Proration Controls</title>
+  <meta name="description" content="Build Stripe per-seat subscriptions in Node with quantity updates, predictable proration behavior, and webhook-synced seat limits for SaaS teams.">
+  <link rel="canonical" href="https://dsotn.com/articles/stripe-per-seat-billing-proration-node/">
+  <meta property="og:title" content="Stripe Per-Seat Billing in Node: Proration Controls">
+  <meta property="og:description" content="A practical Node pattern for Stripe seat quantities, proration choices, and webhook-synced team limits.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/stripe-per-seat-billing-proration-node/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/stripe-per-seat-billing-proration-node.jpg">
+  <meta property="article:published_time" content="2026-06-09T11:18:00-06:00">
+  <meta property="article:modified_time" content="2026-06-09T11:18:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="Stripe & Billing">
+  <meta property="article:tag" content="Stripe subscriptions">
+  <meta property="article:tag" content="per-seat billing">
+  <meta property="article:tag" content="proration">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/stripe-per-seat-billing-proration-node.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Stripe Per-Seat Billing in Node: Proration Controls",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-09T11:18:00-06:00",
+    "dateModified": "2026-06-09T11:18:00-06:00",
+    "articleSection": "Stripe & Billing",
+    "keywords": ["Stripe subscriptions", "per-seat billing", "Node.js", "proration", "subscription quantities"],
+    "wordCount": 818,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/stripe-per-seat-billing-proration-node/",
+    "articleBody": "Stripe per-seat billing in Node needs a durable team-seat ledger, explicit subscription item quantity updates, and a deliberate proration policy.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/stripe-per-seat-billing-proration-node.jpg", "width": 5552, "height": 3701},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Set quantities", "publisher": "Stripe Docs", "url": "https://docs.stripe.com/billing/subscriptions/quantities"},
+      {"@type": "CreativeWork", "name": "Prorations", "publisher": "Stripe Docs", "url": "https://docs.stripe.com/billing/subscriptions/prorations"},
+      {"@type": "CreativeWork", "name": "Update a subscription item", "publisher": "Stripe API Reference", "url": "https://docs.stripe.com/api/subscription_items/update"},
+      {"@type": "CreativeWork", "name": "Update a subscription", "publisher": "Stripe API Reference", "url": "https://docs.stripe.com/api/subscriptions/update"},
+      {"@type": "CreativeWork", "name": "The subscription item object", "publisher": "Stripe API Reference", "url": "https://docs.stripe.com/api/subscription_items/object"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "Stripe & Billing", "item": "https://dsotn.com/categories/stripe-billing/"},
+      {"@type": "ListItem", "position": 4, "name": "Stripe Per-Seat Billing in Node: Proration Controls", "item": "https://dsotn.com/articles/stripe-per-seat-billing-proration-node/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/stripe-per-seat-billing-proration-node.jpg" width="5552" height="3701" alt="Conference room table surrounded by empty chairs.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#quantity-source">Quantity source</a>
+        <a href="#proration-policy">Proration policy</a>
+        <a href="#node-update">Node update</a>
+        <a href="#webhooks">Webhook sync</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">Stripe & Billing</p>
+        <h1>Stripe Per-Seat Billing in Node: Proration Controls</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-09 · 7 min read</p>
+        <p id="editorial-summary">Per-seat billing breaks when your app treats Stripe quantity as a loose counter. Keep your own team-seat ledger, then update the matching subscription item deliberately.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for Stripe per-seat billing</h2>
+          <ul>
+            <li>Stripe Docs says per-seat licensing uses a recurring price with <code>usage_type=licensed</code> and a subscription quantity. <a href="#ref-quantities">[1]</a></li>
+            <li>Stripe's subscription item API exposes <code>quantity</code>, and the update endpoint accepts a new quantity for that item. <a href="#ref-item-object">[5]</a> <a href="#ref-item-update">[3]</a></li>
+            <li>Stripe Docs says prorations are usually created when a subscription changes during a billing period. <a href="#ref-prorations">[2]</a></li>
+            <li>Stripe's subscription item update API includes a <code>proration_behavior</code> parameter for controlling how prorations are handled. <a href="#ref-item-update">[3]</a></li>
+            <li>Stripe's subscription update API warns that frequent quantity updates can hit rate limits and points high-frequency usage to metered billing. <a href="#ref-sub-update">[4]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Per-seat billing needs one seat ledger before one Stripe update</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Count active team seats in your own database, update the Stripe subscription item quantity from that count, and make proration behavior an explicit product decision instead of a hidden default.
+          </div>
+          <p>Stripe Docs describes per-seat licensing as a subscription model that charges a quantity for a recurring price. <a href="#ref-quantities">[1]</a></p>
+          <p>The app should still own the invite, acceptance, removal, and role state that decides who counts as a paid seat. Stripe should receive the resulting quantity, not become the only place where team membership is understood.</p>
+        </section>
+
+        <section id="quantity-source">
+          <h2>The subscription item quantity should mirror accepted seats</h2>
+          <p>Stripe's subscription item object includes a <code>quantity</code> field, and its update endpoint accepts a replacement quantity. <a href="#ref-item-object">[5]</a> <a href="#ref-item-update">[3]</a></p>
+          <p>For a team SaaS app, derive that quantity from accepted or active members, not from pending invites. A pending invite can expire, be revoked, or be accepted by the wrong email if your app has weak invite checks.</p>
+          <p>Keep a small seat table with team ID, user ID, role, status, accepted time, removed time, and the Stripe customer or subscription ID. The Stripe quantity update then becomes a projection of that table.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A single database transaction should accept a seat, enforce the plan's seat limit, and enqueue the Stripe quantity update from the committed active-seat count.
+          </div>
+        </section>
+
+        <section id="proration-policy">
+          <h2>Proration should be chosen before users add seats</h2>
+          <p>Stripe Docs says prorations are generally generated when a subscription changes in the middle of a billing period. <a href="#ref-prorations">[2]</a></p>
+          <p>That default can be right for upgrade fairness, but it is still a product choice. Some teams want same-day seat charges. Others want a clean next-invoice adjustment, especially when seat changes happen during onboarding.</p>
+          <p>The subscription item update endpoint exposes <code>proration_behavior</code>, so your Node service can choose the behavior that matches the plan contract. <a href="#ref-item-update">[3]</a></p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid verdict:</strong> Do not let add-seat, remove-seat, admin-import, and webhook-repair paths call Stripe with different proration behavior by accident.
+          </div>
+        </section>
+
+        <section id="node-update">
+          <h2>The Node update path should be idempotent and rate-aware</h2>
+          <p>Stripe's subscription update API warns that updating a quantity many times in an hour can hit rate limiting, and recommends usage-based billing when usage changes frequently. <a href="#ref-sub-update">[4]</a></p>
+          <p>Per-seat billing usually changes at human speed, but bulk imports and automated seat cleanup can still burst. Coalesce updates by team: store the desired seat count, mark Stripe sync pending, and let one worker update the subscription item with the latest committed count.</p>
+          <p>Use an idempotent sync record keyed by team ID and target quantity. If two admins add users at the same time, your database should settle on one active-seat count and the worker should send that count once.</p>
+          <p>Want this as a drop-in kit? <a href="https://launchagent.gumroad.com/l/vpbnu">Stripe Team Seat Kit</a> packages per-seat subscription payloads, signed team invites, seat-limit enforcement, and idempotent webhook syncing for Node builders.</p>
+        </section>
+
+        <section id="webhooks">
+          <h2>Webhook state should close the loop after Stripe accepts the quantity</h2>
+          <p>Stripe's subscription update API and subscription item update API both return updated subscription-related objects when requests succeed. <a href="#ref-sub-update">[4]</a> <a href="#ref-item-update">[3]</a></p>
+          <p>Do not stop at the immediate API response. Webhooks should reconcile subscription status, item quantity, invoice state, and payment failures back into your team billing table. That keeps the admin UI honest when a card fails or a subscription is canceled outside your app.</p>
+          <p>A practical audit starts with three questions: which database row owns active seats, which worker owns Stripe quantity sync, and which webhook events can suspend paid access. If any answer is "the controller does it inline," the billing path is probably too fragile.</p>
+          <p>This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, Stripe documentation, last reviewed 2026-06-09.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-quantities">Stripe Docs, <a href="https://docs.stripe.com/billing/subscriptions/quantities">Set quantities</a>.</li>
+            <li id="ref-prorations">Stripe Docs, <a href="https://docs.stripe.com/billing/subscriptions/prorations">Prorations</a>.</li>
+            <li id="ref-item-update">Stripe API Reference, <a href="https://docs.stripe.com/api/subscription_items/update">Update a subscription item</a>.</li>
+            <li id="ref-sub-update">Stripe API Reference, <a href="https://docs.stripe.com/api/subscriptions/update">Update a subscription</a>.</li>
+            <li id="ref-item-object">Stripe API Reference, <a href="https://docs.stripe.com/api/subscription_items/object">The subscription item object</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

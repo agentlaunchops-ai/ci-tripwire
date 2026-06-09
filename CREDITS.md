@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| stripe-per-seat-billing-proration-node | https://commons.wikimedia.org/wiki/File:Chairs-2181923.jpg | Pexels / Pixabay contributor | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-09 |
 | stripe-webhook-idempotency-node | https://commons.wikimedia.org/wiki/File:1888_invoice.jpg | Ashton Valve Company / Wikimedia Commons contributor | Public domain in the United States | 2026-06-09 |
 | github-actions-job-summary-security | https://commons.wikimedia.org/wiki/File:EFTA00003026-Beach-House_-_Cluttered_office_desk_with_a_clipboard_holding_a_handwritten_list_of_tasks_and_a_calendar_showing_dates_and_notes.jpg | Federal Bureau of Investigation | Public domain | 2026-06-09 |
 | github-actions-merge-queue-security | https://unsplash.com/photos/a-long-line-of-cars-in-traffic-BntDJXvsacQ | James Lo | Unsplash License | 2026-06-09 |
