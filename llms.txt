@@ -11,8 +11,9 @@
 
 ## Articles by Category
 
-### Stripe & Billing (4)
+### Stripe & Billing (5)
 
+- [Stripe Cancel-Save Flow in Node: Retain Subscribers](https://dsotn.com/articles/stripe-cancel-save-retention-node/)
 - [Stripe MRR and Churn in Node: Subscription Metrics](https://dsotn.com/articles/stripe-mrr-churn-events-node/)
 - [Usage-Based Billing with Stripe in Node: Meter Safely](https://dsotn.com/articles/stripe-usage-based-billing-node/)
 - [Stripe Per-Seat Billing in Node: Proration Controls](https://dsotn.com/articles/stripe-per-seat-billing-proration-node/)

@@ -58,3 +58,4 @@
 | github-actions-sarif-code-scanning | https://commons.wikimedia.org/wiki/File:Scanning_machine.jpg | Salaha mahmood | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-08 |
 | github-actions-log-secret-leaks | https://commons.wikimedia.org/wiki/File:Redacted_documents.png | Natural RX | Public domain | 2026-06-08 |
 | github-actions-rulesets-merge-gates | https://commons.wikimedia.org/wiki/File:Boom_barrier_for_emergency_access_1.jpg | Edward Betts | Public domain | 2026-06-08 |
+| stripe-cancel-save-retention-node | https://commons.wikimedia.org/wiki/File:Old-style_fire_exit_sign_(26009222722).jpg | Alex Liivet | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-09 |

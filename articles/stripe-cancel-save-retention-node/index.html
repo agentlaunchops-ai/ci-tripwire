@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stripe Cancel-Save Flow in Node: Retain Subscribers</title>
+  <meta name="description" content="Build a Stripe cancel-save flow in Node with cancellation reasons, period-end cancellation, reactivation checks, and clean retention offers.">
+  <link rel="canonical" href="https://dsotn.com/articles/stripe-cancel-save-retention-node/">
+  <meta property="og:title" content="Stripe Cancel-Save Flow in Node: Retain Subscribers">
+  <meta property="og:description" content="A practical Node pattern for cancellation intent, save offers, Stripe state, and churn reasons.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/stripe-cancel-save-retention-node/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/stripe-cancel-save-retention-node.jpg">
+  <meta property="article:published_time" content="2026-06-09T12:46:00-06:00">
+  <meta property="article:modified_time" content="2026-06-09T12:46:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="Stripe & Billing">
+  <meta property="article:tag" content="Stripe cancellations">
+  <meta property="article:tag" content="cancel-save">
+  <meta property="article:tag" content="Node.js">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/stripe-cancel-save-retention-node.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Stripe Cancel-Save Flow in Node: Retain Subscribers",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-09T12:46:00-06:00",
+    "dateModified": "2026-06-09T12:46:00-06:00",
+    "articleSection": "Stripe & Billing",
+    "keywords": ["Stripe cancel-save", "Stripe cancellations", "Node.js", "retention offers", "subscription churn"],
+    "wordCount": 840,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/stripe-cancel-save-retention-node/",
+    "articleBody": "A Stripe cancel-save flow in Node should record cancellation intent before applying Stripe subscription changes.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/stripe-cancel-save-retention-node.jpg", "width": 3264, "height": 1840},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Cancel subscriptions", "publisher": "Stripe Docs", "url": "https://docs.stripe.com/billing/subscriptions/cancel"},
+      {"@type": "CreativeWork", "name": "The Subscription object", "publisher": "Stripe API Reference", "url": "https://docs.stripe.com/api/subscriptions/object"},
+      {"@type": "CreativeWork", "name": "Add a cancellation page to the customer portal", "publisher": "Stripe Docs", "url": "https://docs.stripe.com/customer-management/cancellation-page"},
+      {"@type": "CreativeWork", "name": "Integrate the customer portal with the API", "publisher": "Stripe Docs", "url": "https://docs.stripe.com/customer-management/integrate-customer-portal"},
+      {"@type": "CreativeWork", "name": "Update a subscription", "publisher": "Stripe API Reference", "url": "https://docs.stripe.com/api/subscriptions/update"},
+      {"@type": "CreativeWork", "name": "Cancel a subscription", "publisher": "Stripe API Reference", "url": "https://docs.stripe.com/api/subscriptions/cancel"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "Stripe & Billing", "item": "https://dsotn.com/categories/stripe-billing/"},
+      {"@type": "ListItem", "position": 4, "name": "Stripe Cancel-Save Flow in Node: Retain Subscribers", "item": "https://dsotn.com/articles/stripe-cancel-save-retention-node/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/stripe-cancel-save-retention-node.jpg" width="3264" height="1840" alt="Green exit sign hanging from a ceiling.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#intent">Intent record</a>
+        <a href="#offers">Save offers</a>
+        <a href="#stripe-state">Stripe state</a>
+        <a href="#reasons">Reasons</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">Stripe & Billing</p>
+        <h1>Stripe Cancel-Save Flow in Node: Retain Subscribers</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-09 · 7 min read</p>
+        <p id="editorial-summary">A cancel-save flow works best when Node records the customer's intent, shows a narrow offer, and only then updates the Stripe subscription state.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for Stripe cancel-save flows</h2>
+          <ul>
+            <li>Stripe Docs says subscriptions can be canceled immediately or at the end of the current billing period. <a href="#ref-cancel-guide">[1]</a></li>
+            <li>The Stripe Subscription object includes <code>cancel_at_period_end</code>, <code>canceled_at</code>, <code>ended_at</code>, and <code>cancellation_details</code>. <a href="#ref-subscription-object">[2]</a></li>
+            <li>Stripe's customer portal cancellation page can collect cancellation reasons including price, missing features, alternatives, low usage, service, ease of use, quality, and other reason. <a href="#ref-portal-page">[3]</a></li>
+            <li>Stripe's portal integration docs say a classic billing mode subscription can be reactivated before period end when <code>cancel_at_period_end</code> is true. <a href="#ref-portal-api">[4]</a></li>
+            <li>The subscription update API documents <code>cancel_at_period_end</code> as the flag for ending at the current period end. <a href="#ref-update-subscription">[5]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Cancel-save starts before the Stripe API call</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Treat cancellation as a product workflow first and a Stripe mutation second: record the request, show one honest retention path, then update the subscription idempotently.
+          </div>
+          <p>Stripe Docs says subscriptions can be canceled immediately or at the end of the current billing period. <a href="#ref-cancel-guide">[1]</a></p>
+          <p>That choice should not live as an isolated button handler. In Node, create a cancellation-intent row before the Stripe call so support, analytics, offer redemption, and webhook replay all point to the same customer decision.</p>
+        </section>
+
+        <section id="intent">
+          <h2>The intent row keeps cancellation and offer state together</h2>
+          <p>Store customer ID, subscription ID, requested mode, reason code, optional comment, selected offer, offer redemption status, Stripe event ID, and the final subscription status.</p>
+          <p>The Stripe Subscription object includes <code>cancel_at_period_end</code>, <code>canceled_at</code>, <code>ended_at</code>, and <code>cancellation_details</code>. <a href="#ref-subscription-object">[2]</a></p>
+          <p>Keep the intent row independent from the webhook ledger. The intent row captures what the customer tried to do; the webhook ledger captures what Stripe later reported.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> A separate intent row makes abandoned cancellation pages, accepted offers, completed cancels, and webhook retries visible as different states.
+          </div>
+        </section>
+
+        <section id="offers">
+          <h2>Save offers should be narrow and reversible</h2>
+          <p>A cancel-save offer should match the selected reason. For price complaints, show a downgrade or time-boxed discount; for missing features, show a roadmap-safe support path; for low usage, show pause or onboarding help if your product actually supports it.</p>
+          <p>Stripe's customer portal cancellation page can collect cancellation reasons including price, missing features, alternatives, low usage, service, ease of use, quality, and other reason. <a href="#ref-portal-page">[3]</a></p>
+          <p>Do not bury the final cancel action. A retention flow that traps the user may reduce cancellations in the short term, but it creates support risk and worse reason data.</p>
+          <p>Want this as a drop-in kit? <a href="https://launchagent.gumroad.com/l/ogodr">Stripe Cancel Save Kit</a> packages cancellation intent tracking, reason capture, save offers, webhook syncing, tests, and a Node demo server.</p>
+        </section>
+
+        <section id="stripe-state">
+          <h2>Period-end cancellation gives customers a save window</h2>
+          <p>The subscription update API documents <code>cancel_at_period_end</code> as the flag for ending at the current period end. <a href="#ref-update-subscription">[5]</a></p>
+          <p>For most SaaS products, period-end cancellation is the cleaner default because the customer keeps paid access through the current period and can still be won back before the subscription ends.</p>
+          <p>Stripe's portal integration docs say a classic billing mode subscription can be reactivated before period end when <code>cancel_at_period_end</code> is true. <a href="#ref-portal-api">[4]</a></p>
+          <p>Immediate cancellation still matters for refunds, abuse, and explicit stop-now requests. Stripe's cancel-subscription API reference says canceling immediately cancels the subscription and the customer will not be charged again for that subscription. <a href="#ref-cancel-api">[6]</a></p>
+        </section>
+
+        <section id="reasons">
+          <h2>Reason analytics should not rewrite subscription truth</h2>
+          <p>Use cancellation reasons to prioritize retention work, not to decide Stripe state after the fact. Stripe is the authority for the subscription lifecycle; your app is the authority for the product context around that lifecycle.</p>
+          <p>When a customer accepts an offer, mark the intent row as saved and update Stripe only for the actual subscription change you promised. When the customer proceeds, mark the intent row as completed and wait for the webhook projection to confirm the final state.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid verdict:</strong> Do not mix save-offer analytics, support comments, and Stripe subscription status into one mutable row that every handler rewrites.
+          </div>
+          <p>This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 6 entries, Stripe documentation, last reviewed 2026-06-09.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-cancel-guide">Stripe Docs, <a href="https://docs.stripe.com/billing/subscriptions/cancel">Cancel subscriptions</a>.</li>
+            <li id="ref-subscription-object">Stripe API Reference, <a href="https://docs.stripe.com/api/subscriptions/object">The Subscription object</a>.</li>
+            <li id="ref-portal-page">Stripe Docs, <a href="https://docs.stripe.com/customer-management/cancellation-page">Add a cancellation page to the customer portal</a>.</li>
+            <li id="ref-portal-api">Stripe Docs, <a href="https://docs.stripe.com/customer-management/integrate-customer-portal">Integrate the customer portal with the API</a>.</li>
+            <li id="ref-update-subscription">Stripe API Reference, <a href="https://docs.stripe.com/api/subscriptions/update">Update a subscription</a>.</li>
+            <li id="ref-cancel-api">Stripe API Reference, <a href="https://docs.stripe.com/api/subscriptions/cancel">Cancel a subscription</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
