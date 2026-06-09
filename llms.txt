@@ -11,8 +11,9 @@
 
 ## Articles by Category
 
-### Stripe & Billing (2)
+### Stripe & Billing (3)
 
+- [Usage-Based Billing with Stripe in Node: Meter Safely](https://dsotn.com/articles/stripe-usage-based-billing-node/)
 - [Stripe Per-Seat Billing in Node: Proration Controls](https://dsotn.com/articles/stripe-per-seat-billing-proration-node/)
 - [Stripe Webhook Idempotency in Node: Stop Double Work](https://dsotn.com/articles/stripe-webhook-idempotency-node/)
 
