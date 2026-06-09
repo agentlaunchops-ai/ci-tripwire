@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| stripe-mrr-churn-events-node | https://commons.wikimedia.org/wiki/File:HP-15C_Calculator-horizontal-2.jpg | Pittigrilli / derivative work: Hic et nunc | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-09 |
 | stripe-usage-based-billing-node | https://commons.wikimedia.org/wiki/File:Mechanical_electricity_meter_1965_(1).jpg | Mike1024 at English Wikipedia | Public domain | 2026-06-09 |
 | stripe-per-seat-billing-proration-node | https://commons.wikimedia.org/wiki/File:Chairs-2181923.jpg | Pexels / Pixabay contributor | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-09 |
 | stripe-webhook-idempotency-node | https://commons.wikimedia.org/wiki/File:1888_invoice.jpg | Ashton Valve Company / Wikimedia Commons contributor | Public domain in the United States | 2026-06-09 |

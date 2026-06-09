@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stripe MRR and Churn in Node: Subscription Metrics</title>
+  <meta name="description" content="Compute Stripe MRR and churn in Node from subscription, invoice, and refund events with idempotent storage and a clear revenue snapshot safely.">
+  <link rel="canonical" href="https://dsotn.com/articles/stripe-mrr-churn-events-node/">
+  <meta property="og:title" content="Stripe MRR and Churn in Node: Subscription Metrics">
+  <meta property="og:description" content="A practical Node pattern for Stripe MRR, ARR, churn, paid revenue, and refunds from events.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/stripe-mrr-churn-events-node/">
+  <meta property="og:image" content="https://dsotn.com/public/images/articles/stripe-mrr-churn-events-node.jpg">
+  <meta property="article:published_time" content="2026-06-09T12:18:00-06:00">
+  <meta property="article:modified_time" content="2026-06-09T12:18:00-06:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="Stripe & Billing">
+  <meta property="article:tag" content="Stripe MRR">
+  <meta property="article:tag" content="churn analytics">
+  <meta property="article:tag" content="Node.js">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/stripe-mrr-churn-events-node.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Stripe MRR and Churn in Node: Subscription Metrics",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-06-09T12:18:00-06:00",
+    "dateModified": "2026-06-09T12:18:00-06:00",
+    "articleSection": "Stripe & Billing",
+    "keywords": ["Stripe MRR", "Stripe churn", "Node.js", "subscription analytics", "Stripe webhooks"],
+    "wordCount": 808,
+    "timeRequired": "PT7M",
+    "mainEntityOfPage": "https://dsotn.com/articles/stripe-mrr-churn-events-node/",
+    "articleBody": "Stripe MRR and churn analytics in Node should be computed from idempotently stored subscription, invoice, and refund events.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/stripe-mrr-churn-events-node.jpg", "width": 3233, "height": 2424},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Receive Stripe events in your webhook endpoint", "publisher": "Stripe Docs", "url": "https://docs.stripe.com/webhooks"},
+      {"@type": "CreativeWork", "name": "Event types", "publisher": "Stripe API Reference", "url": "https://docs.stripe.com/api/events/types"},
+      {"@type": "CreativeWork", "name": "The Subscription object", "publisher": "Stripe API Reference", "url": "https://docs.stripe.com/api/subscriptions/object"},
+      {"@type": "CreativeWork", "name": "The Invoice object", "publisher": "Stripe API Reference", "url": "https://docs.stripe.com/api/invoices/object"},
+      {"@type": "CreativeWork", "name": "The Refund object", "publisher": "Stripe API Reference", "url": "https://docs.stripe.com/api/refunds/object"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "Stripe & Billing", "item": "https://dsotn.com/categories/stripe-billing/"},
+      {"@type": "ListItem", "position": 4, "name": "Stripe MRR and Churn in Node: Subscription Metrics", "item": "https://dsotn.com/articles/stripe-mrr-churn-events-node/"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/stripe-mrr-churn-events-node.jpg" width="3233" height="2424" alt="Programmable calculator photographed on a desk.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#event-ledger">Event ledger</a>
+        <a href="#mrr-snapshot">MRR snapshot</a>
+        <a href="#paid-revenue">Paid revenue</a>
+        <a href="#churn">Churn</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">Stripe & Billing</p>
+        <h1>Stripe MRR and Churn in Node: Subscription Metrics</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-09 · 7 min read</p>
+        <p id="editorial-summary">Stripe revenue metrics are easier to trust when Node stores the raw event once, projects subscriptions into a current snapshot, and keeps paid invoice revenue separate from MRR.</p>
+
+        <aside class="notice" aria-label="Editorial disclaimer">
+          This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.
+        </aside>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for Stripe MRR and churn analytics</h2>
+          <ul>
+            <li>Stripe Docs says webhook endpoints can listen for asynchronous events, including recurring payment success and subscription payment collection. <a href="#ref-webhooks">[1]</a></li>
+            <li>Stripe's event type catalog includes subscription lifecycle events such as <code>customer.subscription.created</code>, <code>customer.subscription.updated</code>, and <code>customer.subscription.deleted</code>. <a href="#ref-events">[2]</a></li>
+            <li>The Stripe Subscription object includes <code>status</code> and subscription <code>items</code>, which are the core inputs for an active subscription snapshot. <a href="#ref-subscription">[3]</a></li>
+            <li>The Stripe Invoice object includes fields such as <code>amount_paid</code>, <code>currency</code>, <code>status</code>, and invoice lines, so paid revenue should be modeled separately from MRR. <a href="#ref-invoice">[4]</a></li>
+            <li>The Stripe Refund object includes amount, currency, charge, payment intent, and status fields, so refund events need their own revenue adjustment path. <a href="#ref-refund">[5]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>MRR should be a projection, not a webhook side effect</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Store Stripe events idempotently, update a subscription-state table, and compute MRR and churn from that table instead of mutating dashboard totals inside each webhook branch.
+          </div>
+          <p>Stripe Docs describes webhook endpoints as a way to receive asynchronous events, including recurring payment success and subscription payment collection. <a href="#ref-webhooks">[1]</a></p>
+          <p>That event stream is a source of facts, not the dashboard itself. A reliable Node implementation records each event ID once, keeps the payload for replay, and then derives analytics from normalized subscription and invoice rows.</p>
+        </section>
+
+        <section id="event-ledger">
+          <h2>The Node webhook should write an immutable event ledger first</h2>
+          <p>Start with one table keyed by Stripe event ID. Store event type, object ID, created time, processing status, and a JSON copy of the payload your app actually handled.</p>
+          <p>Stripe's event type catalog lists subscription lifecycle events including <code>customer.subscription.created</code>, <code>customer.subscription.updated</code>, and <code>customer.subscription.deleted</code>. <a href="#ref-events">[2]</a></p>
+          <p>Use those events to maintain subscription state. Do not increment or decrement global MRR counters directly in the request handler; duplicate delivery, retries, or backfills can otherwise distort the metric.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Clean verdict:</strong> The event ledger makes replay, debugging, and duplicate suppression the same problem instead of three separate fixes.
+          </div>
+        </section>
+
+        <section id="mrr-snapshot">
+          <h2>MRR comes from active subscription items and recurring intervals</h2>
+          <p>The Stripe Subscription object includes <code>status</code> and subscription <code>items</code>. <a href="#ref-subscription">[3]</a></p>
+          <p>In Node, project each relevant subscription into an analytics row: customer ID, subscription ID, status, currency, price ID, quantity, recurring interval, unit amount, current period, and last event ID.</p>
+          <p>Then calculate current MRR from active recurring subscriptions at read time or in a scheduled snapshot job. Normalize yearly prices to one-twelfth of annual recurring revenue only after you have checked the price interval and currency.</p>
+          <p>Want this as a drop-in kit? <a href="https://launchagent.gumroad.com/l/juzzin">Stripe MRR Analytics Kit</a> packages webhook verification, subscription syncing, MRR, ARR, churn, paid invoice summaries, refunds, tests, and a Node demo server.</p>
+        </section>
+
+        <section id="paid-revenue">
+          <h2>Paid revenue should come from invoices, not MRR math</h2>
+          <p>The Stripe Invoice object includes fields such as <code>amount_paid</code>, <code>currency</code>, <code>status</code>, and invoice lines. <a href="#ref-invoice">[4]</a></p>
+          <p>Keep paid revenue in a separate monthly rollup from MRR. MRR is a forward-looking recurring-rate snapshot; paid invoice revenue is cash movement after invoices are finalized and paid.</p>
+          <p>This separation prevents the classic dashboard bug where plan upgrades, prorations, annual contracts, and retries look like sudden revenue changes even when the underlying subscription base has not changed in the same way.</p>
+        </section>
+
+        <section id="churn">
+          <h2>Churn needs subscription status plus refund adjustments</h2>
+          <p>Use subscription lifecycle events to mark canceled or ended subscriptions in your analytics table, then calculate churn over a defined cohort window. The formula is your business choice, but the event inputs should be stable and replayable.</p>
+          <p>The Stripe Refund object includes amount, currency, charge, payment intent, and status fields. <a href="#ref-refund">[5]</a></p>
+          <p>Model refunds as revenue adjustments instead of churn by default. A refund can be a support credit, duplicate charge fix, or partial reversal; a canceled subscription is the stronger signal that a customer left recurring revenue.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Avoid verdict:</strong> Do not let a single webhook branch decide both subscription churn and net revenue without writing the underlying event and object state first.
+          </div>
+          <p>This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.</p>
+          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, Stripe documentation, last reviewed 2026-06-09.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-webhooks">Stripe Docs, <a href="https://docs.stripe.com/webhooks">Receive Stripe events in your webhook endpoint</a>.</li>
+            <li id="ref-events">Stripe API Reference, <a href="https://docs.stripe.com/api/events/types">Event types</a>.</li>
+            <li id="ref-subscription">Stripe API Reference, <a href="https://docs.stripe.com/api/subscriptions/object">The Subscription object</a>.</li>
+            <li id="ref-invoice">Stripe API Reference, <a href="https://docs.stripe.com/api/invoices/object">The Invoice object</a>.</li>
+            <li id="ref-refund">Stripe API Reference, <a href="https://docs.stripe.com/api/refunds/object">The Refund object</a>.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
