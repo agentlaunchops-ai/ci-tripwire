@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| github-actions-id-token-permission | https://commons.wikimedia.org/wiki/File:Hotel_key_card_holder.JPG | MKFI | Public domain | 2026-06-08 |
 | github-actions-variables-security | https://commons.wikimedia.org/wiki/File:Electronic-Component-Eight-Switch.jpg | Evan-Amos | Public domain | 2026-06-08 |
 | github-actions-tag-release-workflows | https://commons.wikimedia.org/wiki/File:Lightning_over_Oradea_Romania_3.jpg | Mircea Madau | Public domain | 2026-06-08 |
 | github-actions-defaults-run-security | https://commons.wikimedia.org/wiki/File:Unix-ed-shellscript.png | Unbugged~commonswiki | Public domain | 2026-06-08 |
