@@ -10,8 +10,9 @@
 
 ## Articles by Category
 
-### GitHub Actions (45)
+### GitHub Actions (46)
 
+- [GitHub Actions Variables: Safer CI/CD Configuration](https://dsotn.com/articles/github-actions-variables-security/)
 - [GitHub Actions Tag Releases: Secure CI/CD Triggers](https://dsotn.com/articles/github-actions-tag-release-workflows/)
 - [GitHub Actions defaults.run: Safer CI Shell Controls](https://dsotn.com/articles/github-actions-defaults-run-security/)
 - [Composite Actions Security: Safer GitHub Actions Reuse](https://dsotn.com/articles/composite-actions-security/)
