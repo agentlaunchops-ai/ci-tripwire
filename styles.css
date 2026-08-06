@@ -247,6 +247,18 @@ h3 {
   margin: 0 0 10px;
 }
 
+.article-body > .eyebrow,
+.wrap > .eyebrow {
+  color: var(--accent-dark);
+}
+
+.article-body caption {
+  caption-side: top;
+  text-align: left;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
 .wrap > h1 {
   max-width: 780px;
   margin: 0 0 12px;
@@ -438,6 +450,21 @@ h3 {
   }
 
   .toc {
-    position: static;
+    display: none;
+  }
+
+  .article-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .article-body h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .article-body table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }

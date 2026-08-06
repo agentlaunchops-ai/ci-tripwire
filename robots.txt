@@ -4,65 +4,90 @@ Disallow: /.git/
 
 User-agent: GPTBot
 Allow: /
+Disallow: /.git/
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /.git/
 
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /.git/
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /.git/
 
 User-agent: anthropic-ai
 Allow: /
+Disallow: /.git/
 
 User-agent: Claude-Web
 Allow: /
+Disallow: /.git/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /.git/
 
 User-agent: Perplexity-User
 Allow: /
+Disallow: /.git/
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /.git/
 
 User-agent: GoogleOther
 Allow: /
+Disallow: /.git/
 
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /.git/
 
 User-agent: Amazonbot
 Allow: /
+Disallow: /.git/
 
 User-agent: CCBot
 Allow: /
+Disallow: /.git/
 
 User-agent: Bytespider
 Allow: /
+Disallow: /.git/
 
 User-agent: Diffbot
 Allow: /
+Disallow: /.git/
 
 User-agent: FacebookBot
 Allow: /
+Disallow: /.git/
 
 User-agent: Meta-ExternalAgent
 Allow: /
+Disallow: /.git/
 
 User-agent: Meta-ExternalFetcher
 Allow: /
+Disallow: /.git/
+
+User-agent: FriendlyCrawler
+Allow: /
+Disallow: /.git/
 
 User-agent: cohere-ai
 Allow: /
+Disallow: /.git/
 
 User-agent: YouBot
 Allow: /
+Disallow: /.git/
 
 User-agent: DuckAssistBot
 Allow: /
+Disallow: /.git/
 
 Sitemap: https://dsotn.com/sitemap.xml

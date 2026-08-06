@@ -7,6 +7,33 @@
   <meta name="description" content="Browse cited CI Tripwire articles about GitHub Actions workflow security, CI/CD hardening, and Stripe billing reliability.">
   <link rel="canonical" href="https://dsotn.com/articles/">
   <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "CI Tripwire Articles",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "url": "https://dsotn.com/articles/github-actions-workflow-execution-protections/"},
+      {"@type": "ListItem", "position": 2, "url": "https://dsotn.com/articles/stripe-cancel-save-retention-node/"},
+      {"@type": "ListItem", "position": 3, "url": "https://dsotn.com/articles/stripe-mrr-churn-events-node/"},
+      {"@type": "ListItem", "position": 4, "url": "https://dsotn.com/articles/stripe-usage-based-billing-node/"},
+      {"@type": "ListItem", "position": 5, "url": "https://dsotn.com/articles/stripe-per-seat-billing-proration-node/"},
+      {"@type": "ListItem", "position": 6, "url": "https://dsotn.com/articles/stripe-webhook-idempotency-node/"},
+      {"@type": "ListItem", "position": 7, "url": "https://dsotn.com/articles/npm-trusted-publishing-github-actions/"},
+      {"@type": "ListItem", "position": 8, "url": "https://dsotn.com/articles/dependabot-github-actions-security/"},
+      {"@type": "ListItem", "position": 9, "url": "https://dsotn.com/articles/github-actions-script-injection/"},
+      {"@type": "ListItem", "position": 10, "url": "https://dsotn.com/articles/github-actions-cache-security/"},
+      {"@type": "ListItem", "position": 11, "url": "https://dsotn.com/articles/artifact-attestations-github-actions/"},
+      {"@type": "ListItem", "position": 12, "url": "https://dsotn.com/articles/self-hosted-runners-security/"},
+      {"@type": "ListItem", "position": 13, "url": "https://dsotn.com/articles/reusable-workflows-security/"},
+      {"@type": "ListItem", "position": 14, "url": "https://dsotn.com/articles/oidc-trust-policy-footguns/"},
+      {"@type": "ListItem", "position": 15, "url": "https://dsotn.com/articles/pin-github-actions-sha/"},
+      {"@type": "ListItem", "position": 16, "url": "https://dsotn.com/articles/github-token-permissions/"},
+      {"@type": "ListItem", "position": 17, "url": "https://dsotn.com/articles/pull-request-target-security/"},
+      {"@type": "ListItem", "position": 18, "url": "https://dsotn.com/articles/github-actions-security-risks/"}
+    ]
+  }
+  </script>
     <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2C26MR4ZSP"></script>
@@ -24,7 +51,7 @@
       <div class="nav-links">
         <a href="/articles/">Articles</a>
         <a href="/about/">About</a>
-        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
     </nav>
   </header>
@@ -32,6 +59,14 @@
     <p class="eyebrow">Articles</p>
     <h1>Engineering guides</h1>
     <p>Long-form, cited guides for maintainers hardening GitHub Actions workflows and Stripe billing paths.</p>
+    <article class="card">
+      <img src="/public/images/articles/github-actions-workflow-execution-protections.jpg" width="1600" height="900" alt="A large control panel with rows of switches, buttons, and displays.">
+      <div>
+        <p class="article-meta">Research · GitHub Actions · Published 2026-08-05 · Updated 2026-08-05</p>
+        <h2><a href="/articles/github-actions-workflow-execution-protections/">GitHub Actions workflow execution protections guide</a></h2>
+        <p>Control which actors and events can start workflows, test the policy in evaluate mode, and activate it with evidence.</p>
+      </div>
+    </article>
     <article class="card">
       <img src="/public/images/articles/stripe-cancel-save-retention-node.jpg" width="3264" height="1840" alt="Green exit sign hanging from a ceiling.">
       <div>

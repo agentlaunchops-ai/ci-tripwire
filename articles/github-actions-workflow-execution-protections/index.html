@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>GitHub Actions workflow execution protections guide</title>
+  <meta name="description" content="Configure GitHub Actions workflow execution protections with actor rules, event rules, evaluate mode, and a rollout checklist.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-workflow-execution-protections/">
+  <meta property="og:title" content="GitHub Actions workflow execution protections guide">
+  <meta property="og:description" content="Control which actors and events can start GitHub Actions workflows, test the policy in evaluate mode, and enforce it safely.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-workflow-execution-protections/">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/articles/github-actions-workflow-execution-protections.png">
+  <meta property="article:published_time" content="2026-08-05T12:47:42-04:00">
+  <meta property="article:modified_time" content="2026-08-05T12:47:42-04:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="workflow execution protections">
+  <meta property="article:tag" content="Actions policies">
+  <meta property="article:tag" content="GitHub rulesets">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GitHub Actions workflow execution protections guide">
+  <meta name="twitter:description" content="Control which actors and events can start GitHub Actions workflows, then test the policy in evaluate mode.">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/github-actions-workflow-execution-protections.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "GitHub Actions workflow execution protections guide",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-08-05T12:47:42-04:00",
+    "dateModified": "2026-08-05T12:47:42-04:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions workflow execution protections", "Actions policies", "actor rules", "event rules", "evaluate mode"],
+    "wordCount": 1769,
+    "timeRequired": "PT9M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-workflow-execution-protections/",
+    "articleBody": "Workflow execution protections put an allow list with actor and event rules in front of GitHub Actions runs. Start in evaluate mode, inspect the affected workflows, and activate the narrowest policy that covers the risky triggers.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/og/articles/github-actions-workflow-execution-protections.png", "width": 1200, "height": 630},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Control who and what triggers GitHub Actions workflows", "publisher": "GitHub Changelog", "url": "https://github.blog/changelog/2026-06-18-control-who-and-what-triggers-github-actions-workflows/"},
+      {"@type": "CreativeWork", "name": "Workflow execution protections", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/actions-policies/workflow-execution-protections"},
+      {"@type": "CreativeWork", "name": "About Actions policies", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/organizations/managing-organization-settings/actions-policies/about-actions-policies"},
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
+      {"@type": "CreativeWork", "name": "What's coming to our GitHub Actions 2026 security roadmap", "publisher": "The GitHub Blog", "url": "https://github.blog/news-insights/product-news/whats-coming-to-our-github-actions-2026-security-roadmap/"},
+      {"@type": "CreativeWork", "name": "GitHub Actions holds potentially malicious workflows for approval", "publisher": "GitHub Changelog", "url": "https://github.blog/changelog/2026-07-28-github-actions-holds-potentially-malicious-workflows-for-approval/"},
+      {"@type": "CreativeWork", "name": "Triggering a workflow", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow"},
+      {"@type": "CreativeWork", "name": "Safer pull_request_target defaults for GitHub Actions checkout", "publisher": "GitHub Changelog", "url": "https://github.blog/changelog/2026-06-18-safer-pull_request_target-defaults-for-github-actions-checkout/"},
+      {"@type": "CreativeWork", "name": "Workflow execution protections", "publisher": "GitHub Docs source", "url": "https://raw.githubusercontent.com/github/docs/main/content/repositories/managing-your-repositorys-settings-and-features/actions-policies/workflow-execution-protections.md"},
+      {"@type": "CreativeWork", "name": "About rulesets", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets"},
+      {"@type": "CreativeWork", "name": "Audit log events for your organization", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/audit-log-events-for-your-organization"},
+      {"@type": "CreativeWork", "name": "Managing custom properties for repositories in your organization", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/organizations/managing-organization-settings/managing-custom-properties-for-repositories-in-your-organization"},
+      {"@type": "CreativeWork", "name": "Securely using pull_request_target", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target"},
+      {"@type": "CreativeWork", "name": "Deployments and environments", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments"},
+      {"@type": "CreativeWork", "name": "About code owners", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"},
+      {"@type": "CreativeWork", "name": "Reviewing the audit log for your organization", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization"},
+      {"@type": "CreativeWork", "name": "Workflow execution protections", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/organizations/managing-organization-settings/actions-policies/workflow-execution-protections"},
+      {"@type": "CreativeWork", "name": "Webhook events and payloads", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/webhooks/webhook-events-and-payloads#custom_property_values"},
+      {"@type": "CreativeWork", "name": "REST API endpoints for custom properties", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/rest/orgs/custom-properties"},
+      {"@type": "CreativeWork", "name": "Events that trigger workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#actor-for-scheduled-workflows"},
+      {"@type": "CreativeWork", "name": "Workflow execution protections", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/actions-policies/workflow-execution-protections"},
+      {"@type": "CreativeWork", "name": "Accessing the audit log for your enterprise", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/accessing-the-audit-log-for-your-enterprise"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "GitHub Actions workflow execution protections guide", "item": "https://dsotn.com/articles/github-actions-workflow-execution-protections/"}
+    ]
+  }
+  </script>
+  <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2C26MR4ZSP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2C26MR4ZSP');
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-workflow-execution-protections.jpg" width="1600" height="900" alt="A large control panel with rows of switches, buttons, and displays.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#two-rules">Actor and event rules</a>
+        <a href="#evaluate-mode">Evaluate mode</a>
+        <a href="#event-rules">Event rules</a>
+        <a href="#actor-rules">Actor rules</a>
+        <a href="#rollout">Repository rollout</a>
+        <a href="#activation-review">Activation review</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>GitHub Actions workflow execution protections guide</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-08-05 · 9 min read</p>
+        <p id="editorial-summary">Workflow execution protections put an allow list with actor and event rules in front of GitHub Actions runs. <a href="#ref-protections">[2]</a> Start in evaluate mode, inspect the affected workflows, and activate the narrowest policy that covers the risky triggers.</p>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for workflow execution protections</h2>
+          <ul>
+            <li>GitHub announced workflow execution protections in public preview on June 18, 2026. <a href="#ref-announcement">[1]</a></li>
+            <li>The policy uses an allow list to control which actors and events can start GitHub Actions workflows. <a href="#ref-protections">[2]</a></li>
+            <li>The first two rule types are actor rules and event rules. GitHub says more rule types are planned. <a href="#ref-protections">[2]</a></li>
+            <li>Evaluate mode shows what a rule would block without enforcing the rule, which gives maintainers a dry run before activation. <a href="#ref-protections">[2]</a></li>
+            <li>Actions policies are available at repository, organization, and enterprise levels. Workflow execution protections use the GitHub rulesets framework. <a href="#ref-actions-policies">[3]</a></li>
+            <li>GitHub's current source page lists GitHub.com plans and GitHub Enterprise Cloud, but not GitHub Enterprise Server. <a href="#ref-doc-source">[9]</a></li>
+          </ul>
+          <p><strong>Skip to:</strong></p>
+          <ul>
+            <li><a href="#article-summary">the bottom line</a></li>
+            <li><a href="#two-rules">actor and event rules</a></li>
+            <li><a href="#evaluate-mode">evaluate mode</a></li>
+            <li><a href="#event-rules">event-rule boundaries</a></li>
+            <li><a href="#actor-rules">actor-rule boundaries</a></li>
+            <li><a href="#rollout">repository rollout</a></li>
+            <li><a href="#activation-review">activation and rollback</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Stop disallowed workflow runs before execution</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> start with one repository in evaluate mode. Define the actors and events that genuinely need CI access, review every run the policy would block, then activate it.
+          </div>
+          <p>Workflow execution protections decide whether an actor and event pass this gate. <a href="#ref-protections">[2]</a> Separate GitHub features can also hold certain workflow runs before execution. <a href="#ref-holds">[6]</a> <a href="#ref-triggering">[7]</a> GitHub's automatic malicious-workflow hold currently applies to public repositories on GitHub.com, not GitHub Enterprise Server. <a href="#ref-holds">[6]</a> Job token permissions, workflow-file review, and runner isolation remain separate controls. <a href="#ref-secure-use">[4]</a> Approvals for jobs that reference a protected environment are another control. <a href="#ref-environments">[14]</a></p>
+          <p>GitHub describes workflow execution protections as an allow list evaluated before a workflow run begins. An actor or event outside that policy does not reach execution. <a href="#ref-protections">[2]</a> That control sits above the YAML files and can cover a repository or a wider set of repositories through rulesets. <a href="#ref-protections">[2]</a></p>
+          <p>An administrator can block a risky event across the chosen repositories before correcting every workflow file. <a href="#ref-protections">[2]</a> GitHub also supports evaluate mode, so the first policy pass can expose breakage without stopping current runs. <a href="#ref-announcement">[1]</a></p>
+        </section>
+
+        <section id="two-rules">
+          <h2>Actor and event rules cover different trust decisions</h2>
+          <p>Actions policies currently contain one policy type: workflow execution protections. That policy starts with two rule types, actor and event. <a href="#ref-actions-policies">[3]</a> Treat them as separate review questions.</p>
+          <table>
+            <caption>Actor and event workflow execution rules <a href="#ref-protections">[2]</a></caption>
+            <thead>
+              <tr>
+                <th scope="col">Rule</th>
+                <th scope="col">Controls</th>
+                <th scope="col">Examples documented by GitHub</th>
+                <th scope="col">Review question</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Actor</td>
+                <td>Who may trigger a workflow</td>
+                <td>Users, roles, GitHub Apps, Copilot, Dependabot</td>
+                <td>Which identities need CI execution authority?</td>
+              </tr>
+              <tr>
+                <td>Event</td>
+                <td>Which events may start a workflow</td>
+                <td><code>push</code>, <code>pull_request</code>, <code>pull_request_target</code>, <code>workflow_dispatch</code></td>
+                <td>Which trigger types belong in this repository?</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>GitHub lists Read, Maintain, and Admin among the repository roles supported by actor rules. It also says every user with write access can trigger workflows by default. <a href="#ref-protections">[2]</a> Actor rules can make code access and CI execution authority distinct decisions.</p>
+        </section>
+
+        <section id="evaluate-mode">
+          <h2>Evaluate mode reveals policy impact before enforcement</h2>
+          <p>Evaluate mode runs the rule without enforcing it and shows exactly what the rule would block. <a href="#ref-protections">[2]</a> GitHub says would-be blocked runs appear in policy insights. <a href="#ref-roadmap">[5]</a> Repository and organization setup pages place the policy under <strong>Actions</strong>, <strong>Policies</strong>. <a href="#ref-protections">[2]</a> <a href="#ref-org-protections">[17]</a></p>
+          <p>An organization owner can also search the organization audit log with <code>action:workflows.actions_policy_violation repo:ORG/REPO</code>. <a href="#ref-audit-log-review">[16]</a> Inspect the actor, repository, timestamp, <code>allowed</code>, <code>event_name</code>, <code>ruleset_ids</code>, and <code>violations</code>. The event has no workflow-run ID. <a href="#ref-audit-events">[11]</a> Correlate each entry with policy insights or Actions history by repository, actor, and time. For enterprise rollout, an enterprise owner can use the enterprise audit log to view aggregated actions from every organization owned by the enterprise. <a href="#ref-enterprise-audit-log">[22]</a></p>
+          <ol class="risk-list">
+            <li>Inventory the events used by every workflow in the target repository.</li>
+            <li>List the human roles, Apps, and bots that start those workflows.</li>
+            <li>Create actor and event rules in evaluate mode.</li>
+            <li>Exercise normal pull request, release, automation, and maintenance paths.</li>
+            <li>Review each would-be block in policy insights and adjust only the cases with a documented need.</li>
+          </ol>
+          <p>A clean evaluate period means the policy matches the runs observed during that period. It does not cover a quarterly job, an incident-only workflow, or a rarely used release path unless those paths ran or were reviewed directly.</p>
+        </section>
+
+        <section id="event-rules">
+          <h2>Event rules can block sensitive triggers across the selected scope</h2>
+          <p>GitHub names <code>push</code>, <code>pull_request</code>, <code>pull_request_target</code>, and <code>workflow_dispatch</code> as event-rule examples. <a href="#ref-protections">[2]</a> The event list should match the repository's actual automation rather than every trigger a workflow author might choose later.</p>
+          <p><code>pull_request_target</code> deserves a deliberate decision. Privileged workflows become vulnerable when they fetch or download and then execute untrusted code, dependencies, configuration, or artifacts. <a href="#ref-pr-target">[13]</a> A checkout by itself is not execution, and a workflow can ingest untrusted data without using <code>actions/checkout</code>. <a href="#ref-pr-target">[13]</a> The existing <a href="/articles/pull-request-target-security/">CI Tripwire pull_request_target guide</a> covers the workflow-level boundary. An event rule adds a central gate before those workflows run. <a href="#ref-protections">[2]</a></p>
+          <p>GitHub's changelog scheduled safer <code>actions/checkout</code> backport enforcement for July 20, 2026, but it does not confirm completed rollout. <a href="#ref-safer-checkout">[8]</a> Version 1 was excluded. <a href="#ref-safer-checkout">[8]</a> Inspect the exact checkout ref in each workflow; full-SHA, minor, and patch pins need an explicit update to receive a backport. <a href="#ref-safer-checkout">[8]</a> The <code>allow-unsafe-pr-checkout: true</code> input opts out and should be treated as a high-risk review finding. <a href="#ref-pr-target">[13]</a></p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Caution:</strong> blocking an event can stop legitimate automation along with risky automation. Evaluate the rule against real release, Dependabot, GitHub App, and manual-operation paths before activation.
+          </div>
+        </section>
+
+        <section id="actor-rules">
+          <h2>Actor rules separate repository access from workflow authority</h2>
+          <p>Actor rules can allow individual users, repository roles, GitHub Apps, Copilot, and Dependabot. <a href="#ref-protections">[2]</a> A policy built only around human roles can block the automation identities that open maintenance pull requests or operate release workflows.</p>
+          <p>Build the actor list from run history and ownership records. Name the App or bot that needs access, the workflows it starts, and the repository scope where that access belongs. Broad role access is easier to configure, while named automation makes exceptions visible during review.</p>
+          <p>Record the current actor for every scheduled workflow. GitHub can reassign that actor after a default-branch change. <a href="#ref-scheduled-actor">[20]</a> A user with write access who changes the cron schedule of a deactivated workflow reactivates it and becomes its actor. <a href="#ref-scheduled-actor">[20]</a> A scheduled workflow linked to an Enterprise Managed User stops if that actor is deprovisioned. <a href="#ref-scheduled-actor">[20]</a> Retest the schedule after any of those changes.</p>
+          <p>Actor rules control who can trigger workflows. <a href="#ref-protections">[2]</a> An allowed but compromised user or App can still pass that identity check. GitHub cites compromised credentials as one reason it separately holds some public-repository workflow runs for approval. <a href="#ref-holds">[6]</a> Protect those credentials, narrow GitHub App permissions, and monitor allowed identities.</p>
+          <p>CODEOWNERS can require approval before a pull request merges when a branch protection rule enables that review. <a href="#ref-codeowners">[15]</a> Treat workflow-file merge review and actor rules as separate controls.</p>
+          <p>Keep the <a href="/articles/github-token-permissions/">GITHUB_TOKEN permissions</a> at the smallest job boundary. <a href="#ref-secure-use">[4]</a> Pin third-party actions to reviewed full-length commit SHAs verified against the action repository. <a href="#ref-secure-use">[4]</a> For untrusted code on self-hosted compute, use an isolated environment that is not reused across runs and cannot reach internal resources. <a href="#ref-pr-target">[13]</a></p>
+        </section>
+
+        <section id="rollout">
+          <h2>A repository-first rollout keeps the first policy bounded</h2>
+          <p>At repository level, GitHub places the feature under <strong>Settings</strong>, <strong>Actions</strong>, <strong>Policies</strong>. The setup flow creates a ruleset, adds actor and event rules, then saves it in active or evaluate mode. <a href="#ref-protections">[2]</a></p>
+          <p>Start with a repository whose workflows and owners are known. After evaluation covers the repository's uncommon paths, consider moving the same decision to organization or enterprise scope. At enterprise level, open <strong>Policies</strong>, <strong>Actions</strong>, then <strong>Policies</strong>. <a href="#ref-enterprise-protections">[21]</a> Workflow execution protections use rulesets and can target repositories through repository custom properties. <a href="#ref-actions-policies">[3]</a></p>
+          <p>Inventory repository, organization, and enterprise rulesets before promotion. Source [10] establishes aggregation for branch and tag rulesets only. This guide makes no assumption about Actions-policy overlap behavior. Verify overlapping Actions-policy scopes in evaluate mode before reconciling or retiring the repository-level policy. <a href="#ref-rulesets">[10]</a></p>
+          <p>Custom-property targeting creates a changing repository set. Name the property owner and decide whether repository users or Apps may update its value. <a href="#ref-custom-properties">[12]</a> Record the expected matched repositories. For organization scope, use the <code>custom_property_values</code> organization webhook or an installed GitHub App as a change signal. <a href="#ref-property-webhook">[18]</a> Paginate through every response page from <code>GET /orgs/{org}/properties/values</code>. <a href="#ref-property-rest">[19]</a> For enterprise scope, configure that webhook or App coverage across every targeted organization. <a href="#ref-property-webhook">[18]</a> Enumerate every targeted organization and paginate the endpoint separately for each one. <a href="#ref-property-rest">[19]</a></p>
+          <p>Keep the policy name specific, record its owner, and attach the reason for every exception. A future maintainer needs to know whether an allowed event supports production delivery, dependency automation, or an abandoned workflow.</p>
+        </section>
+
+        <section id="activation-review">
+          <h2>Activation needs evidence from normal and uncommon runs</h2>
+          <ul class="risk-list">
+            <li>Every workflow event in the repository has an allow, block, or documented exception decision.</li>
+            <li>Human roles, GitHub Apps, Copilot, and Dependabot have been considered separately.</li>
+            <li>Allowed identities have credential protection, narrow permissions, and monitoring.</li>
+            <li>Evaluate mode covered pull requests, releases, maintenance jobs, and manual operations.</li>
+            <li>Direct expression interpolation from untrusted contexts into scripts has been removed in favor of action inputs or quoted intermediate environment variables. <a href="#ref-secure-use">[4]</a></li>
+            <li>The policy scope targets only the repositories reviewed for this rule.</li>
+            <li>Custom-property ownership, mutability, expected matches, and change monitoring are recorded.</li>
+            <li>Overlapping Actions-policy scopes have been tested in evaluate mode without assuming precedence.</li>
+            <li>The rollback owner and the path for changing the ruleset from active to evaluate mode are recorded before activation. <a href="#ref-protections">[2]</a></li>
+          </ul>
+          <p>After activation, trigger one known-allowed canary. If actor and event rules are both configured, test a denied actor with a known-allowed event, then an allowed actor with a denied event. Each denied canary should fail to reach execution under the policy. <a href="#ref-protections">[2]</a> For an organization-owned canary repository, confirm each denial with a <code>workflows.actions_policy_violation</code> audit event matched by repository, actor, event, and ruleset. <a href="#ref-audit-events">[11]</a> Observe normal automation through the team's chosen monitoring window and record the result.</p>
+          <p>If rollback is needed, the recorded owner changes the ruleset from active to evaluate mode and saves it. <a href="#ref-protections">[2]</a> Then rerun the harmless actor or event path that active enforcement blocked and verify that it executes. A canary that was already allowed cannot prove enforcement was removed.</p>
+          <p>As of August 5, 2026, GitHub documents Actions policies and workflow execution protections as public preview features that are subject to change. <a href="#ref-actions-policies">[3]</a> Recheck the current documentation before copying this setup into a permanent organization standard.</p>
+          <p>Related reviews: <a href="/articles/github-actions-security-risks/">GitHub Actions security risks</a>, <a href="/articles/pull-request-target-security/">pull_request_target security</a>, and <a href="/articles/reusable-workflows-security/">reusable workflow security</a>.</p>
+          <aside class="notice" aria-label="Editorial disclaimer">
+            This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+          </aside>
+          <p>CI Tripwire Editorial has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 22 official GitHub primary-source entries across 21 underlying documents, last reviewed 2026-08-05.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-announcement">GitHub Changelog, <a href="https://github.blog/changelog/2026-06-18-control-who-and-what-triggers-github-actions-workflows/" rel="nofollow noopener noreferrer" target="_blank">Control who and what triggers GitHub Actions workflows</a>, published 2026-06-18.</li>
+            <li id="ref-protections">GitHub Docs, <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/actions-policies/workflow-execution-protections" rel="nofollow noopener noreferrer" target="_blank">Workflow execution protections</a>, retrieved 2026-08-05.</li>
+            <li id="ref-actions-policies">GitHub Docs, <a href="https://docs.github.com/en/organizations/managing-organization-settings/actions-policies/about-actions-policies" rel="nofollow noopener noreferrer" target="_blank">About Actions policies</a>, retrieved 2026-08-05.</li>
+            <li id="ref-secure-use">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use" rel="nofollow noopener noreferrer" target="_blank">Secure use reference</a>, retrieved 2026-08-05.</li>
+            <li id="ref-roadmap">The GitHub Blog, <a href="https://github.blog/news-insights/product-news/whats-coming-to-our-github-actions-2026-security-roadmap/" rel="nofollow noopener noreferrer" target="_blank">What's coming to our GitHub Actions 2026 security roadmap</a>, updated 2026-03-30.</li>
+            <li id="ref-holds">GitHub Changelog, <a href="https://github.blog/changelog/2026-07-28-github-actions-holds-potentially-malicious-workflows-for-approval/" rel="nofollow noopener noreferrer" target="_blank">GitHub Actions holds potentially malicious workflows for approval</a>, published 2026-07-28.</li>
+            <li id="ref-triggering">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow" rel="nofollow noopener noreferrer" target="_blank">Triggering a workflow</a>, retrieved 2026-08-05.</li>
+            <li id="ref-safer-checkout">GitHub Changelog, <a href="https://github.blog/changelog/2026-06-18-safer-pull_request_target-defaults-for-github-actions-checkout/" rel="nofollow noopener noreferrer" target="_blank">Safer pull_request_target defaults for GitHub Actions checkout</a>, updated 2026-07-15.</li>
+            <li id="ref-doc-source">GitHub Docs source, <a href="https://raw.githubusercontent.com/github/docs/main/content/repositories/managing-your-repositorys-settings-and-features/actions-policies/workflow-execution-protections.md" rel="nofollow noopener noreferrer" target="_blank">Workflow execution protections</a>, retrieved 2026-08-05.</li>
+            <li id="ref-rulesets">GitHub Docs, <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets" rel="nofollow noopener noreferrer" target="_blank">About rulesets</a>, retrieved 2026-08-05.</li>
+            <li id="ref-audit-events">GitHub Docs, <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/audit-log-events-for-your-organization" rel="nofollow noopener noreferrer" target="_blank">Audit log events for your organization</a>, retrieved 2026-08-05.</li>
+            <li id="ref-custom-properties">GitHub Docs, <a href="https://docs.github.com/en/organizations/managing-organization-settings/managing-custom-properties-for-repositories-in-your-organization" rel="nofollow noopener noreferrer" target="_blank">Managing custom properties for repositories in your organization</a>, retrieved 2026-08-05.</li>
+            <li id="ref-pr-target">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target" rel="nofollow noopener noreferrer" target="_blank">Securely using pull_request_target</a>, retrieved 2026-08-05.</li>
+            <li id="ref-environments">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments" rel="nofollow noopener noreferrer" target="_blank">Deployments and environments</a>, retrieved 2026-08-05.</li>
+            <li id="ref-codeowners">GitHub Docs, <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" rel="nofollow noopener noreferrer" target="_blank">About code owners</a>, retrieved 2026-08-05.</li>
+            <li id="ref-audit-log-review">GitHub Docs, <a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization" rel="nofollow noopener noreferrer" target="_blank">Reviewing the audit log for your organization</a>, retrieved 2026-08-05.</li>
+            <li id="ref-org-protections">GitHub Docs, <a href="https://docs.github.com/en/organizations/managing-organization-settings/actions-policies/workflow-execution-protections" rel="nofollow noopener noreferrer" target="_blank">Workflow execution protections</a>, retrieved 2026-08-05.</li>
+            <li id="ref-property-webhook">GitHub Docs, <a href="https://docs.github.com/en/webhooks/webhook-events-and-payloads#custom_property_values" rel="nofollow noopener noreferrer" target="_blank">Webhook events and payloads</a>, retrieved 2026-08-05.</li>
+            <li id="ref-property-rest">GitHub Docs, <a href="https://docs.github.com/en/rest/orgs/custom-properties" rel="nofollow noopener noreferrer" target="_blank">REST API endpoints for custom properties</a>, retrieved 2026-08-05.</li>
+            <li id="ref-scheduled-actor">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#actor-for-scheduled-workflows" rel="nofollow noopener noreferrer" target="_blank">Events that trigger workflows</a>, retrieved 2026-08-05.</li>
+            <li id="ref-enterprise-protections">GitHub Docs, <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/actions-policies/workflow-execution-protections" rel="nofollow noopener noreferrer" target="_blank">Workflow execution protections</a>, retrieved 2026-08-05.</li>
+            <li id="ref-enterprise-audit-log">GitHub Docs, <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/accessing-the-audit-log-for-your-enterprise" rel="nofollow noopener noreferrer" target="_blank">Accessing the audit log for your enterprise</a>, retrieved 2026-08-05.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
