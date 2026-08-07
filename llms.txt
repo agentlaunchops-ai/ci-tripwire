@@ -5,6 +5,7 @@
 ## Navigation
 
 - [Home](https://dsotn.com/)
+- [Articles](https://dsotn.com/articles/)
 - [About](https://dsotn.com/about/)
 - [Stripe & Billing](https://dsotn.com/categories/stripe-billing/)
 - [gha-guard](https://github.com/agentlaunchops-ai/gha-guard)
@@ -19,8 +20,9 @@
 - [Stripe Per-Seat Billing in Node: Proration Controls](https://dsotn.com/articles/stripe-per-seat-billing-proration-node/)
 - [Stripe Webhook Idempotency in Node: Stop Double Work](https://dsotn.com/articles/stripe-webhook-idempotency-node/)
 
-### GitHub Actions (52)
+### GitHub Actions (13)
 
+- [GitHub Actions workflow execution protections guide](https://dsotn.com/articles/github-actions-workflow-execution-protections/)
 - [npm Trusted Publishing: Safer GitHub Actions Releases](https://dsotn.com/articles/npm-trusted-publishing-github-actions/)
 - [Dependabot GitHub Actions: Safer Bot PR CI Workflows](https://dsotn.com/articles/dependabot-github-actions-security/)
 - [GitHub Actions Script Injection: Safer Shell Steps](https://dsotn.com/articles/github-actions-script-injection/)

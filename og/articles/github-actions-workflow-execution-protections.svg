@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">GitHub Actions workflow execution protections guide</title>
+  <desc id="desc">CI Tripwire article social image fallback.</desc>
+  <rect width="1200" height="630" fill="#102129"/>
+  <rect x="68" y="68" width="1064" height="494" rx="8" fill="#ffffff"/>
+  <text x="106" y="142" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#b9322b">CI Tripwire</text>
+  <text x="106" y="258" font-family="Arial, sans-serif" font-size="66" font-weight="800" fill="#172026">GitHub Actions</text>
+  <text x="106" y="344" font-family="Arial, sans-serif" font-size="62" font-weight="800" fill="#172026">workflow execution</text>
+  <text x="106" y="430" font-family="Arial, sans-serif" font-size="62" font-weight="800" fill="#172026">protections guide</text>
+  <text x="106" y="508" font-family="Arial, sans-serif" font-size="30" fill="#52616b">Actor rules, event rules, evaluate mode</text>
+</svg>
