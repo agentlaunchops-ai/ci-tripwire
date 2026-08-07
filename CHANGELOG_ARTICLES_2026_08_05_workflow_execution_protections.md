@@ -288,6 +288,15 @@ Each round used a frozen draft. Counts below are raw auditor findings and theref
 - Mobile render at 390px: PASS after the shared table overflow fix and removal of the desktop TOC from the mobile flow. CDP measured `scrollWidth=390`, `innerWidth=390`, the H1 beginning at 434px, and a two-sentence Bottom line callout.
 - Full test, lint, and build commands: not available. This repository is static HTML with no package manifest or test runner.
 
+## Delivery evidence
+
+- Feature branch: `feat/workflow-execution-protections-article`, pushed at `60b784a547c08af9a79ff6e5e0d3dbfae14e3fec`.
+- Pull request: `https://github.com/agentlaunchops-ai/ci-tripwire/pull/1`, merged 2026-08-07.
+- Initial `main` merge commit: `ac3d465fa6dafb192991204b43b48d4265cc13e9`.
+- GitHub Pages build: `built` for the initial merge commit at 2026-08-07T13:32:30Z.
+- Live URL: `https://dsotn.com/articles/github-actions-workflow-execution-protections/`, HTTP 200 with the committed title, canonical URL, 22 visible sources, 22 JSON-LD citation entries, GA4, and Plausible.
+- Live asset checks: hero JPEG, social PNG, and social SVG each returned HTTP 200.
+
 ## Known limitations and residual risk
 
 - Workflow execution protections remain in public preview and can change after this review date.
