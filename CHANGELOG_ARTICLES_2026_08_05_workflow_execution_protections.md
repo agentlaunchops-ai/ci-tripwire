@@ -12,7 +12,7 @@
 
 The change adds one static article route, a licensed and unique hero photo, PNG and SVG social assets, homepage and article-index cards, sitemap discovery, `llms.txt` discovery, image credit, and a mobile table overflow fix. It also corrects the stale `llms.txt` GitHub Actions count from 52 to the actual 13.
 
-On 2026-08-06, the owner explicitly requested a commit and feature-branch push after the outstanding final fresh-context audit gate was disclosed. This source-control delivery does not include a pull request, merge, deployment, or production indexing action.
+On 2026-08-06, the owner explicitly requested a commit and feature-branch push after the outstanding final fresh-context audit gate was disclosed. On 2026-08-07, after that limitation was repeated, the owner explicitly requested that the branch be pushed and made live. That instruction authorizes the merge and GitHub Pages deployment recorded in the delivery evidence.
 
 ## Citation ledger
 
@@ -295,7 +295,7 @@ Each round used a frozen draft. Counts below are raw auditor findings and theref
 - The Pexels source page returned HTTP 403 to `curl`; it loaded in browser-based research, identified Ibrahim Boran and the Pexels License, and its direct image asset downloaded successfully.
 - Local rendering proves the static candidate, not production deployment or indexing.
 - A complete fresh-context adversarial round after the Round 5 fixes remains unrun because the session reached its auditor-thread limit. The article must not be described as verified or release-ready until that round reaches 0 HIGH and 0 MEDIUM.
-- Owner-directed exception: commit and push the feature branch on 2026-08-06 while preserving the release-readiness limitation above. No merge or deployment is authorized by that request.
+- Owner-directed exception: commit and push the feature branch on 2026-08-06, then merge and deploy it on 2026-08-07 while preserving the release-readiness limitation above.
 - Affiliate opportunity: none.
 
 ## Distribution draft
