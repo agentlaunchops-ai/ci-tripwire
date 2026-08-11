@@ -357,6 +357,33 @@ h3 {
   margin: 0 0 1rem;
 }
 
+.article-body pre {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #102129;
+  color: #f5f8fa;
+  line-height: 1.5;
+}
+
+.article-body pre code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9rem;
+  white-space: pre;
+}
+
+.article-body p code,
+.article-body li code,
+.article-body td code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .takeaways {
   background: #fff7ed;
   border: 1px solid #fed7aa;
@@ -455,6 +482,21 @@ h3 {
 
   .article-shell {
     grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: 100vw;
+    padding: 34px 20px 44px;
+  }
+
+  .article-hero {
+    width: 100%;
+    max-width: 100vw;
+    padding: 30px 20px 0;
+  }
+
+  .article-body,
+  .article-body section {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .article-body h1 {

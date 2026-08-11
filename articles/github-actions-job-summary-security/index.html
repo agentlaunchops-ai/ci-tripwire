@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>Can GitHub Actions job summaries expose CI secrets?</title>
+  <meta name="description" content="GitHub Actions job summaries can expose sensitive CI data. A fixed template with validated fields limits raw output and reliance on masking.">
+  <link rel="canonical" href="https://dsotn.com/articles/github-actions-job-summary-security/">
+  <meta property="og:title" content="Can GitHub Actions job summaries expose CI secrets?">
+  <meta property="og:description" content="GitHub Actions job summaries can expose sensitive CI data. A fixed template with validated fields limits raw output and reliance on masking.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/github-actions-job-summary-security/">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/articles/github-actions-job-summary-security.png">
+  <meta property="article:published_time" content="2026-08-11T11:06:08-04:00">
+  <meta property="article:modified_time" content="2026-08-11T11:06:08-04:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="GitHub Actions job summaries">
+  <meta property="article:tag" content="GITHUB_STEP_SUMMARY">
+  <meta property="article:tag" content="CI secret handling">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Can GitHub Actions job summaries expose CI secrets?">
+  <meta name="twitter:description" content="GitHub Actions job summaries can expose sensitive CI data. A fixed template with validated fields limits raw output and reliance on masking.">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/github-actions-job-summary-security.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Can GitHub Actions job summaries expose CI secrets?",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-08-11T11:06:08-04:00",
+    "dateModified": "2026-08-11T11:06:08-04:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["GitHub Actions job summary security", "GITHUB_STEP_SUMMARY", "GitHub Actions secrets", "CI reports"],
+    "wordCount": 1202,
+    "timeRequired": "PT6M",
+    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-job-summary-security/",
+    "articleBody": "Yes. GitHub Actions job summaries can expose sensitive CI data when a workflow publishes raw output or relies on masking as its only control. Publish fixed labels, validated counts, known status values, and controlled links instead.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/og/articles/github-actions-job-summary-security.png", "width": 1200, "height": 630},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Workflow commands for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands"},
+      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
+      {"@type": "CreativeWork", "name": "Script injections", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/security/script-injections"},
+      {"@type": "CreativeWork", "name": "Viewing workflow run history", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/monitor-workflows/view-workflow-run-history"},
+      {"@type": "CreativeWork", "name": "Using workflow run logs", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/monitor-workflows/use-workflow-run-logs"},
+      {"@type": "CreativeWork", "name": "Evaluate expressions in workflows and actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/expressions"},
+      {"@type": "CreativeWork", "name": "Deleting a workflow run", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/delete-a-workflow-run"},
+      {"@type": "CreativeWork", "name": "Canceling a workflow run", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/cancel-a-workflow-run"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "Can GitHub Actions job summaries expose CI secrets?", "item": "https://dsotn.com/articles/github-actions-job-summary-security/"}
+    ]
+  }
+  </script>
+  <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2C26MR4ZSP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2C26MR4ZSP');
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/github-actions-job-summary-security.jpg" width="1600" height="900" alt="Data-reporting dashboard displayed on a laptop screen.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Short answer</a>
+        <a href="#safe-pattern">Safe summary pattern</a>
+        <a href="#two-boundaries">Shell and Markdown boundaries</a>
+        <a href="#masking">Secret masking</a>
+        <a href="#recovery">Cleanup and limits</a>
+        <a href="#review">Review checklist</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>Can GitHub Actions job summaries expose CI secrets?</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-08-11 · 6 min read</p>
+        <p id="editorial-summary">Yes. GitHub Actions automatically masks secrets in job summaries. <a href="#ref-workflow-commands">[1]</a> GitHub also warns that automatic redaction is not guaranteed. <a href="#ref-secure-use">[2]</a> Keep raw logs, event payloads, tokens, and transformed credentials out of summaries. Publish fixed labels, validated counts, known status values, and controlled links instead.</p>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for GitHub Actions job summaries</h2>
+          <ul>
+            <li>Job summaries render GitHub-flavored Markdown. <a href="#ref-workflow-commands">[1]</a> Each step writes to its own <code>GITHUB_STEP_SUMMARY</code> file. <a href="#ref-workflow-commands">[1]</a></li>
+            <li>GitHub groups completed step summaries into one job summary. <a href="#ref-workflow-commands">[1]</a> Summaries from multiple jobs are ordered by job completion time. <a href="#ref-workflow-commands">[1]</a></li>
+            <li>A completed step's summary cannot be changed by a later step. <a href="#ref-workflow-commands">[1]</a> Removing sensitive summary content after upload requires deleting the workflow run. <a href="#ref-workflow-commands">[1]</a></li>
+            <li>Each step has a 1 MiB summary limit. <a href="#ref-workflow-commands">[1]</a> Only 20 step summaries are displayed per job. <a href="#ref-workflow-commands">[1]</a> A summary upload failure does not fail the step or job. <a href="#ref-workflow-commands">[1]</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>Yes, a summary can publish data that never belonged there</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> build job summaries from an allowlist of reviewable fields. Fixed headings, validated counts, known status values, commit identifiers, and controlled links are useful. Raw logs, serialized contexts, stack traces, request bodies, and credentials stay out.
+          </div>
+          <p>A job summary is custom Markdown on the workflow run summary page. <a href="#ref-workflow-commands">[1]</a> GitHub requires repository read access to view workflow-run history. <a href="#ref-run-history">[4]</a> In GitHub's web UI, a viewer must sign in before opening workflow-run information for a public repository. <a href="#ref-run-logs">[5]</a> GitHub positions summaries as a way to show results and failures without making a reader open the logs. <a href="#ref-workflow-commands">[1]</a> That convenience gives the summary its own review boundary.</p>
+          <p>A command that dumps a test report, cloud response, or event object into Markdown can publish much more than the few fields a maintainer meant to show.</p>
+          <table>
+            <caption>A narrow publishing contract for job summaries</caption>
+            <thead>
+              <tr>
+                <th scope="col">Output</th>
+                <th scope="col">Default treatment</th>
+                <th scope="col">Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pass, fail, and skip counts</td>
+                <td>Allow after numeric validation</td>
+                <td>One-to-nine-digit result counts</td>
+              </tr>
+              <tr>
+                <td>Commit SHA and workflow-run link</td>
+                <td>Allow from known GitHub fields</td>
+                <td>Useful traceability without copying logs</td>
+              </tr>
+              <tr>
+                <td>Pull-request titles, branch names, and labels</td>
+                <td>Omit or encode before rendering</td>
+                <td>GitHub treats these as potentially untrusted input <a href="#ref-script-injections">[3]</a></td>
+              </tr>
+              <tr>
+                <td>Logs, payloads, stack traces, and API responses</td>
+                <td>Keep out by default</td>
+                <td>Unbounded content is difficult to review field by field</td>
+              </tr>
+              <tr>
+                <td>Secrets and derived credentials</td>
+                <td>Never publish deliberately</td>
+                <td>GitHub says redaction is not guaranteed <a href="#ref-secure-use">[2]</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="safe-pattern">
+          <h2>A safe summary validates data before writing Markdown</h2>
+          <p>This Bash step accepts two step outputs through environment variables, permits one to nine ASCII digits, and writes a fixed Markdown table. The values cannot add a heading, link, image, or shell command because their accepted shape and length are deliberately narrow.</p>
+          <pre><code>- name: Publish validated test counts
+  if: $&#123;&#123; !cancelled() &#125;&#125;
+  env:
+    PASSED: $&#123;&#123; steps.tests.outputs.passed &#125;&#125;
+    FAILED: $&#123;&#123; steps.tests.outputs.failed &#125;&#125;
+  shell: bash
+  run: |
+    for value in "$PASSED" "$FAILED"; do
+      if [[ ! "$value" =~ ^[0123456789]{1,9}$ ]]; then
+        rm -f "$GITHUB_STEP_SUMMARY"
+        exit 1
+      fi
+    done
+
+    {
+      printf '## Test results\n\n'
+      printf '| Result | Count |\n'
+      printf '| --- | ---: |\n'
+      printf '| Passed | %s |\n' "$PASSED"
+      printf '| Failed | %s |\n' "$FAILED"
+    } &gt;&gt; "$GITHUB_STEP_SUMMARY"</code></pre>
+          <p>The status condition follows GitHub's recommendation for a step that should run after success or failure but not cancellation. <a href="#ref-expressions">[6]</a> The earlier <code>tests</code> step must emit both outputs before it exits, including when tests fail.</p>
+          <p>Use a fixed template. The workflow decides which fields are public enough for the summary, checks their shape and length, and gives each value one intended location. A failure removes the current step's summary file before the step ends, which GitHub documents as the supported way to remove that step's pending summary. <a href="#ref-workflow-commands">[1]</a></p>
+        </section>
+
+        <section id="two-boundaries">
+          <h2>Shell safety and Markdown safety need separate checks</h2>
+          <p>GitHub warns that pull-request titles, issue bodies, branch names, labels, and similar context fields can contain attacker-controlled text. <a href="#ref-script-injections">[3]</a> Putting an expression such as <code>$&#123;&#123; github.event.pull_request.title &#125;&#125;</code> directly inside a <code>run:</code> script can turn that text into part of the temporary shell script before the runner executes it. <a href="#ref-script-injections">[3]</a></p>
+          <p>GitHub's preferred inline-script pattern places untrusted expressions in intermediate environment variables. <a href="#ref-secure-use">[2]</a> That stops expression substitution from rewriting the shell program. <a href="#ref-secure-use">[2]</a> <a href="#ref-script-injections">[3]</a> Job summary output still renders as GitHub-flavored Markdown. <a href="#ref-workflow-commands">[1]</a> Apply a separate content review: validate a narrow format, encode the Markdown characters the summary permits, or omit the field.</p>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Two reviews:</strong> first confirm that untrusted data cannot become shell code. Then confirm that the resulting text cannot publish an unexpected Markdown structure or sensitive value.
+          </div>
+        </section>
+
+        <section id="masking">
+          <h2>Secret masking backs up the publishing allowlist</h2>
+          <p>GitHub says job summaries automatically mask secrets that were added accidentally. <a href="#ref-workflow-commands">[1]</a> The broader secure-use reference says redaction is not guaranteed when secret values are transformed. <a href="#ref-secure-use">[2]</a> Runner redaction also depends on the job using the secret and the runner being able to access it. <a href="#ref-secure-use">[2]</a></p>
+          <p>Register generated sensitive values with <code>::add-mask::VALUE</code> before any command could print them. <a href="#ref-workflow-commands">[1]</a> GitHub specifically calls out transformed values, including Base64 or URL-encoded forms, as values that need their own registration. <a href="#ref-secure-use">[2]</a> Keep the summary allowlist anyway. Masking is useful when a mistake slips through; it is a weak approval criterion for content the workflow publishes on purpose.</p>
+        </section>
+
+        <section id="recovery">
+          <h2>Cleanup changes when the step finishes</h2>
+          <p>Within the current step, <code>&gt;</code> overwrites earlier summary content. <a href="#ref-workflow-commands">[1]</a> Deleting the file referenced by <code>GITHUB_STEP_SUMMARY</code> removes that step's pending summary. <a href="#ref-workflow-commands">[1]</a> After the step completes, GitHub uploads the summary. <a href="#ref-workflow-commands">[1]</a> Later steps cannot modify it. <a href="#ref-workflow-commands">[1]</a> A sensitive uploaded summary requires deletion of the entire workflow run. <a href="#ref-workflow-commands">[1]</a></p>
+          <ul class="risk-list">
+            <li><strong>Before the step ends:</strong> delete the summary file to remove the current step's pending summary. <a href="#ref-workflow-commands">[1]</a> Stop writing and fail the step if the publishing contract was violated.</li>
+            <li><strong>After upload:</strong> rotate any credential that may have appeared. <a href="#ref-secure-use">[2]</a> Have someone with repository write access cancel the workflow if it is still running. <a href="#ref-cancel-run">[8]</a> Once the run has completed, that person can delete it. <a href="#ref-delete-run">[7]</a> Deleting the run removes its job summaries. <a href="#ref-workflow-commands">[1]</a></li>
+            <li><strong>For oversized summaries:</strong> investigate the error annotation. <a href="#ref-workflow-commands">[1]</a> GitHub says the per-step upload fails above 1 MiB. <a href="#ref-workflow-commands">[1]</a> The failure does not change the step or job result. <a href="#ref-workflow-commands">[1]</a></li>
+          </ul>
+        </section>
+
+        <section id="review">
+          <h2>Review the summary as an explicit CI output</h2>
+          <ul class="risk-list">
+            <li>Every dynamic field has a named owner and a narrow reason to appear.</li>
+            <li>Inline scripts receive untrusted context values through environment variables. <a href="#ref-secure-use">[2]</a> Direct expression interpolation stays out. <a href="#ref-secure-use">[2]</a> <a href="#ref-script-injections">[3]</a> Actions receive those values as inputs. <a href="#ref-secure-use">[2]</a></li>
+            <li>Each dynamic value has an allowlist, type check, or encoding step before Markdown output.</li>
+            <li>No command pipes a log file, complete context, payload, stack trace, or API response into the summary.</li>
+            <li>Generated credentials are registered for masking before output or another workflow command could expose them. <a href="#ref-workflow-commands">[1]</a> They are never deliberately written to the summary.</li>
+            <li>The workflow has a tested failure path that deletes the pending summary before the step exits. <a href="#ref-workflow-commands">[1]</a></li>
+            <li>Summary-size failures produce an error annotation. <a href="#ref-workflow-commands">[1]</a> They do not fail the job. <a href="#ref-workflow-commands">[1]</a></li>
+          </ul>
+          <p>Related reviews: <a href="/articles/github-actions-script-injection/">GitHub Actions script injection</a>, <a href="/articles/github-token-permissions/"><code>GITHUB_TOKEN</code> permissions</a>, and <a href="/articles/github-actions-security-risks/">five GitHub Actions security risks</a>.</p>
+          <aside class="notice" aria-label="Editorial disclaimer">
+            This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+          </aside>
+          <p>CI Tripwire Editorial has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 8 official GitHub primary-source entries, last reviewed 2026-08-11.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-workflow-commands">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands" rel="nofollow noopener noreferrer" target="_blank">Workflow commands for GitHub Actions</a>, retrieved 2026-08-11.</li>
+            <li id="ref-secure-use">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use" rel="nofollow noopener noreferrer" target="_blank">Secure use reference</a>, retrieved 2026-08-11.</li>
+            <li id="ref-script-injections">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/security/script-injections" rel="nofollow noopener noreferrer" target="_blank">Script injections</a>, retrieved 2026-08-11.</li>
+            <li id="ref-run-history">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/monitor-workflows/view-workflow-run-history" rel="nofollow noopener noreferrer" target="_blank">Viewing workflow run history</a>, retrieved 2026-08-11.</li>
+            <li id="ref-run-logs">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/monitor-workflows/use-workflow-run-logs" rel="nofollow noopener noreferrer" target="_blank">Using workflow run logs</a>, retrieved 2026-08-11.</li>
+            <li id="ref-expressions">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/expressions" rel="nofollow noopener noreferrer" target="_blank">Evaluate expressions in workflows and actions</a>, retrieved 2026-08-11.</li>
+            <li id="ref-delete-run">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/manage-workflow-runs/delete-a-workflow-run" rel="nofollow noopener noreferrer" target="_blank">Deleting a workflow run</a>, retrieved 2026-08-11.</li>
+            <li id="ref-cancel-run">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/manage-workflow-runs/cancel-a-workflow-run" rel="nofollow noopener noreferrer" target="_blank">Canceling a workflow run</a>, retrieved 2026-08-11.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>
