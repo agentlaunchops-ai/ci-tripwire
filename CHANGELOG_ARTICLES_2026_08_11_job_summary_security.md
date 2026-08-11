@@ -313,6 +313,15 @@ Round 6 used fourteen new read-only roles against article SHA-256 `130713525123e
 - Package-manager gates: not applicable. This static repository has no `package.json`, lint script, build script, or test script.
 - Full independent audit: PASS. Round 6 returned 0 HIGH, 0 MEDIUM, and 0 LOW findings across all 14 required roles.
 
+## Deployment record
+
+- Article commit: `1103fe6bea9c65e1299bc71cfa89312abac34bb9`.
+- Release PR: `https://github.com/agentlaunchops-ai/ci-tripwire/pull/3`.
+- Main merge commit: `54531beb68f820936e881cb1a46461ee8aee9887`.
+- GitHub Pages build: `built` at 2026-08-11T19:17:28Z.
+- Live URL: `https://dsotn.com/articles/github-actions-job-summary-security/`.
+- Live verification: PASS. The article, hero, OG image, homepage, article index, sitemap, and `llms.txt` returned HTTP 200 and were byte-for-byte identical to the audited release commit. The live title and H1 also matched exactly.
+
 ## Distribution draft
 
 ### Can GitHub Actions job summaries expose CI secrets?
