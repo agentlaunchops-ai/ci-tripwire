@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://dsotn.com/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-11</lastmod>
   </url>
   <url>
     <loc>https://dsotn.com/about/</loc>
@@ -10,11 +10,19 @@
   </url>
   <url>
     <loc>https://dsotn.com/articles/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-11</lastmod>
   </url>
   <url>
     <loc>https://dsotn.com/categories/stripe-billing/</loc>
     <lastmod>2026-06-09</lastmod>
+  </url>
+  <url>
+    <loc>https://dsotn.com/articles/github-actions-job-summary-security/</loc>
+    <lastmod>2026-08-11</lastmod>
+    <image:image>
+      <image:loc>https://dsotn.com/public/images/articles/github-actions-job-summary-security.jpg</image:loc>
+      <image:title>Data-reporting dashboard displayed on a laptop screen</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://dsotn.com/articles/github-actions-workflow-execution-protections/</loc>
