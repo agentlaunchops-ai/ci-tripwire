@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| ai-trends-software-engineering-2026 | https://unsplash.com/photos/two-server-racks-filled-with-electronic-components-and-wires-k27hkqXuveo | Eric Stoynov | Unsplash License | 2026-08-12 |
 | github-actions-workflow-execution-protections | https://www.pexels.com/photo/close-up-photo-of-control-panel-3582392/ | Ibrahim Boran | Pexels License | 2026-08-05 |
 | stripe-mrr-churn-events-node | https://commons.wikimedia.org/wiki/File:HP-15C_Calculator-horizontal-2.jpg | Pittigrilli / derivative work: Hic et nunc | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-09 |
 | stripe-usage-based-billing-node | https://commons.wikimedia.org/wiki/File:Mechanical_electricity_meter_1965_(1).jpg | Mike1024 at English Wikipedia | Public domain | 2026-06-09 |

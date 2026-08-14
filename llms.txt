@@ -1,6 +1,6 @@
 # CI Tripwire
 
-> Source-linked CI/CD workflow security and Stripe billing reliability articles for developers and maintainers.
+> Source-linked AI engineering, CI/CD workflow security, and Stripe billing reliability articles for developers and maintainers.
 
 ## Navigation
 
@@ -11,6 +11,10 @@
 - [gha-guard](https://github.com/agentlaunchops-ai/gha-guard)
 
 ## Articles by Category
+
+### Artificial Intelligence (1)
+
+- [Five AI trends for software engineering teams in 2026](https://dsotn.com/articles/ai-trends-software-engineering-2026/)
 
 ### Stripe & Billing (5)
 
