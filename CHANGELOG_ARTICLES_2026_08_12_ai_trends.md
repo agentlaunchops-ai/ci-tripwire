@@ -298,7 +298,21 @@ manifestations, not treated as dead links.
 - Independent Round 16 Chrome/CDP checks at 390 by 844 and 1440 by 1000 found
   no horizontal overflow or out-of-bounds elements. All eight section targets
   and all 11 source-row targets cleared the sticky header at both widths.
-- Repository actions taken: no commit, push, pull request, merge, or deployment.
+- Repository actions taken: article commit, release PR, merge, Pages build, and
+  live byte verification completed on 2026-08-14.
+
+## Deployment record
+
+- Article commit: `cb5b21edd86a70b0b63682a094fe63a12bd4ab69`.
+- Release PR: `https://github.com/agentlaunchops-ai/ci-tripwire/pull/5`.
+- Main merge commit: `73313576819749104d2616d0f89c78ca939ad249`.
+- GitHub Pages build: `built` at 2026-08-14T14:28:41Z.
+- Live URL: `https://dsotn.com/articles/ai-trends-software-engineering-2026/`.
+- Live verification: PASS. The article, hero, PNG and SVG social images,
+  homepage, article index, sitemap, and `llms.txt` returned HTTP 200 and were
+  byte-for-byte identical to merge commit `7331357`. The live article exposed
+  the exact title, canonical URL, two valid JSON-LD blocks, and 11 visible
+  references.
 
 ## Distribution draft
 
