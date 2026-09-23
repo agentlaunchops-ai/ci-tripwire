@@ -2,6 +2,7 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| pull-request-target-november-2 | https://commons.wikimedia.org/wiki/File:Rail_road_crossing_Yankton_2013.jpg | Peterupton99 | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-09-23 |
 | ai-trends-software-engineering-2026 | https://unsplash.com/photos/two-server-racks-filled-with-electronic-components-and-wires-k27hkqXuveo | Eric Stoynov | Unsplash License | 2026-08-12 |
 | github-actions-workflow-execution-protections | https://www.pexels.com/photo/close-up-photo-of-control-panel-3582392/ | Ibrahim Boran | Pexels License | 2026-08-05 |
 | stripe-mrr-churn-events-node | https://commons.wikimedia.org/wiki/File:HP-15C_Calculator-horizontal-2.jpg | Pittigrilli / derivative work: Hic et nunc | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-06-09 |

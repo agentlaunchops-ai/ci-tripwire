@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>Public pull_request_target enforcement starts November 2</title>
+  <meta name="description" content="On November 2, 2026, GitHub enforces the pull_request_target default for repos that used it before general availability. Evaluate mode is on now.">
+  <link rel="canonical" href="https://dsotn.com/articles/pull-request-target-november-2/">
+  <meta property="og:title" content="Public pull_request_target enforcement starts November 2">
+  <meta property="og:description" content="On November 2, 2026, GitHub enforces the pull_request_target default for repos that used it before general availability. Evaluate mode is on now.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dsotn.com/articles/pull-request-target-november-2/">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/articles/pull-request-target-november-2.png">
+  <meta property="article:published_time" content="2026-09-23T12:00:00-04:00">
+  <meta property="article:modified_time" content="2026-09-23T12:00:00-04:00">
+  <meta property="article:author" content="CI Tripwire Editorial">
+  <meta property="article:section" content="GitHub Actions">
+  <meta property="article:tag" content="pull_request_target">
+  <meta property="article:tag" content="workflow execution protections">
+  <meta property="article:tag" content="actions/checkout">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Public pull_request_target enforcement starts November 2">
+  <meta name="twitter:description" content="On November 2, 2026, GitHub enforces the pull_request_target default for repos that used it before general availability. Evaluate mode is on now.">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/pull-request-target-november-2.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Public pull_request_target enforcement starts November 2",
+    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
+    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
+    "datePublished": "2026-09-23T12:00:00-04:00",
+    "dateModified": "2026-09-23T12:00:00-04:00",
+    "articleSection": "GitHub Actions",
+    "keywords": ["pull_request_target", "GitHub Actions security", "workflow execution protections", "actions/checkout", "November 2 2026"],
+    "wordCount": 2070,
+    "timeRequired": "PT10M",
+    "mainEntityOfPage": "https://dsotn.com/articles/pull-request-target-november-2/",
+    "articleBody": "On November 2, 2026, GitHub enforces its default pull_request_target rule for repositories still on that default before the feature became generally available. While the rule is in evaluate mode, workflow runs still start.",
+    "image": {"@type": "ImageObject", "url": "https://dsotn.com/og/articles/pull-request-target-november-2.png", "width": 1200, "height": 630},
+    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
+    "citation": [
+      {"@type": "CreativeWork", "name": "Securely using pull_request_target", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target"},
+      {"@type": "CreativeWork", "name": "Workflow execution protections in GitHub Actions generally available", "publisher": "GitHub Changelog", "url": "https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available"},
+      {"@type": "CreativeWork", "name": "Safer pull_request_target defaults for GitHub Actions checkout", "publisher": "GitHub Changelog", "url": "https://github.blog/changelog/2026-06-18-safer-pull_request_target-defaults-for-github-actions-checkout/"},
+      {"@type": "CreativeWork", "name": "About Actions policies", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/about-actions-policies"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
+      {"@type": "ListItem", "position": 3, "name": "Public pull_request_target enforcement starts November 2", "item": "https://dsotn.com/articles/pull-request-target-november-2/"}
+    ]
+  }
+  </script>
+    <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2C26MR4ZSP"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-2C26MR4ZSP');
+    </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/articles/">Articles</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="article-hero">
+      <img src="/public/images/articles/pull-request-target-november-2.jpg" width="1600" height="900" alt="Railroad crossing signals and a crossbuck beside tracks and a road in Yankton, South Dakota, with an electrical substation behind them.">
+    </div>
+    <div class="article-shell">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>On this page</strong>
+        <a href="#key-takeaways">Key takeaways</a>
+        <a href="#article-summary">Bottom line</a>
+        <a href="#general-availability">September 17 availability</a>
+        <a href="#who-is-covered">Who the default covers</a>
+        <a href="#checkout-pins">SHA pins and checkout</a>
+        <a href="#insights-before-enforcement">Policy insights</a>
+        <a href="#references">Sources</a>
+      </aside>
+      <article class="article-body">
+        <p class="eyebrow">GitHub Actions</p>
+        <h1>Public pull_request_target enforcement starts November 2</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Research · Published 2026-09-23 · Updated 2026-09-23 · 10 min read</p>
+        <p id="editorial-summary">On November 2, 2026, GitHub will enforce a default <code>pull_request_target</code> block for repositories that "were using the default pull_request_target policy before general availability." <a href="#ref-pr-target">[1]</a> The default is in evaluate mode, so workflow runs still start. <a href="#ref-pr-target">[1]</a> It is added on public repositories with no applicable Actions event policy yet, and it leaves private and internal repositories out. <a href="#ref-pr-target">[1]</a></p>
+
+        <section id="key-takeaways" class="takeaways">
+          <h2>Key takeaways for the November 2 pull_request_target default</h2>
+          <ul>
+            <li>The September 17, 2026 changelog says workflow execution protections are "generally available for GitHub Enterprise, organizations, and repositories." <a href="#ref-ga">[2]</a></li>
+            <li>That changelog adds workflow-file targeting, an Insights view, and a REST API. The API can add a rule, fetch it, change it, or remove it, and a rule can name a workflow path. Those calls exist at enterprise scope, organization scope, and repository scope. <a href="#ref-ga">[2]</a></li>
+            <li>GitHub adds the default on a public repository that does not yet have an applicable Actions event policy. Private repositories are outside it. Internal repositories are outside it. An applicable event policy already in place stays in place. <a href="#ref-pr-target">[1]</a></li>
+            <li>The default is in evaluate mode, so workflow runs still start. Policy insights show which of those runs enforcement would block. <a href="#ref-pr-target">[1]</a></li>
+            <li>Enforcement date: November 2, 2026, for repositories that "were using the default pull_request_target policy before general availability." <a href="#ref-pr-target">[1]</a></li>
+            <li>A July 15, 2026 editor's note moved checkout backport enforcement from July 16, 2026 to July 20, 2026. Full SHA pins, minor tags, and patch tags are outside that backport. <code>actions/checkout</code> v1 is excluded from the backport. <a href="#ref-checkout">[3]</a></li>
+          </ul>
+          <p>Skip to:</p>
+          <ul>
+            <li><a href="#article-summary">November 2, 2026 covers repositories on the default before general availability</a></li>
+            <li><a href="#general-availability">September 17, 2026 is when the policy feature became generally available</a></li>
+            <li><a href="#who-is-covered">The default covers public repositories with no event policy yet</a></li>
+            <li><a href="#checkout-pins">A SHA pin is outside the July 20 checkout backport</a></li>
+            <li><a href="#insights-before-enforcement">Policy insights list the runs enforcement would block</a></li>
+          </ul>
+        </section>
+
+        <section id="article-summary">
+          <h2>November 2, 2026 covers repositories on the default before general availability</h2>
+          <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
+            <strong>Bottom line:</strong> Enforcement date: November 2, 2026, for repositories that "were using the default pull_request_target policy before general availability." The default is in evaluate mode, so workflow runs still start.
+          </div>
+          <p>The September 17, 2026 changelog says workflow execution protections are "generally available for GitHub Enterprise, organizations, and repositories." <a href="#ref-ga">[2]</a> GitHub's Actions policies page gives the short version: on public repositories, the new default will block <code>pull_request_target</code>, and that page dates enforcement to November 2, 2026. The page links to the <code>pull_request_target</code> guide. <a href="#ref-policies">[4]</a></p>
+          <table>
+            <caption>Where GitHub's default pull_request_target policy applies, retrieved 2026-09-23 <a href="#ref-pr-target">[1]</a></caption>
+            <thead>
+              <tr>
+                <th scope="col">Repository</th>
+                <th scope="col">What the default does now</th>
+                <th scope="col">November 2, 2026</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Public, and no applicable Actions event policy yet</td>
+                <td>GitHub adds a default that blocks workflows started by <code>pull_request_target</code>. Runs still start during evaluate mode.</td>
+                <td>Enforcement hits the pre-general-availability cohort named in the bottom line.</td>
+              </tr>
+              <tr>
+                <td>Public, with an applicable event policy already configured</td>
+                <td>An applicable event policy already in place stays in place.</td>
+                <td>An applicable event policy is not replaced. The November 2, 2026 sentence names repositories on the default before general availability, as its own sentence.</td>
+              </tr>
+              <tr>
+                <td>Private or internal</td>
+                <td>Private repositories are outside the default. Internal repositories are outside the default.</td>
+                <td>This default does not add a November 2, 2026 block.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>Check the date before you treat it as fixed:</strong> A July 15, 2026 editor's note moved checkout backport enforcement from July 16, 2026 to July 20, 2026. Full SHA pins, minor tags, and patch tags are outside that backport. <code>actions/checkout</code> v1 is excluded from the backport. <a href="#ref-checkout">[3]</a> Recheck the <code>pull_request_target</code> guide and the September 17, 2026 changelog before treating November 2, 2026 as fixed. Both were retrieved September 23, 2026.
+          </div>
+        </section>
+
+        <section id="general-availability">
+          <h2>September 17, 2026 is when the policy feature became generally available</h2>
+          <p>The September 17, 2026 changelog says workflow execution protections are "generally available for GitHub Enterprise, organizations, and repositories." <a href="#ref-ga">[2]</a> The <a href="/articles/github-actions-workflow-execution-protections/">workflow execution protections guide</a> on this site records the preview setup as of August 5, 2026, including actor rules and event rules. General availability is this later changelog.</p>
+          <p>The changelog describes an allow list evaluated before a run. Actor rules are the who. Event rules are the what. <a href="#ref-ga">[2]</a> General availability adds three controls on top of that preview.</p>
+          <ul class="risk-list">
+            <li><strong>Workflow file targeting.</strong> A rule can name specific workflow files. The changelog's example restricts <code>deploy.yml</code> to a designated team and leaves CI workflows open to all contributors. <a href="#ref-ga">[2]</a></li>
+            <li><strong>Insights.</strong> Insights shows how Actions evaluates and enforces rules across the enterprise, the organization, and repositories. <a href="#ref-ga">[2]</a></li>
+            <li><strong>REST API.</strong> A caller can add a rule, fetch it, change it, or remove it. Workflow path conditions are part of that API. The same calls exist for an enterprise, an organization, and a repository. <a href="#ref-ga">[2]</a></li>
+          </ul>
+          <p>Evaluate mode from the preview remains. A rule can run in shadow mode, and the runs it would block are visible before enforcement. <a href="#ref-ga">[2]</a></p>
+        </section>
+
+        <section id="who-is-covered">
+          <h2>The default covers public repositories with no event policy yet</h2>
+          <p>Enforcement date: November 2, 2026, for repositories that "were using the default pull_request_target policy before general availability." <a href="#ref-pr-target">[1]</a> A separate rule says who receives the default now: GitHub adds it on a public repository that does not yet have an applicable Actions event policy. <a href="#ref-pr-target">[1]</a> Private repositories are outside it. Internal repositories are outside it. An applicable event policy already in place stays in place. <a href="#ref-pr-target">[1]</a></p>
+          <p>Policy insights show which of those runs enforcement would block. <a href="#ref-pr-target">[1]</a></p>
+          <p>A <code>pull_request_target</code> job receives the base repository's <code>GITHUB_TOKEN</code> and can read repository secrets and organization secrets. <a href="#ref-pr-target">[1]</a> GitHub's checkout changelog says these workflows have default-branch cache access. <a href="#ref-checkout">[3]</a> The <code>pull_request_target</code> guide says that access is read-only unless the workflow declares a write-capable cache mode. <a href="#ref-pr-target">[1]</a> The <a href="/articles/github-actions-cache-security/">cache security guide</a> is the longer treatment of that cache. By default, the workflow file comes from the base repository's default branch. A checkout that sets no <code>ref</code> and no <code>repository</code> does too. An unrelated third-party <code>repository</code> input is outside the fork-only refusal. <a href="#ref-pr-target">[1]</a> <a href="#ref-checkout">[3]</a></p>
+          <p>Fork code is not executed by default. Checkout by itself does not run that code. The bug is finished when a later step executes what a checkout or a fetch brought in: the pull request head, the pull request merge ref, a <code>repository</code> input pointed at the fork, or a fetch outside <code>actions/checkout</code>. That list is not the only way a command runs in this event. The same page also names command injection. <a href="#ref-pr-target">[1]</a></p>
+          <p>GitHub's name for the resulting bug is a pwn request: checking out an unreviewed fork pull request head inside one of these workflows usually means the fork's code runs with the workflow's privileges. <a href="#ref-checkout">[3]</a> The <a href="/articles/pull-request-target-security/">pull_request_target guide</a> stays the workflow-level writeup. This page is the enforcement date and the repository policy around it.</p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Labeling and triage are documented uses:</strong> GitHub says <code>pull_request_target</code> is useful for automation that answers a fork pull request, and the examples are labeling, triage, and posting authenticated status checks. <a href="#ref-pr-target">[1]</a> Keeping the trigger through enforcement means the workflow still needs it and an applicable event policy allows it. <a href="#ref-pr-target">[1]</a> The same page says to allow the trigger only when it is necessary. It also says these workflows should not check out, build, or run an untrusted pull request's code when they can read repository secrets or hold a privileged <code>GITHUB_TOKEN</code>. <a href="#ref-pr-target">[1]</a>
+          </div>
+        </section>
+
+        <section id="checkout-pins">
+          <h2>A SHA pin is outside the July 20 checkout backport</h2>
+          <p><code>actions/checkout</code> v7 became generally available with the June 18, 2026 changelog. It refuses to fetch fork pull request code during <code>pull_request_target</code>. It also refuses during <code>workflow_run</code> when the workflow run's triggering event is a <code>pull_request*</code> event. <a href="#ref-checkout">[3]</a> The refusal applies when the pull request comes from a fork and any of these inputs match: <code>repository</code> resolves to the fork's repository, <code>ref</code> matches the head form or the merge form GitHub writes as <code>refs/pull/number/head</code> and <code>refs/pull/number/merge</code>, or <code>ref</code> resolves to that fork pull request's head commit or its merge commit. <a href="#ref-checkout">[3]</a></p>
+          <p>Same-repository pull requests are unchanged. The <code>pull_request</code> event is unchanged. <a href="#ref-checkout">[3]</a></p>
+          <p>A July 15, 2026 editor's note moved checkout backport enforcement from July 16, 2026 to July 20, 2026. <a href="#ref-checkout">[3]</a> Full SHA pins, minor tags, and patch tags are outside that backport. <code>actions/checkout</code> v1 is excluded from the backport. Floating major tags were the pins GitHub said would pick up the change on their own. GitHub says the pins outside the backport need an upgrade, and it names Dependabot or an established upgrade process. <a href="#ref-checkout">[3]</a></p>
+          <p>The July 16, 2026 sentence is still in the post body under that note. The editor's note is the revision. The page retrieved September 23, 2026 has no later note saying the July 20, 2026 enforcement finished. A floating major tag was in the plan. A full SHA pin was not.</p>
+          <p>The <a href="/articles/pin-github-actions-sha/">SHA pinning guide</a> is how this site treats a full commit pin. Moving that pin forward is how a pinned checkout receives the refusal. A SHA pin selects the checkout commit. November 2, 2026 is the gate for a <code>pull_request_target</code> run only for repositories that were on the default before general availability, the cohort in the table above. Private repositories, internal repositories, and a public repository that already has an applicable event policy are outside that default. <a href="#ref-pr-target">[1]</a></p>
+          <table>
+            <caption>Checkout pin scope from the June 18, 2026 post body. The July 15, 2026 note excludes v1 and moves the date. <a href="#ref-checkout">[3]</a></caption>
+            <thead>
+              <tr>
+                <th scope="col">Pin</th>
+                <th scope="col">July 20, 2026 backport</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Floating major tag on a supported version other than v1</td>
+                <td>In the backport plan. GitHub said these tags would pick up the change on their own.</td>
+              </tr>
+              <tr>
+                <td>Full SHA, minor tag, or patch tag</td>
+                <td>Outside the backport. The post says a specific SHA, a minor version, or a patch version.</td>
+              </tr>
+              <tr>
+                <td><code>actions/checkout</code> v1</td>
+                <td>Excluded. The July 15, 2026 note says v1 will not receive the change.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
+            <strong>The checkout refusal is narrow:</strong> A <code>run</code> step that uses <code>git</code> or <code>gh</code> to pull a head ref, or some other untrusted source that the step then executes, is outside it. An event such as <code>issue_comment</code> is outside it. Checking out an unrelated third-party repository is outside it. <a href="#ref-checkout">[3]</a> GitHub says a privileged event that checks out untrusted code and then executes it is still a pwn request risk. <a href="#ref-checkout">[3]</a> The docs add <code>git fetch</code>, <code>gh pr checkout</code>, and running a downloaded artifact to that uncovered list. <a href="#ref-pr-target">[1]</a>
+          </div>
+          <p>The documented opt-out on the checkout step is <code>allow-unsafe-pr-checkout: true</code>. GitHub's guide says turning that input on permits a checkout of a fork pull request's head ref. The condition is a confirmation that the checked-out code is never executed. The same page says install commands, builds, configuration, and dependencies can run that code, and that this does not require an obvious build step. Before the event is used, that code has to stay data. <a href="#ref-pr-target">[1]</a> GitHub chose the input name so a reviewer sees it, and so static analysis sees it too. <a href="#ref-pr-target">[1]</a> <a href="#ref-checkout">[3]</a></p>
+        </section>
+
+        <section id="insights-before-enforcement">
+          <h2>Policy insights list the runs enforcement would block</h2>
+          <p>While the default stays in evaluate mode, GitHub's guide says to use policy insights to find <code>pull_request_target</code> workflows that enforcement would stop. <a href="#ref-pr-target">[1]</a> The September 17 changelog describes that same Insights pass, then names two outcomes. One is to leave the rule in place to block the trigger once enforcement begins. The other is an explicit allow, inside an event policy that applies, and only where a workflow still depends on this trigger. Workflow file targeting can put that allow on named workflow files instead of the whole repository. <a href="#ref-ga">[2]</a></p>
+          <p>The guide splits the per-workflow decision this way. <a href="#ref-pr-target">[1]</a></p>
+          <ul class="risk-list">
+            <li><strong>The workflow does not need the trigger.</strong> Update the workflow to a safer event where that fits. The guide's example is <code>pull_request</code>. <a href="#ref-pr-target">[1]</a></li>
+            <li><strong>The workflow still needs the trigger.</strong> Put this trigger on the allow side of an applicable event policy. Write that policy, or change the one that applies. <a href="#ref-pr-target">[1]</a> Workflow file targeting can limit that allow to named workflow files. <a href="#ref-ga">[2]</a></li>
+            <li><strong>If <code>pull_request_target</code> is not wanted.</strong> Leave the default alone. Once enforcement begins, GitHub blocks runs started by that event. <a href="#ref-pr-target">[1]</a></li>
+          </ul>
+          <p>Related reviews: <a href="/articles/pull-request-target-security/">pull_request_target security</a>, <a href="/articles/pin-github-actions-sha/">pinning actions to a full SHA</a>, and <a href="/articles/github-actions-workflow-execution-protections/">workflow execution protections</a>.</p>
+          <aside class="notice" aria-label="Editorial disclaimer">
+            This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+          </aside>
+          <p>CI Tripwire Editorial has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, all primary GitHub documentation, last reviewed 2026-09-23.</p>
+        </section>
+
+        <section id="references" class="refs">
+          <h2>Sources</h2>
+          <ol>
+            <li id="ref-pr-target">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target" rel="nofollow noopener noreferrer" target="_blank">Securely using pull_request_target</a>, retrieved 2026-09-23.</li>
+            <li id="ref-ga">GitHub Changelog, <a href="https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available" rel="nofollow noopener noreferrer" target="_blank">Workflow execution protections in GitHub Actions generally available</a>, published 2026-09-17.</li>
+            <li id="ref-checkout">GitHub Changelog, <a href="https://github.blog/changelog/2026-06-18-safer-pull_request_target-defaults-for-github-actions-checkout/" rel="nofollow noopener noreferrer" target="_blank">Safer pull_request_target defaults for GitHub Actions checkout</a>, published 2026-06-18, editor's note 2026-07-15, retrieved 2026-09-23.</li>
+            <li id="ref-policies">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/about-actions-policies" rel="nofollow noopener noreferrer" target="_blank">About Actions policies</a>, retrieved 2026-09-23.</li>
+          </ol>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+  </footer>
+</body>
+</html>

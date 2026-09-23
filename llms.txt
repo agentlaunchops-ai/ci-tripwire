@@ -24,8 +24,9 @@
 - [Stripe Per-Seat Billing in Node: Proration Controls](https://dsotn.com/articles/stripe-per-seat-billing-proration-node/)
 - [Stripe Webhook Idempotency in Node: Stop Double Work](https://dsotn.com/articles/stripe-webhook-idempotency-node/)
 
-### GitHub Actions (14)
+### GitHub Actions (15)
 
+- [Public pull_request_target enforcement starts November 2](https://dsotn.com/articles/pull-request-target-november-2/)
 - [Can GitHub Actions job summaries expose CI secrets?](https://dsotn.com/articles/github-actions-job-summary-security/)
 - [GitHub Actions workflow execution protections guide](https://dsotn.com/articles/github-actions-workflow-execution-protections/)
 - [npm Trusted Publishing: Safer GitHub Actions Releases](https://dsotn.com/articles/npm-trusted-publishing-github-actions/)
