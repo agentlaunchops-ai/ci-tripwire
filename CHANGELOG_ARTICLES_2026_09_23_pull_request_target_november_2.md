@@ -55,7 +55,8 @@ After that commit, the citation auditor (still running on the round-3 text) repo
 | 1 | 1 | several | several | HIGH fixed, full re-run required |
 | 2 | 2 | several | several | HIGH fixed, full re-run required |
 | 3 | 1 | several | several | HIGH and the MEDIUMs above fixed after the round |
-| 4 | not run | not run | not run | Outstanding |
+| 4 | 1 | several | several | Cache opt-out HIGH fixed (workflow or job). Re-run required |
+| 5 | 0 | 2 | 0 | Both MEDIUMs fixed before publish: cut the unsupported "move the pin forward" sentence; quoted the September 17 changelog title in the reference list. No sixth round |
 
 ## Pass 4: voice consistency end-to-end
 
