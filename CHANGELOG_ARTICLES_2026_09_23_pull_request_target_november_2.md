@@ -43,6 +43,13 @@ MEDIUMs fixed in the same passes included: "for the conditions" gloss, "second c
 
 A full round after the round-3 HIGH fix has not been run. This piece is not at 0 HIGH and 0 MEDIUM on a post-fix round.
 
+After that commit, the citation auditor (still running on the round-3 text) reported two MEDIUMs. Both were fixed in a follow-up commit:
+
+- "only where a workflow still depends on this trigger" was rewritten to "if workflows still depend on this trigger," matching the changelog's choice condition rather than a product limit on which workflows an allow can cover.
+- The SHA-pin sentences in the checkout section were cited to the checkout changelog [3]. The November 2 sentences in that paragraph stay on [1].
+- The enforcement quote now includes the source word "affected."
+- The default-branch checkout sentence no longer adds "and no repository," which the guide does not say. The third-party repository sentence is cited only to [3].
+
 | Round | HIGH | MEDIUM | LOW | Outcome |
 | --- | --- | --- | --- | --- |
 | 1 | 1 | several | several | HIGH fixed, full re-run required |
