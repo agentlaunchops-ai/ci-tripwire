@@ -561,11 +561,8 @@ roughly four lines on mobile:
   `rel`, no `target`.
 - External non-affiliate links use a full https URL and render with
   `rel="nofollow noopener noreferrer"` and `target="_blank"`.
-- Affiliate links are allowed only when the host is on the operator-owned
-  allowlist; they render with `rel="sponsored noopener noreferrer"` and a
-  visible inline disclosure marker. If the host is not on the allowlist, write
-  the brand as plain text and flag the URL in the changelog for owner review.
-  The agent never edits the allowlist.
+- Affiliate links render with `rel="sponsored noopener noreferrer"` and a
+  visible inline disclosure marker.
 - `javascript:`, `data:`, and mailto URLs are rejected as a security gate.
 - Do not put citation markers inside link labels; the bracket collision breaks
   the parse. Put the cite after the link.

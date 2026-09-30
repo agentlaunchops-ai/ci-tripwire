@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://dsotn.com/</loc>
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-30</lastmod>
   </url>
   <url>
     <loc>https://dsotn.com/about/</loc>
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://dsotn.com/articles/</loc>
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-09-30</lastmod>
   </url>
   <url>
     <loc>https://dsotn.com/categories/stripe-billing/</loc>
@@ -184,4 +184,7 @@
       <image:title>Server racks in a computing facility</image:title>
     </image:image>
   </url>
+<url><loc>https://dsotn.com/articles/local-newsletter-launch-plan/</loc><lastmod>2026-09-30</lastmod><image:image><image:loc>https://dsotn.com/public/images/articles/local-newsletter-launch-plan.jpg</image:loc><image:title>A stack of printed newspapers resting on a wooden table.</image:title></image:image></url>
+<url><loc>https://dsotn.com/articles/local-media-empire-publishing-checklist/</loc><lastmod>2026-09-30</lastmod><image:image><image:loc>https://dsotn.com/public/images/articles/local-media-empire-publishing-checklist.jpg</image:loc><image:title>Folded printed newspapers stacked on a table.</image:title></image:image></url>
+<url><loc>https://dsotn.com/tools/local-publication-planner/</loc><lastmod>2026-09-30</lastmod></url>
 </urlset>
