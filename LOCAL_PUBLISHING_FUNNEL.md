@@ -42,4 +42,4 @@ Built in `/tmp/ci-tripwire-local-media-funnel` on `feat/local-media-affiliate-fu
 
 The owner explicitly removed the affiliate allowlist requirement and authorized the choice of local-publishing disclaimer. Those instruction changes have separate commits before content work.
 
-This file documents the funnel. The dated changelog records audit and verification evidence. Publishing requires an explicit owner instruction under section 8.9 of the article rules.
+The owner explicitly authorized publication on 2026-09-30. Release PR #8 merged as `83cd82672f89d278a1ae726c02e08a7c3a80209f`, and GitHub Pages reported that commit built. All three public funnel pages, homepage/article listings, discovery files, styles, scripts, and images passed HTTP 200 and exact-byte verification. Live Chromium checks at 390px and 1440px passed, including the conversion path and worksheet download. The dated changelog records the release evidence and remaining limitations.
