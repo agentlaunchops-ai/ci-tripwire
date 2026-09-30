@@ -2,6 +2,8 @@
 
 | Slug | Source URL | Author | License | Retrieved |
 | --- | --- | --- | --- | --- |
+| local-newsletter-launch-plan | https://www.pexels.com/photo/close-up-photo-of-newspapers-5010877/ | Suzy Hazelwood | Pexels License | 2026-09-30 |
+| local-media-empire-publishing-checklist | https://www.pexels.com/photo/folded-newspapers-5505690/ | Mike van Schoonderwalt | Pexels License | 2026-09-30 |
 | pull-request-target-november-2 | https://commons.wikimedia.org/wiki/File:Rail_road_crossing_Yankton_2013.jpg | Peterupton99 | Creative Commons CC0 1.0 Universal Public Domain Dedication | 2026-09-23 |
 | ai-trends-software-engineering-2026 | https://unsplash.com/photos/two-server-racks-filled-with-electronic-components-and-wires-k27hkqXuveo | Eric Stoynov | Unsplash License | 2026-08-12 |
 | github-actions-workflow-execution-protections | https://www.pexels.com/photo/close-up-photo-of-control-panel-3582392/ | Ibrahim Boran | Pexels License | 2026-08-05 |
