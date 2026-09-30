@@ -30,7 +30,7 @@ Use these values when applying section 0 of `ARTICLE_WRITING_RULES.md`:
 | `<REF_DIR>` | The article's inline citations and closing `#references` section |
 | `<IMAGES>` | `public/images/articles/`, `og/articles/`, and `CREDITS.md` |
 | `<CHANGELOG_DIR>` | The repository root for dated article changelogs; `CHANGELOG.md` is the rolling index |
-| `<DISCLAIMER>` | CI/security: `This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.` Stripe/billing: `This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.` |
+| `<DISCLAIMER>` | CI/security: `This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.` Stripe/billing: `This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.` Local publishing: `This article is informational and is not a substitute for a legal, tax, or business review of your own publication.` |
 | `<TOPIC_EXCLUSIONS>` | None documented; ask the owner before assuming an exclusion |
 
 This is a static HTML repository, not a typed-data content repository. Map the
