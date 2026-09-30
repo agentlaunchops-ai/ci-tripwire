@@ -1,6 +1,6 @@
 # Changelog
 
-- 2026-09-30: Built the Local Media Empire affiliate funnel with two sourced articles, a free worksheet, disclosed offer links, twelve independent audit slices, and local browser verification. See [dated evidence](CHANGELOG_ARTICLES_2026_09_30_local_media_funnel.md). Not deployed.
+- 2026-09-30: Published the Local Media Empire affiliate funnel with two sourced articles, a free worksheet, disclosed offer links, and twelve independent audit slices. GitHub Pages built merge `83cd826`; all 17 checked live routes/assets match the audited files, and live mobile/desktop browser checks pass. See [dated evidence](CHANGELOG_ARTICLES_2026_09_30_local_media_funnel.md).
 
 ## Unreleased
 

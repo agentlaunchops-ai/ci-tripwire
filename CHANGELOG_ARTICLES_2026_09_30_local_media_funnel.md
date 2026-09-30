@@ -12,7 +12,7 @@ The two article routes use static HTML, Organization authors, TechArticle and br
 
 The operator explicitly requested deletion of the affiliate allowlist restriction. Commit `489fd9f` removes only that requirement; sponsored attributes and visible disclosure remain mandatory. The operator authorized the choice of topic disclaimer. Commit `d488a10` adds the local-publishing disclaimer to AGENTS.md before content drafting.
 
-Scope: this campaign and its discovery entries. Existing articles, unrelated checkout work, accounts, email delivery, and production deployment are outside this implementation.
+Implementation scope: this campaign and its discovery entries. Existing articles, unrelated checkout work, accounts, and email delivery are outside this implementation. Production deployment was separately authorized after the completed funnel was reviewed.
 
 ## Source registry and per-claim ledger
 
@@ -136,7 +136,26 @@ Promotes Local Media Empire using the owner-supplied link. Commission disclosure
 - Citation: initial raw FTC requests were bot-blocked; later raw first-party HTML and independently opened official pages provide the claim evidence.
 - Product evidence: no paid-account testing was conducted while preparing the articles; questions are not presented as proven functionality.
 - Financial: costs and placement rates are user assumptions; currency formatting can show a rounded cent value while cost coverage uses the exact fraction. The distinction is stated.
-- Release: local candidate only. No push, PR, merge, or deployment occurred. Section 8.9 requires an explicit instruction to publish.
+- Release: the initial audited candidate was held locally under section 8.9. The owner subsequently authorized publication; the release evidence follows.
+
+## Published release evidence
+
+The owner explicitly authorized publication on 2026-09-30. No additional publication approval was requested.
+
+- Audited implementation: `ee16b9617fd99ff9c2384f94ac23b006001d4e3b`.
+- Release PR: https://github.com/agentlaunchops-ai/ci-tripwire/pull/8, merged at 2026-09-30 19:59:10 UTC.
+- Shipped merge: `83cd82672f89d278a1ae726c02e08a7c3a80209f`, confirmed on `origin/main`.
+- GitHub Pages source: repository root on `main`, legacy build. Latest build for the shipped merge reported `built`, updated 2026-09-30 20:00:39 UTC, with no build error.
+- Live guide: https://dsotn.com/articles/local-newsletter-launch-plan/.
+- Live worksheet: https://dsotn.com/tools/local-publication-planner/.
+- Live product page: https://dsotn.com/articles/local-media-empire-publishing-checklist/.
+- All 17 checked URLs returned HTTP 200 and matched the audited candidate byte for byte: three funnel routes; homepage and article index; sitemap, llms.txt and robots.txt; both stylesheets; the planner module; both hero photographs; and all four OG PNG/SVG files.
+- Live standalone Chromium QA: all three routes at 390px and 1440px loaded with no page errors, broken images, or horizontal overflow. The guide -> worksheet -> product path passed. The paid offer URL and sponsored attributes matched. User-entered assumptions produced $435.00 / 3 placements; the exact-cent boundary produced $15.03 / 1 placement. The downloaded worksheet contained entered text, outputs, checked items, formulas, and rounding disclosure. Invalid/empty inputs blocked download. Reload cleared user inputs. All observed requests were same-origin GETs, and the guide's takeaways and payoff remained visible with JavaScript disabled.
+- Verification JSON, screenshots, and downloaded sample are local QA artifacts under `/tmp/ci-live-funnel-*`. They are not public SEO assets.
+- All eight Node tests and the offline HTML/discovery gate passed again immediately before release; no new content edits occurred during publication.
+- GitHub operations used the authorized repository account; the originally active `dvoltolina` account was restored. The original shared main checkout and its unrelated untracked instruction files were preserved.
+
+Real checkout attribution, purchases, email delivery, search indexing, ranking, and production Core Web Vitals remain untested. This release verifies the public funnel and download, not sales or search performance.
 
 ## Distribution draft
 
@@ -152,4 +171,4 @@ Full write-up with sources: https://dsotn.com/articles/local-newsletter-launch-p
 
 The guide contains a Local Media Empire offer link; we may earn a commission from purchases through it.
 
-Safe-to-post note: draft only, use the URL after publication. Suitable only where useful educational posts with disclosed affiliate content and self-links are permitted. Where links are prohibited, remove the URL; where promotion is prohibited, do not post this affiliate-linked draft. The substance stands alone. Nothing was auto-posted. Author voice audit and independent S1/S2 reviews passed.
+Safe-to-post note: draft only; the article URL is now published and verified. Suitable only where useful educational posts with disclosed affiliate content and self-links are permitted. Where links are prohibited, remove the URL; where promotion is prohibited, do not post this affiliate-linked draft. The substance stands alone. Nothing was auto-posted. Author voice audit and independent S1/S2 reviews passed.
