@@ -3,59 +3,128 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Self-Hosted Runners: Secure GitHub Actions CI Builds</title>
-  <meta name="description" content="Secure self-hosted GitHub Actions runners by isolating public PRs, using runner groups, reducing secrets, and preferring clean ephemeral machines.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>Self-hosted GitHub Actions runners: isolate CI machines</title>
+  <meta name="description" content="Harden self-hosted GitHub Actions runners: keep public repositories off persistent machines, restrict runner groups, and use ephemeral JIT runners.">
   <link rel="canonical" href="https://dsotn.com/articles/self-hosted-runners-security/">
-  <meta property="og:title" content="Self-Hosted Runners: Secure GitHub Actions CI Builds">
-  <meta property="og:description" content="How to review self-hosted runner exposure before CI jobs can reach local machines, private networks, or long-lived credentials.">
+  <meta property="og:title" content="Self-hosted GitHub Actions runners: isolate CI machines">
+  <meta property="og:description" content="Harden self-hosted GitHub Actions runners: keep public repositories off persistent machines, restrict runner groups, and use ephemeral JIT runners.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/self-hosted-runners-security/">
-  <meta property="og:image" content="https://dsotn.com/public/images/articles/self-hosted-runners-security.jpg">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/articles/self-hosted-runners-security.png">
   <meta property="article:published_time" content="2026-06-08T00:00:00-06:00">
-  <meta property="article:modified_time" content="2026-06-08T00:00:00-06:00">
+  <meta property="article:modified_time" content="2026-10-26T11:30:00-05:00">
   <meta property="article:author" content="CI Tripwire Editorial">
   <meta property="article:section" content="GitHub Actions">
   <meta property="article:tag" content="self-hosted runners">
   <meta property="article:tag" content="runner groups">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/self-hosted-runners-security.jpg">
+  <meta name="twitter:title" content="Self-hosted GitHub Actions runners: isolate CI machines">
+  <meta name="twitter:description" content="Harden self-hosted GitHub Actions runners: keep public repositories off persistent machines, restrict runner groups, and use ephemeral JIT runners.">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/self-hosted-runners-security.png">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": "Self-Hosted Runners: Secure GitHub Actions CI Builds",
-    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
-    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
-    "datePublished": "2026-06-08T00:00:00-06:00",
-    "dateModified": "2026-06-08T00:00:00-06:00",
-    "articleSection": "GitHub Actions",
-    "keywords": ["GitHub Actions self-hosted runners", "self-hosted runner security", "runner groups", "CI/CD runner hardening"],
-    "wordCount": 1147,
-    "timeRequired": "PT7M",
-    "mainEntityOfPage": "https://dsotn.com/articles/self-hosted-runners-security/",
-    "articleBody": "Self-hosted runners move GitHub Actions jobs onto machines and networks you operate.",
-    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/self-hosted-runners-security.jpg", "width": 5100, "height": 3300},
-    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
-    "citation": [
-      {"@type": "CreativeWork", "name": "Self-hosted runners", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/runners/self-hosted-runners"},
-      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
-      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"},
-      {"@type": "CreativeWork", "name": "Using secrets in GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets"},
-      {"@type": "CreativeWork", "name": "Create configuration for a just-in-time runner for an organization", "publisher": "GitHub REST API Docs", "url": "https://docs.github.com/en/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization"}
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Self-hosted GitHub Actions runners: isolate CI machines",
+  "author": {
+    "@type": "Organization",
+    "name": "CI Tripwire Editorial",
+    "url": "https://dsotn.com/about/#contributors"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CI Tripwire",
+    "url": "https://dsotn.com/"
+  },
+  "datePublished": "2026-06-08T00:00:00-06:00",
+  "dateModified": "2026-10-26T11:30:00-05:00",
+  "articleSection": "GitHub Actions",
+  "keywords": [
+    "GitHub Actions self-hosted runners",
+    "self-hosted runner security",
+    "runner groups",
+    "CI/CD runner hardening"
+  ],
+  "wordCount": 1080,
+  "timeRequired": "PT7M",
+  "mainEntityOfPage": "https://dsotn.com/articles/self-hosted-runners-security/",
+  "articleBody": "Self-hosted runners move GitHub Actions jobs onto machines and networks you operate.",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://dsotn.com/og/articles/self-hosted-runners-security.png",
+    "width": 1200,
+    "height": 630
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      "#key-takeaways",
+      "#article-summary",
+      "#editorial-summary"
     ]
-  }
+  },
+  "citation": [
+    {
+      "@type": "CreativeWork",
+      "name": "Self-hosted runners",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/concepts/runners/self-hosted-runners"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Secure use reference",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Workflow syntax for GitHub Actions",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Using secrets in GitHub Actions",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Create configuration for a just-in-time runner for an organization",
+      "publisher": "GitHub REST API Docs",
+      "url": "https://docs.github.com/en/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization"
+    }
+  ]
+}
   </script>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
-      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
-      {"@type": "ListItem", "position": 3, "name": "Self-Hosted Runners: Secure GitHub Actions CI Builds", "item": "https://dsotn.com/articles/self-hosted-runners-security/"}
-    ]
-  }
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dsotn.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://dsotn.com/articles/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Self-hosted GitHub Actions runners: isolate CI machines",
+      "item": "https://dsotn.com/articles/self-hosted-runners-security/"
+    }
+  ]
+}
   </script>
     <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
     <!-- Google tag (gtag.js) -->
@@ -72,15 +141,17 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
-        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
     </nav>
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/self-hosted-runners-security.jpg" width="5100" height="3300" alt="Rows of data center equipment and cabling.">
+      <img src="/public/images/articles/self-hosted-runners-security.jpg" width="1600" height="900" fetchpriority="high" alt="Rows of data center equipment and cabling.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -93,17 +164,14 @@
         <a href="#secrets">Secrets</a>
         <a href="#ephemeral">Ephemeral runners</a>
         <a href="#audit">Fast audit</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
         <p class="eyebrow">GitHub Actions</p>
-        <h1>Self-Hosted Runners: Secure GitHub Actions CI Builds</h1>
-        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <h1>Self-hosted GitHub Actions runners: isolate CI machines</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · Updated 2026-10-26 · 7 min read</p>
         <p id="editorial-summary">Self-hosted runners are useful when GitHub Actions jobs need custom hardware, local services, or private network access, but that access makes the runner machine part of the CI/CD trust boundary.</p>
-
-        <aside class="notice" aria-label="Editorial disclaimer">
-          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
-        </aside>
 
         <section id="key-takeaways" class="takeaways">
           <h2>Key takeaways for self-hosted runner security</h2>
@@ -168,27 +236,82 @@
         <section id="audit">
           <h2>A fast audit starts with <code>runs-on: self-hosted</code></h2>
           <p>Search every workflow for <code>runs-on</code> entries that include <code>self-hosted</code> or sensitive runner labels. GitHub's workflow syntax documents <code>runs-on</code> as the job field that defines the type of machine to run the job on. <a href="#ref-syntax">[3]</a></p>
-          <p>For each match, record repository visibility, event triggers, runner group, labels, token permissions, secrets, environment approvals, network reach, and whether untrusted pull-request code can influence the job. Then run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so runner findings sit beside trigger, permission, pinned-action, timeout, OIDC, reusable-workflow, and shell-context findings.</p>
-          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
-          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>For each match, record repository visibility, event triggers, runner group, labels, token permissions, secrets, environment approvals, network reach, and whether untrusted pull-request code can influence the job. Then run <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a> locally so runner findings sit beside trigger, permission, pinned-action, timeout, OIDC, reusable-workflow, and shell-context findings.</p>
+          <aside class="notice" aria-label="Editorial disclaimer">
+            This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+          </aside>
+          <p>CI Tripwire Editorial has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
           <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, primary platform documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/categories/github-actions/">Explore all 15 GitHub Actions security guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-workflow-execution-protections/">GitHub Actions workflow execution protections guide</a>
+              <p>Gate workflow runs with actor rules, event allowlists, and evaluate-mode testing before enforcement.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pull-request-target-security/">GitHub Actions pull_request_target security: safe patterns</a>
+              <p>Separate untrusted fork code from privileged base-repository secrets and write-scoped tokens.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-cache-security/">GitHub Actions cache security: prevent poisoned builds</a>
+              <p>Audit branch cache boundaries and restored build paths before release jobs trust cached artifacts.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-security-risks/">GitHub Actions security: five workflow risks to fix now</a>
+              <p>Run a fast five-point baseline across commit SHA pins, token scopes, pull_request_target, shell input, and timeouts.</p>
+            </div>
+          </div>
         </section>
 
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
-            <li id="ref-self-hosted">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/runners/self-hosted-runners">Self-hosted runners</a>.</li>
-            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
-            <li id="ref-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">Workflow syntax for GitHub Actions</a>.</li>
-            <li id="ref-secrets">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets">Using secrets in GitHub Actions</a>.</li>
-            <li id="ref-jit">GitHub REST API Docs, <a href="https://docs.github.com/en/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization">Create configuration for a just-in-time runner for an organization</a>.</li>
+            <li id="ref-self-hosted">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/runners/self-hosted-runners" rel="nofollow noopener noreferrer" target="_blank">Self-hosted runners</a>.</li>
+            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use" rel="nofollow noopener noreferrer" target="_blank">Secure use reference</a>.</li>
+            <li id="ref-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax" rel="nofollow noopener noreferrer" target="_blank">Workflow syntax for GitHub Actions</a>.</li>
+            <li id="ref-secrets">GitHub Docs, <a href="https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets" rel="nofollow noopener noreferrer" target="_blank">Using secrets in GitHub Actions</a>.</li>
+            <li id="ref-jit">GitHub REST API Docs, <a href="https://docs.github.com/en/rest/actions/self-hosted-runners#create-configuration-for-a-just-in-time-runner-for-an-organization" rel="nofollow noopener noreferrer" target="_blank">Create configuration for a just-in-time runner for an organization</a>.</li>
           </ol>
         </section>
       </article>
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

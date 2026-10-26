@@ -34,7 +34,7 @@ Use these values when applying section 0 of `ARTICLE_WRITING_RULES.md`:
 | `<BRAND>` | `CI Tripwire Editorial` for the organization byline; `CI Tripwire` for the publisher |
 | `<ARTICLE_DIR>` | `articles/<slug>/index.html` |
 | `<ARTICLE_INDEX>` | `articles/index.html`, plus the relevant listings in `index.html`, `categories/github-actions/index.html`, `categories/stripe-billing/index.html`, `sitemap.xml`, and `llms.txt` |
-| `<SCHEMA>` | The established HTML structure (`TechArticle`, `BreadcrumbList`, `ItemList`, `WebSite`, `Organization`, `WebApplication`) |
+| `<SCHEMA>` | The established HTML structure (`TechArticle`, `BreadcrumbList`, `ItemList`, `WebSite`, `Organization`, `AboutPage`, `WebApplication`) |
 | `<REF_DIR>` | The article's inline citations and closing `#references` section |
 | `<IMAGES>` | `public/images/articles/` (`1600x900` landscape `<350 KB`), `og/` (`1200x630` PNG + SVG pairs), and `CREDITS.md` |
 | `<CHANGELOG_DIR>` | The repository root for dated changelogs; `CHANGELOG.md` is the rolling index |

@@ -3,58 +3,134 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GITHUB_TOKEN Permissions: Safer GitHub Actions CI/CD</title>
-  <meta name="description" content="A practical guide to least-privilege GITHUB_TOKEN permissions in GitHub Actions workflows, with cited defaults, YAML patterns, and audit checks.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>GitHub Actions GITHUB_TOKEN permissions: least privilege</title>
+  <meta name="description" content="Configure least-privilege GITHUB_TOKEN scopes in YAML and Settings &gt; Actions &gt; General, including org defaults and pull-request creation permissions.">
   <link rel="canonical" href="https://dsotn.com/articles/github-token-permissions/">
-  <meta property="og:title" content="GITHUB_TOKEN Permissions: Safer GitHub Actions CI/CD">
-  <meta property="og:description" content="How to make GitHub Actions token permissions explicit, narrow, and easier to audit.">
+  <meta property="og:title" content="GitHub Actions GITHUB_TOKEN permissions: least privilege">
+  <meta property="og:description" content="Configure least-privilege GITHUB_TOKEN scopes in YAML and Settings &gt; Actions &gt; General, including org defaults and pull-request creation permissions.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/github-token-permissions/">
-  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-token-permissions.jpg">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/articles/github-token-permissions.png">
   <meta property="article:published_time" content="2026-06-07T21:18:00-06:00">
-  <meta property="article:modified_time" content="2026-06-07T21:18:00-06:00">
+  <meta property="article:modified_time" content="2026-10-26T11:30:00-05:00">
   <meta property="article:author" content="CI Tripwire Editorial">
   <meta property="article:section" content="GitHub Actions">
   <meta property="article:tag" content="GITHUB_TOKEN">
   <meta property="article:tag" content="token permissions">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-token-permissions.jpg">
+  <meta name="twitter:title" content="GitHub Actions GITHUB_TOKEN permissions: least privilege">
+  <meta name="twitter:description" content="Configure least-privilege GITHUB_TOKEN scopes in YAML and Settings &gt; Actions &gt; General, including org defaults and pull-request creation permissions.">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/github-token-permissions.png">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": "GITHUB_TOKEN Permissions: Safer GitHub Actions CI/CD",
-    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
-    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
-    "datePublished": "2026-06-07T21:18:00-06:00",
-    "dateModified": "2026-06-07T21:18:00-06:00",
-    "articleSection": "GitHub Actions",
-    "keywords": ["GITHUB_TOKEN", "GitHub Actions security", "token permissions", "least privilege"],
-    "wordCount": 947,
-    "timeRequired": "PT7M",
-    "mainEntityOfPage": "https://dsotn.com/articles/github-token-permissions/",
-    "articleBody": "Make GITHUB_TOKEN permissions explicit at the workflow top level, then grant write scopes only to the jobs that need them.",
-    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-token-permissions.jpg", "width": 1848, "height": 3014},
-    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
-    "citation": [
-      {"@type": "CreativeWork", "name": "Use GITHUB_TOKEN for authentication in workflows", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"},
-      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"},
-      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
-      {"@type": "CreativeWork", "name": "OpenSSF Scorecard checks", "publisher": "OpenSSF", "url": "https://github.com/ossf/scorecard/blob/main/docs/checks.md#token-permissions"}
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "GitHub Actions GITHUB_TOKEN permissions: least privilege",
+  "author": {
+    "@type": "Organization",
+    "name": "CI Tripwire Editorial",
+    "url": "https://dsotn.com/about/#contributors"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CI Tripwire",
+    "url": "https://dsotn.com/"
+  },
+  "datePublished": "2026-06-07T21:18:00-06:00",
+  "dateModified": "2026-10-26T11:30:00-05:00",
+  "articleSection": "GitHub Actions",
+  "keywords": [
+    "GITHUB_TOKEN",
+    "GitHub Actions security",
+    "token permissions",
+    "least privilege"
+  ],
+  "wordCount": 1169,
+  "timeRequired": "PT8M",
+  "mainEntityOfPage": "https://dsotn.com/articles/github-token-permissions/",
+  "articleBody": "Make GITHUB_TOKEN permissions explicit at the workflow top level, then grant write scopes only to the jobs that need them.",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://dsotn.com/og/articles/github-token-permissions.png",
+    "width": 1200,
+    "height": 630
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      "#key-takeaways",
+      "#article-summary",
+      "#editorial-summary"
     ]
-  }
+  },
+  "citation": [
+    {
+      "@type": "CreativeWork",
+      "name": "Use GITHUB_TOKEN for authentication in workflows",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Workflow syntax for GitHub Actions",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Secure use reference",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "OpenSSF Scorecard checks",
+      "publisher": "OpenSSF",
+      "url": "https://github.com/ossf/scorecard/blob/main/docs/checks.md#token-permissions"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Managing GitHub Actions settings for a repository",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Disabling or limiting GitHub Actions for your organization",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization"
+    }
+  ]
+}
   </script>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
-      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
-      {"@type": "ListItem", "position": 3, "name": "GITHUB_TOKEN Permissions: Safer GitHub Actions CI/CD", "item": "https://dsotn.com/articles/github-token-permissions/"}
-    ]
-  }
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dsotn.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://dsotn.com/articles/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "GitHub Actions GITHUB_TOKEN permissions: least privilege",
+      "item": "https://dsotn.com/articles/github-token-permissions/"
+    }
+  ]
+}
   </script>
     <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
     <!-- Google tag (gtag.js) -->
@@ -71,15 +147,17 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
-        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
     </nav>
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/github-token-permissions.jpg" width="1848" height="3014" alt="A transparent padlock photographed open with a key inserted, used as a visual metaphor for workflow token access.">
+      <img src="/public/images/articles/github-token-permissions.jpg" width="1600" height="900" fetchpriority="high" alt="A transparent padlock photographed open with a key inserted, used as a visual metaphor for workflow token access.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -87,66 +165,75 @@
         <a href="#key-takeaways">Key takeaways</a>
         <a href="#article-summary">Bottom line</a>
         <a href="#default-access">Default access</a>
+        <a href="#repo-org-settings">Repo &amp; org settings</a>
         <a href="#workflow-baseline">Workflow baseline</a>
         <a href="#job-write-scopes">Job write scopes</a>
         <a href="#pull-requests">Pull requests</a>
         <a href="#audit">Fast audit</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
         <p class="eyebrow">GitHub Actions</p>
-        <h1>GITHUB_TOKEN Permissions: Safer GitHub Actions CI/CD</h1>
-        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-07 · 7 min read</p>
-        <p id="editorial-summary">Make `GITHUB_TOKEN` permissions explicit at the workflow top level, then grant write scopes only to the jobs that need them. The goal is not a clever YAML trick. The goal is that reviewers can see privilege before they merge a workflow change.</p>
-
-        <aside class="notice" aria-label="Editorial disclaimer">
-          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
-        </aside>
+        <h1>GitHub Actions GITHUB_TOKEN permissions: least privilege</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-07 · Updated 2026-10-26 · 8 min read</p>
+        <p id="editorial-summary">Declare <code>GITHUB_TOKEN</code> permissions explicitly at the workflow top level, grant write scopes only on the jobs that need them, and verify repository and organization workflow-permission settings before debugging blocked pull-request automation.</p>
 
         <section id="key-takeaways" class="takeaways">
-          <h2>Key takeaways for `GITHUB_TOKEN` permissions</h2>
+          <h2>Key takeaways for <code>GITHUB_TOKEN</code> permissions</h2>
           <ul>
-            <li>GitHub says an action can access `GITHUB_TOKEN` through the `github.token` context even when the workflow does not explicitly pass the token to the action. <a href="#ref-token-auth">[1]</a></li>
-            <li>GitHub recommends limiting `GITHUB_TOKEN` to the minimum access required by the workflow or job. <a href="#ref-token-auth">[1]</a></li>
-            <li>GitHub documents `permissions` as the workflow key for setting `GITHUB_TOKEN` access, including `read-all`, `write-all`, `{}`, and per-scope `read`, `write`, or `none`. <a href="#ref-workflow-syntax">[2]</a></li>
-            <li>GitHub documents that once any permission is specified, unspecified permissions are set to `none`. <a href="#ref-workflow-syntax">[2]</a></li>
+            <li>GitHub says an action can access <code>GITHUB_TOKEN</code> through the <code>github.token</code> context even when the workflow does not explicitly pass the token to the action. <a href="#ref-token-auth">[1]</a></li>
+            <li>GitHub recommends limiting <code>GITHUB_TOKEN</code> to the minimum access required by the workflow or job. <a href="#ref-token-auth">[1]</a></li>
+            <li>GitHub documents <code>permissions</code> as the workflow key for setting <code>GITHUB_TOKEN</code> access, including <code>read-all</code>, <code>write-all</code>, <code>{}</code>, and per-scope <code>read</code>, <code>write</code>, or <code>none</code>. <a href="#ref-workflow-syntax">[2]</a></li>
+            <li>GitHub documents that once any permission is specified, unspecified permissions are set to <code>none</code>. <a href="#ref-workflow-syntax">[2]</a></li>
             <li>OpenSSF Scorecard's Token-Permissions check rewards workflows that declare read-only permissions at the top level and put required write permissions at the job level. <a href="#ref-scorecard">[4]</a></li>
+            <li>New personal repositories and new organizations default <code>GITHUB_TOKEN</code> to read-only <code>contents</code> and <code>packages</code> scopes and block pull-request creation until <strong>Allow GitHub Actions to create and approve pull requests</strong> is enabled under <strong>Settings &gt; Actions &gt; General</strong>. <a href="#ref-repo-actions-settings">[5]</a> <a href="#ref-org-actions-settings">[6]</a></li>
           </ul>
         </section>
 
         <section id="article-summary">
           <h2>Make least privilege visible in the YAML</h2>
           <div class="callout" role="note" aria-label="Bottom line" data-callout-tone="info">
-            <strong>Bottom line:</strong> Start workflows with `permissions: read-all` or the narrower `contents: read`, then grant specific write scopes only on the jobs that create issues, publish packages, request OIDC tokens, update statuses, or change repository state.
+            <strong>Bottom line:</strong> Start workflows with <code>permissions: read-all</code> or the narrower <code>contents: read</code>, then grant specific write scopes only on the jobs that create issues, publish packages, request OIDC tokens, update statuses, or change repository state.
           </div>
-          <p>GitHub's authentication guide says workflows can use `GITHUB_TOKEN` for actions, GitHub CLI calls, and API requests. It also says actions can access the token through the `github.token` context even if the workflow does not explicitly pass it. <a href="#ref-token-auth">[1]</a> That is why token permissions deserve review even in workflows that do not show `secrets.GITHUB_TOKEN` in a step.</p>
-          <p>The practical control is the `permissions` key. GitHub says this key can be used for an entire workflow or for individual jobs, and that it lets maintainers configure the minimum required permissions. <a href="#ref-token-auth">[1]</a></p>
+          <p>GitHub's authentication guide says workflows can use <code>GITHUB_TOKEN</code> for actions, GitHub CLI calls, and API requests. It also says actions can access the token through the <code>github.token</code> context even if the workflow does not explicitly pass it. <a href="#ref-token-auth">[1]</a> That is why token permissions deserve review even in workflows that do not show <code>secrets.GITHUB_TOKEN</code> in a step.</p>
+          <p>The practical control is the <code>permissions</code> key. GitHub says this key can be used for an entire workflow or for individual jobs, and that it lets maintainers configure the minimum required permissions. <a href="#ref-token-auth">[1]</a></p>
         </section>
 
         <section id="default-access">
           <h2>Default token access is too implicit for review</h2>
-          <p>GitHub's workflow syntax reference lists `permissions` under the top-level workflow syntax and under `jobs.&lt;job_id&gt;.permissions`. <a href="#ref-workflow-syntax">[2]</a> It also documents broad shortcuts, including `read-all`, `write-all`, and `{}`. <a href="#ref-workflow-syntax">[2]</a></p>
-          <p>Those shortcuts are useful when they make intent obvious. `permissions: read-all` tells reviewers the workflow starts read-only. `permissions: {}` tells reviewers the workflow starts with no token permissions. `permissions: write-all` usually deserves extra scrutiny because it hides which write capability the job truly needs.</p>
+          <p>GitHub's workflow syntax reference lists <code>permissions</code> under the top-level workflow syntax and under <code>jobs.&lt;job_id&gt;.permissions</code>. <a href="#ref-workflow-syntax">[2]</a> It also documents broad shortcuts, including <code>read-all</code>, <code>write-all</code>, and <code>{}</code>. <a href="#ref-workflow-syntax">[2]</a></p>
+          <p>Those shortcuts are useful when they make intent obvious. <code>permissions: read-all</code> tells reviewers the workflow starts read-only. <code>permissions: {}</code> tells reviewers the workflow starts with no token permissions. <code>permissions: write-all</code> usually deserves extra scrutiny because it hides which write capability the job truly needs.</p>
           <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
             <strong>Reviewable baseline:</strong> A top-level read-only baseline plus job-level write exceptions makes privilege easier to scan than a workflow that relies on repository defaults.
           </div>
         </section>
 
+        <section id="repo-org-settings">
+          <h2>Align repository and organization workflow-permission settings</h2>
+          <p>YAML <code>permissions</code> blocks work alongside repository and organization controls under <strong>Settings &gt; Actions &gt; General &gt; Workflow permissions</strong>. GitHub Docs describes two default presets on that screen: a permissive preset granting <code>GITHUB_TOKEN</code> read and write scopes broadly, and a restricted preset limiting the token to read-only <code>contents</code> and <code>packages</code> access. <a href="#ref-repo-actions-settings">[5]</a> <a href="#ref-org-actions-settings">[6]</a></p>
+          <p>Newly created personal-account repositories and newly created organizations both start on that restricted <code>contents</code> and <code>packages</code> read-only preset. <a href="#ref-repo-actions-settings">[5]</a> <a href="#ref-org-actions-settings">[6]</a> New repositories inside an organization inherit the organization's configured baseline instead. <a href="#ref-repo-actions-settings">[5]</a> When an organization enforces the restricted preset, member repositories inherit that selection with the permissive radio button disabled; similarly, a restrictive GitHub Enterprise policy prevents organization admins from picking the permissive option. <a href="#ref-repo-actions-settings">[5]</a> <a href="#ref-org-actions-settings">[6]</a></p>
+          <p>Even under a restricted UI preset, contributors who hold repository write access can still grant or narrow job and workflow <code>GITHUB_TOKEN</code> scopes through the workflow file's <code>permissions</code> key. <a href="#ref-repo-actions-settings">[5]</a> <a href="#ref-org-actions-settings">[6]</a> Pull-request creation uses a separate checkbox: new personal repositories and new organizations block workflows from opening or approving pull requests by default. <a href="#ref-repo-actions-settings">[5]</a> <a href="#ref-org-actions-settings">[6]</a></p>
+          <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
+            <strong>Fixing blocked pull-request creation:</strong> When a release or automation job needs <code>GITHUB_TOKEN</code> to open or approve a pull request, declare job-level <code>pull-requests: write</code> in YAML <a href="#ref-workflow-syntax">[2]</a> and confirm that <strong>"Allow GitHub Actions to create and approve pull requests"</strong> is checked under <strong>Settings &gt; Actions &gt; General &gt; Workflow permissions</strong> (or at the organization level when inherited policy disables the repository checkbox). <a href="#ref-repo-actions-settings">[5]</a> <a href="#ref-org-actions-settings">[6]</a>
+          </div>
+        </section>
+
         <section id="workflow-baseline">
           <h2>A top-level baseline keeps accidental write scope out</h2>
-          <p>GitHub documents that if a workflow specifies access for any permission, all permissions not specified are set to `none`. <a href="#ref-workflow-syntax">[2]</a> That behavior lets teams use a short baseline instead of repeating every permission name.</p>
+          <p>GitHub documents that if a workflow specifies access for any permission, all permissions not specified are set to <code>none</code>. <a href="#ref-workflow-syntax">[2]</a> That behavior lets teams use a short baseline instead of repeating every permission name.</p>
           <ul class="risk-list">
-            <li><strong>Read-only baseline:</strong> use `permissions: read-all` when most jobs only need to read repository contents and metadata.</li>
-            <li><strong>Narrow baseline:</strong> use `permissions: contents: read` when the workflow only needs repository content reads.</li>
-            <li><strong>No-token baseline:</strong> use `permissions: {}` when jobs should not receive repository token access unless a job explicitly opts in.</li>
+            <li><strong>Read-only baseline:</strong> use <code>permissions: read-all</code> when most jobs only need to read repository contents and metadata.</li>
+            <li><strong>Narrow baseline:</strong> use <code>permissions: contents: read</code> when the workflow only needs repository content reads.</li>
+            <li><strong>No-token baseline:</strong> use <code>permissions: {}</code> when jobs should not receive repository token access unless a job explicitly opts in.</li>
           </ul>
-          <p>OpenSSF Scorecard mirrors that posture in its Token-Permissions remediation guidance: set top-level permissions as `read-all` or `contents: read`, then set required write permissions at the job level. <a href="#ref-scorecard">[4]</a></p>
+          <p>OpenSSF Scorecard mirrors that posture in its Token-Permissions remediation guidance: set top-level permissions as <code>read-all</code> or <code>contents: read</code>, then set required write permissions at the job level. <a href="#ref-scorecard">[4]</a></p>
         </section>
 
         <section id="job-write-scopes">
           <h2>Write scopes belong beside the step that needs them</h2>
-          <p>GitHub's token guide uses job-level `permissions` examples for creating an issue with the GitHub CLI and with the REST API. <a href="#ref-token-auth">[1]</a> That pattern is useful because the permission sits near the behavior it enables.</p>
-          <p>A release job that publishes a package may need a package write scope. An issue triage job may need issue write scope. A cloud deployment using OpenID Connect may need `id-token: write`; GitHub's secure-use reference recommends considering OIDC for deployments that need short-lived, well-scoped cloud tokens. <a href="#ref-secure-use">[3]</a></p>
+          <p>GitHub's token guide uses job-level <code>permissions</code> examples for creating an issue with the GitHub CLI and with the REST API. <a href="#ref-token-auth">[1]</a> That pattern is useful because the permission sits near the behavior it enables.</p>
+          <p>A release job that publishes a package may need a package write scope. An issue triage job may need issue write scope. A cloud deployment using OpenID Connect may need <code>id-token: write</code> <a href="#ref-workflow-syntax">[2]</a>; GitHub's secure-use reference recommends considering OIDC for deployments that need short-lived, well-scoped cloud tokens. <a href="#ref-secure-use">[3]</a></p>
           <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
             <strong>Caution:</strong> A job that only checks out code, runs tests, or reads metadata should not inherit write scopes just because a later release or comment job needs them.
           </div>
@@ -154,33 +241,90 @@
 
         <section id="pull-requests">
           <h2>Pull-request workflows need token review before merge</h2>
-          <p>Token scope interacts with workflow triggers. GitHub's workflow syntax reference notes special permission behavior for `pull_request_target`, and the CI Tripwire guide on <a href="/articles/pull-request-target-security/">`pull_request_target` security</a> explains why privileged pull-request automation should stay away from untrusted pull-request code. <a href="#ref-workflow-syntax">[2]</a></p>
+          <p>Token scope interacts with workflow triggers. GitHub's workflow syntax reference notes special permission behavior for <code>pull_request_target</code>, and the CI Tripwire guide on <a href="/articles/pull-request-target-security/"><code>pull_request_target</code> security</a> explains why privileged pull-request automation should stay away from untrusted pull-request code. <a href="#ref-workflow-syntax">[2]</a></p>
           <p>For ordinary pull-request CI, a read-only or no-token baseline reduces the impact of unexpected token access. For privileged pull-request metadata work, the workflow should show exactly why a write scope exists and should avoid running code from the pull request.</p>
         </section>
 
         <section id="audit">
           <h2>A first audit can start with five searches</h2>
-          <p>Search workflow YAML for `permissions:`, `write-all`, `secrets.GITHUB_TOKEN`, `github.token`, and `pull_request_target`. Those strings map to the source-backed review areas in this guide: explicit token scope, broad write grants, implicit token access, and privileged pull-request automation. <a href="#ref-token-auth">[1]</a> <a href="#ref-workflow-syntax">[2]</a></p>
-          <p>For a local review queue, run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> against the repository and inspect any token-permissions, trigger, checkout, timeout, or shell-context findings before merging workflow changes.</p>
-          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
-          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
-          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, primary platform, security reference, and project documentation, last reviewed 2026-06-07.</p>
+          <p>Search workflow YAML for <code>permissions:</code>, <code>write-all</code>, <code>secrets.GITHUB_TOKEN</code>, <code>github.token</code>, and <code>pull_request_target</code>. Those strings map to the source-backed review areas in this guide: explicit token scope, broad write grants, implicit token access, and privileged pull-request automation. <a href="#ref-token-auth">[1]</a> <a href="#ref-workflow-syntax">[2]</a></p>
+          <p>For a local review queue, run <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a> against the repository and inspect any token-permissions, trigger, checkout, timeout, or shell-context findings before merging workflow changes.</p>
+          <aside class="notice" aria-label="Editorial disclaimer">
+            This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+          </aside>
+          <p>CI Tripwire Editorial has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 6 entries, primary platform, security reference, and project documentation, last reviewed 2026-10-26.</p>
+        </section>
+
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/categories/github-actions/">Explore all 15 GitHub Actions security guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pull-request-target-november-2/">Public pull_request_target enforcement starts November 2</a>
+              <p>See which public repositories hit the November 2, 2026 default block and how to audit runs in Policy Insights.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pull-request-target-security/">GitHub Actions pull_request_target security: safe patterns</a>
+              <p>Separate untrusted fork code from privileged base-repository secrets and write-scoped tokens.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-workflow-execution-protections/">GitHub Actions workflow execution protections guide</a>
+              <p>Gate workflow runs with actor rules, event allowlists, and evaluate-mode testing before enforcement.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/dependabot-github-actions-security/">Dependabot and GitHub Actions: secure bot PR workflows</a>
+              <p>Set safe token and secret boundaries around Dependabot pull requests and automated merge workflows.</p>
+            </div>
+          </div>
         </section>
 
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
-            <li id="ref-token-auth">GitHub Docs, <a href="https://docs.github.com/en/actions/tutorials/authenticate-with-github_token">Use GITHUB_TOKEN for authentication in workflows</a>.</li>
-            <li id="ref-workflow-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">Workflow syntax for GitHub Actions</a>.</li>
-            <li id="ref-secure-use">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
-            <li id="ref-scorecard">OpenSSF Scorecard, <a href="https://github.com/ossf/scorecard/blob/main/docs/checks.md#token-permissions">checks documentation: Token-Permissions</a>.</li>
+            <li id="ref-token-auth">GitHub Docs, <a href="https://docs.github.com/en/actions/tutorials/authenticate-with-github_token" rel="nofollow noopener noreferrer" target="_blank">Use GITHUB_TOKEN for authentication in workflows</a>.</li>
+            <li id="ref-workflow-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax" rel="nofollow noopener noreferrer" target="_blank">Workflow syntax for GitHub Actions</a>.</li>
+            <li id="ref-secure-use">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use" rel="nofollow noopener noreferrer" target="_blank">Secure use reference</a>.</li>
+            <li id="ref-scorecard">OpenSSF Scorecard, <a href="https://github.com/ossf/scorecard/blob/main/docs/checks.md#token-permissions" rel="nofollow noopener noreferrer" target="_blank">checks documentation: Token-Permissions</a>.</li>
+            <li id="ref-repo-actions-settings">GitHub Docs, <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository" rel="nofollow noopener noreferrer" target="_blank">Managing GitHub Actions settings for a repository</a>, retrieved 2026-10-26.</li>
+            <li id="ref-org-actions-settings">GitHub Docs, <a href="https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization" rel="nofollow noopener noreferrer" target="_blank">Disabling or limiting GitHub Actions for your organization</a>, retrieved 2026-10-26.</li>
           </ol>
         </section>
       </article>
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

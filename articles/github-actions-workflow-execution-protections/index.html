@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <title>GitHub Actions workflow execution protections guide</title>
-  <meta name="description" content="Configure GitHub Actions workflow execution protections with actor rules, event rules, evaluate mode, and a rollout checklist.">
+  <meta name="description" content="Configure GitHub Actions workflow execution protections with actor rules, event rules, workflow-file targeting, and shadow testing in evaluate mode.">
   <link rel="canonical" href="https://dsotn.com/articles/github-actions-workflow-execution-protections/">
   <meta property="og:title" content="GitHub Actions workflow execution protections guide">
-  <meta property="og:description" content="Control which actors and events can start GitHub Actions workflows, test the policy in evaluate mode, and enforce it safely.">
+  <meta property="og:description" content="Configure GitHub Actions workflow execution protections with actor rules, event rules, workflow-file targeting, and shadow testing in evaluate mode.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/github-actions-workflow-execution-protections/">
   <meta property="og:site_name" content="CI Tripwire">
@@ -22,7 +22,7 @@
   <meta property="article:tag" content="GitHub rulesets">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GitHub Actions workflow execution protections guide">
-  <meta name="twitter:description" content="Control which actors and events can start GitHub Actions workflows, then test the policy in evaluate mode.">
+  <meta name="twitter:description" content="Configure GitHub Actions workflow execution protections with actor rules, event rules, workflow-file targeting, and shadow testing in evaluate mode.">
   <meta name="twitter:image" content="https://dsotn.com/og/articles/github-actions-workflow-execution-protections.png">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
@@ -94,7 +94,9 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
         <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
@@ -102,7 +104,7 @@
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/github-actions-workflow-execution-protections.jpg" width="1600" height="900" alt="A large control panel with rows of switches, buttons, and displays.">
+      <img src="/public/images/articles/github-actions-workflow-execution-protections.jpg" width="1600" height="900" fetchpriority="high" alt="A large control panel with rows of switches, buttons, and displays.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -115,6 +117,7 @@
         <a href="#actor-rules">Actor rules</a>
         <a href="#rollout">Repository rollout</a>
         <a href="#activation-review">Activation review</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
@@ -253,6 +256,33 @@
           <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 22 official GitHub primary-source entries across 21 underlying documents, last reviewed 2026-08-05.</p>
         </section>
 
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/categories/github-actions/">Explore all 15 GitHub Actions security guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pull-request-target-november-2/">Public pull_request_target enforcement starts November 2</a>
+              <p>See which public repositories hit the November 2, 2026 default block and how to audit runs in Policy Insights.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pull-request-target-security/">GitHub Actions pull_request_target security: safe patterns</a>
+              <p>Separate untrusted fork code from privileged base-repository secrets and write-scoped tokens.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-token-permissions/">GitHub Actions GITHUB_TOKEN permissions: least privilege</a>
+              <p>Lock down top-level permissions in YAML and align repository and organization workflow-permission settings.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/self-hosted-runners-security/">Self-hosted GitHub Actions runners: isolate CI machines</a>
+              <p>Isolate persistent runners from public fork PRs and prefer ephemeral just-in-time runner hosts.</p>
+            </div>
+          </div>
+        </section>
+
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
@@ -284,7 +314,33 @@
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

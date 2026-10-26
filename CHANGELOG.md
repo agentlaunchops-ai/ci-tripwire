@@ -1,5 +1,6 @@
 # Changelog
 
+- 2026-10-26: Established canonical brand voice governance (`BRAND_VOICE.md`, updated `AGENTS.md` and `ARTICLE_WRITING_RULES.md`), overhauled sitewide copy/UX/navigation across `dsotn.com`, added the `/categories/github-actions/` hub and `tests/check-site-seo.py`, compressed all 17 June hero images from `51.59 MB` to `4.54 MB` (`1600x900`), generated missing `1200x630` OG PNG/SVG cards, remediated 127 raw backtick bugs and 17 duplicate disclaimers, wired full cluster interlinking, and expanded `github-token-permissions` with primary-sourced repository/organization workflow-permission settings. See [dated evidence](CHANGELOG_ARTICLES_2026_10_26_brand_voice_seo_overhaul.md).
 - 2026-09-30: Published the Local Media Empire affiliate funnel with two sourced articles, a free worksheet, disclosed offer links, and twelve independent audit slices. GitHub Pages built merge `83cd826`; all 17 checked live routes/assets match the audited files, and live mobile/desktop browser checks pass. See [dated evidence](CHANGELOG_ARTICLES_2026_09_30_local_media_funnel.md).
 
 ## Unreleased

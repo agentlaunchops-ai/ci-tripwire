@@ -3,59 +3,128 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>npm Trusted Publishing: Safer GitHub Actions Releases</title>
-  <meta name="description" content="Secure npm releases from GitHub Actions with trusted publishing, OIDC, provenance, scoped job permissions, and protected release workflows today.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>npm trusted publishing in GitHub Actions: OIDC releases</title>
+  <meta name="description" content="Replace long-lived npm tokens with OIDC trusted publishing in GitHub Actions, provenance attestations, protected environments, and SHA-pinned steps.">
   <link rel="canonical" href="https://dsotn.com/articles/npm-trusted-publishing-github-actions/">
-  <meta property="og:title" content="npm Trusted Publishing: Safer GitHub Actions Releases">
-  <meta property="og:description" content="How to keep npm publishing workflows tokenless, traceable, and narrow enough to review.">
+  <meta property="og:title" content="npm trusted publishing in GitHub Actions: OIDC releases">
+  <meta property="og:description" content="Replace long-lived npm tokens with OIDC trusted publishing in GitHub Actions, provenance attestations, protected environments, and SHA-pinned steps.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/npm-trusted-publishing-github-actions/">
-  <meta property="og:image" content="https://dsotn.com/public/images/articles/npm-trusted-publishing-github-actions.jpg">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/articles/npm-trusted-publishing-github-actions.png">
   <meta property="article:published_time" content="2026-06-08T05:12:00-06:00">
-  <meta property="article:modified_time" content="2026-06-08T05:12:00-06:00">
+  <meta property="article:modified_time" content="2026-10-26T11:30:00-05:00">
   <meta property="article:author" content="CI Tripwire Editorial">
   <meta property="article:section" content="GitHub Actions">
   <meta property="article:tag" content="npm trusted publishing">
   <meta property="article:tag" content="OIDC">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/npm-trusted-publishing-github-actions.jpg">
+  <meta name="twitter:title" content="npm trusted publishing in GitHub Actions: OIDC releases">
+  <meta name="twitter:description" content="Replace long-lived npm tokens with OIDC trusted publishing in GitHub Actions, provenance attestations, protected environments, and SHA-pinned steps.">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/npm-trusted-publishing-github-actions.png">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": "npm Trusted Publishing: Safer GitHub Actions Releases",
-    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
-    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
-    "datePublished": "2026-06-08T05:12:00-06:00",
-    "dateModified": "2026-06-08T05:12:00-06:00",
-    "articleSection": "GitHub Actions",
-    "keywords": ["npm trusted publishing", "GitHub Actions OIDC", "npm provenance", "release workflow security"],
-    "wordCount": 927,
-    "timeRequired": "PT7M",
-    "mainEntityOfPage": "https://dsotn.com/articles/npm-trusted-publishing-github-actions/",
-    "articleBody": "npm trusted publishing removes long-lived npm publish tokens from GitHub Actions, but the release workflow still has to be narrow and reviewable.",
-    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/npm-trusted-publishing-github-actions.jpg", "width": 2304, "height": 3072},
-    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
-    "citation": [
-      {"@type": "CreativeWork", "name": "Trusted publishing for npm packages", "publisher": "npm Docs", "url": "https://docs.npmjs.com/trusted-publishers/"},
-      {"@type": "CreativeWork", "name": "Generating provenance statements", "publisher": "npm Docs", "url": "https://docs.npmjs.com/generating-provenance-statements/"},
-      {"@type": "CreativeWork", "name": "Viewing package provenance", "publisher": "npm Docs", "url": "https://docs.npmjs.com/viewing-package-provenance/"},
-      {"@type": "CreativeWork", "name": "OpenID Connect in GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/concepts/security/openid-connect"},
-      {"@type": "CreativeWork", "name": "Workflow syntax for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"}
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "npm trusted publishing in GitHub Actions: OIDC releases",
+  "author": {
+    "@type": "Organization",
+    "name": "CI Tripwire Editorial",
+    "url": "https://dsotn.com/about/#contributors"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CI Tripwire",
+    "url": "https://dsotn.com/"
+  },
+  "datePublished": "2026-06-08T05:12:00-06:00",
+  "dateModified": "2026-10-26T11:30:00-05:00",
+  "articleSection": "GitHub Actions",
+  "keywords": [
+    "npm trusted publishing",
+    "GitHub Actions OIDC",
+    "npm provenance",
+    "release workflow security"
+  ],
+  "wordCount": 862,
+  "timeRequired": "PT7M",
+  "mainEntityOfPage": "https://dsotn.com/articles/npm-trusted-publishing-github-actions/",
+  "articleBody": "npm trusted publishing removes long-lived npm publish tokens from GitHub Actions, but the release workflow still has to be narrow and reviewable.",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://dsotn.com/og/articles/npm-trusted-publishing-github-actions.png",
+    "width": 1200,
+    "height": 630
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      "#key-takeaways",
+      "#article-summary",
+      "#editorial-summary"
     ]
-  }
+  },
+  "citation": [
+    {
+      "@type": "CreativeWork",
+      "name": "Trusted publishing for npm packages",
+      "publisher": "npm Docs",
+      "url": "https://docs.npmjs.com/trusted-publishers/"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Generating provenance statements",
+      "publisher": "npm Docs",
+      "url": "https://docs.npmjs.com/generating-provenance-statements/"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Viewing package provenance",
+      "publisher": "npm Docs",
+      "url": "https://docs.npmjs.com/viewing-package-provenance/"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "OpenID Connect in GitHub Actions",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/concepts/security/openid-connect"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Workflow syntax for GitHub Actions",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+    }
+  ]
+}
   </script>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
-      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
-      {"@type": "ListItem", "position": 3, "name": "npm Trusted Publishing: Safer GitHub Actions Releases", "item": "https://dsotn.com/articles/npm-trusted-publishing-github-actions/"}
-    ]
-  }
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dsotn.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://dsotn.com/articles/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "npm trusted publishing in GitHub Actions: OIDC releases",
+      "item": "https://dsotn.com/articles/npm-trusted-publishing-github-actions/"
+    }
+  ]
+}
   </script>
     <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
     <!-- Google tag (gtag.js) -->
@@ -72,15 +141,17 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
-        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
     </nav>
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/npm-trusted-publishing-github-actions.jpg" width="2304" height="3072" alt="Corrugated cardboard moving down a conveyor belt.">
+      <img src="/public/images/articles/npm-trusted-publishing-github-actions.jpg" width="1600" height="900" fetchpriority="high" alt="Corrugated cardboard moving down a conveyor belt.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -92,17 +163,14 @@
         <a href="#provenance">Provenance</a>
         <a href="#workflow">Workflow controls</a>
         <a href="#audit">Fast audit</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
         <p class="eyebrow">GitHub Actions</p>
-        <h1>npm Trusted Publishing: Safer GitHub Actions Releases</h1>
-        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <h1>npm trusted publishing in GitHub Actions: OIDC releases</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · Updated 2026-10-26 · 7 min read</p>
         <p id="editorial-summary">npm trusted publishing can remove long-lived npm publish tokens from release workflows, but it does not make the workflow itself harmless.</p>
-
-        <aside class="notice" aria-label="Editorial disclaimer">
-          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
-        </aside>
 
         <section id="key-takeaways" class="takeaways">
           <h2>Key takeaways for npm trusted publishing</h2>
@@ -160,27 +228,82 @@
           <h2>A fast npm release audit starts with the workflow file</h2>
           <p>List every workflow that can publish to npm. For each one, record the trigger, the trusted publisher configuration, whether it runs on GitHub-hosted runners, the job permissions, environment protection, third-party actions, package-build commands, and any path where pull-request input can affect release artifacts.</p>
           <p>npm Docs says OIDC authentication supports <code>npm publish</code> and <code>npm stage publish</code>, while other npm commands such as <code>install</code>, <code>view</code>, or <code>access</code> still require traditional authentication methods. <a href="#ref-trusted">[1]</a></p>
-          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so npm release review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, <code>workflow_run</code>, and checkout-credential audits.</p>
-          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
-          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a> locally so npm release review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, concurrency, Dependabot, <code>workflow_run</code>, and checkout-credential audits.</p>
+          <aside class="notice" aria-label="Editorial disclaimer">
+            This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+          </aside>
+          <p>CI Tripwire Editorial has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
           <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, primary npm and GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/categories/github-actions/">Explore all 15 GitHub Actions security guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/oidc-trust-policy-footguns/">GitHub Actions OIDC trust policies: lock down cloud IAM</a>
+              <p>Scope cloud IAM subject claims to exact repositories, branches, and environments so foreign workflows cannot assume roles.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/artifact-attestations-github-actions/">GitHub Actions artifact attestations: verify CI provenance</a>
+              <p>Sign release artifacts in CI and enforce gh attestation verify checks before deployment.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pin-github-actions-sha/">Pin GitHub Actions to commit SHAs: supply-chain control</a>
+              <p>Pin third-party actions to immutable 40-character commit SHAs and verify upstream repository provenance.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-token-permissions/">GitHub Actions GITHUB_TOKEN permissions: least privilege</a>
+              <p>Lock down top-level permissions in YAML and align repository and organization workflow-permission settings.</p>
+            </div>
+          </div>
         </section>
 
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
-            <li id="ref-trusted">npm Docs, <a href="https://docs.npmjs.com/trusted-publishers/">Trusted publishing for npm packages</a>.</li>
-            <li id="ref-provenance">npm Docs, <a href="https://docs.npmjs.com/generating-provenance-statements/">Generating provenance statements</a>.</li>
-            <li id="ref-view">npm Docs, <a href="https://docs.npmjs.com/viewing-package-provenance/">Viewing package provenance</a>.</li>
-            <li id="ref-oidc">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/security/openid-connect">OpenID Connect in GitHub Actions</a>.</li>
-            <li id="ref-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">Workflow syntax for GitHub Actions</a>.</li>
+            <li id="ref-trusted">npm Docs, <a href="https://docs.npmjs.com/trusted-publishers/" rel="nofollow noopener noreferrer" target="_blank">Trusted publishing for npm packages</a>.</li>
+            <li id="ref-provenance">npm Docs, <a href="https://docs.npmjs.com/generating-provenance-statements/" rel="nofollow noopener noreferrer" target="_blank">Generating provenance statements</a>.</li>
+            <li id="ref-view">npm Docs, <a href="https://docs.npmjs.com/viewing-package-provenance/" rel="nofollow noopener noreferrer" target="_blank">Viewing package provenance</a>.</li>
+            <li id="ref-oidc">GitHub Docs, <a href="https://docs.github.com/en/actions/concepts/security/openid-connect" rel="nofollow noopener noreferrer" target="_blank">OpenID Connect in GitHub Actions</a>.</li>
+            <li id="ref-syntax">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax" rel="nofollow noopener noreferrer" target="_blank">Workflow syntax for GitHub Actions</a>.</li>
           </ol>
         </section>
       </article>
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

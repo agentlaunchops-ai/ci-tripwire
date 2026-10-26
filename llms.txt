@@ -1,54 +1,54 @@
 # CI Tripwire
 
-> Source-linked AI engineering, CI/CD workflow security, and Stripe billing reliability articles for developers and maintainers.
+> Independent software engineering publication at dsotn.com covering GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI release checks. Published by CI Tripwire Editorial; unaffiliated with GitHub, Stripe, or Fortra Tripwire.
 
 ## Navigation
 
 - [Home](https://dsotn.com/)
-- [Articles](https://dsotn.com/articles/)
-- [About](https://dsotn.com/about/)
+- [GitHub Actions Security](https://dsotn.com/categories/github-actions/)
 - [Stripe & Billing](https://dsotn.com/categories/stripe-billing/)
+- [All Guides](https://dsotn.com/articles/)
+- [About](https://dsotn.com/about/)
+- [Free Local-Publication Planner](https://dsotn.com/tools/local-publication-planner/)
 - [gha-guard](https://github.com/agentlaunchops-ai/gha-guard)
 
 ## Articles by Category
 
-### Local publishing (2)
+### GitHub Actions (15)
 
-- [Start a local newsletter with a repeatable launch plan (includes affiliate promotion)](https://dsotn.com/articles/local-newsletter-launch-plan/)
-- [Ad: Local Media Empire publishing workflow checklist (includes affiliate promotion)](https://dsotn.com/articles/local-media-empire-publishing-checklist/)
+- [Public pull_request_target enforcement starts November 2](https://dsotn.com/articles/pull-request-target-november-2/)
+- [GitHub Actions GITHUB_TOKEN permissions: least privilege](https://dsotn.com/articles/github-token-permissions/)
+- [GitHub Actions workflow execution protections guide](https://dsotn.com/articles/github-actions-workflow-execution-protections/)
+- [Can GitHub Actions job summaries expose CI secrets?](https://dsotn.com/articles/github-actions-job-summary-security/)
+- [GitHub Actions security: five workflow risks to fix now](https://dsotn.com/articles/github-actions-security-risks/)
+- [GitHub Actions pull_request_target security: safe patterns](https://dsotn.com/articles/pull-request-target-security/)
+- [Pin GitHub Actions to commit SHAs: supply-chain control](https://dsotn.com/articles/pin-github-actions-sha/)
+- [GitHub Actions OIDC trust policies: lock down cloud IAM](https://dsotn.com/articles/oidc-trust-policy-footguns/)
+- [GitHub Actions artifact attestations: verify CI provenance](https://dsotn.com/articles/artifact-attestations-github-actions/)
+- [npm trusted publishing in GitHub Actions: OIDC releases](https://dsotn.com/articles/npm-trusted-publishing-github-actions/)
+- [GitHub Actions script injection: safe run-step patterns](https://dsotn.com/articles/github-actions-script-injection/)
+- [GitHub Actions cache security: prevent poisoned builds](https://dsotn.com/articles/github-actions-cache-security/)
+- [Dependabot and GitHub Actions: secure bot PR workflows](https://dsotn.com/articles/dependabot-github-actions-security/)
+- [GitHub Actions reusable workflows: secure workflow_call](https://dsotn.com/articles/reusable-workflows-security/)
+- [Self-hosted GitHub Actions runners: isolate CI machines](https://dsotn.com/articles/self-hosted-runners-security/)
 
-- [Free local-publication planner](https://dsotn.com/tools/local-publication-planner/)
+### Stripe & Billing (5)
 
+- [Stripe webhook idempotency in Node.js: stop double work](https://dsotn.com/articles/stripe-webhook-idempotency-node/)
+- [Stripe per-seat billing in Node: safe proration_behavior](https://dsotn.com/articles/stripe-per-seat-billing-proration-node/)
+- [Stripe cancel-save flow in Node: cancel_at_period_end](https://dsotn.com/articles/stripe-cancel-save-retention-node/)
+- [Stripe usage-based billing in Node: safe meter ledgers](https://dsotn.com/articles/stripe-usage-based-billing-node/)
+- [Stripe MRR and churn in Node.js: event-ledger metrics](https://dsotn.com/articles/stripe-mrr-churn-events-node/)
 
 ### Artificial Intelligence (1)
 
 - [Five AI trends for software engineering teams in 2026](https://dsotn.com/articles/ai-trends-software-engineering-2026/)
 
-### Stripe & Billing (5)
+### Local publishing (2)
 
-- [Stripe Cancel-Save Flow in Node: Retain Subscribers](https://dsotn.com/articles/stripe-cancel-save-retention-node/)
-- [Stripe MRR and Churn in Node: Subscription Metrics](https://dsotn.com/articles/stripe-mrr-churn-events-node/)
-- [Usage-Based Billing with Stripe in Node: Meter Safely](https://dsotn.com/articles/stripe-usage-based-billing-node/)
-- [Stripe Per-Seat Billing in Node: Proration Controls](https://dsotn.com/articles/stripe-per-seat-billing-proration-node/)
-- [Stripe Webhook Idempotency in Node: Stop Double Work](https://dsotn.com/articles/stripe-webhook-idempotency-node/)
-
-### GitHub Actions (15)
-
-- [Public pull_request_target enforcement starts November 2](https://dsotn.com/articles/pull-request-target-november-2/)
-- [Can GitHub Actions job summaries expose CI secrets?](https://dsotn.com/articles/github-actions-job-summary-security/)
-- [GitHub Actions workflow execution protections guide](https://dsotn.com/articles/github-actions-workflow-execution-protections/)
-- [npm Trusted Publishing: Safer GitHub Actions Releases](https://dsotn.com/articles/npm-trusted-publishing-github-actions/)
-- [Dependabot GitHub Actions: Safer Bot PR CI Workflows](https://dsotn.com/articles/dependabot-github-actions-security/)
-- [GitHub Actions Script Injection: Safer Shell Steps](https://dsotn.com/articles/github-actions-script-injection/)
-- [GitHub Actions Cache Security: Avoid Poisoned Builds](https://dsotn.com/articles/github-actions-cache-security/)
-- [Artifact Attestations: Verify GitHub Actions Builds](https://dsotn.com/articles/artifact-attestations-github-actions/)
-- [Self-Hosted Runners: Secure GitHub Actions CI Builds](https://dsotn.com/articles/self-hosted-runners-security/)
-- [Reusable Workflows: Secure GitHub Actions Pipelines](https://dsotn.com/articles/reusable-workflows-security/)
-- [OIDC Trust Policies: Secure GitHub Actions Cloud Deploys](https://dsotn.com/articles/oidc-trust-policy-footguns/)
-- [Pin GitHub Actions to SHAs: Secure CI/CD Pipelines](https://dsotn.com/articles/pin-github-actions-sha/)
-- [GITHUB_TOKEN Permissions: Safer GitHub Actions CI/CD](https://dsotn.com/articles/github-token-permissions/)
-- [GitHub pull_request_target Security: Safe PR Workflows](https://dsotn.com/articles/pull-request-target-security/)
-- [GitHub Actions Security: 5 CI Risks to Fix Right Now](https://dsotn.com/articles/github-actions-security-risks/)
+- [Start a local newsletter with a repeatable launch plan (includes affiliate promotion)](https://dsotn.com/articles/local-newsletter-launch-plan/)
+- [Ad: Local Media Empire publishing workflow checklist (includes affiliate promotion)](https://dsotn.com/articles/local-media-empire-publishing-checklist/)
+- [Free local-publication planner](https://dsotn.com/tools/local-publication-planner/)
 
 ## Auxiliary Resources
 

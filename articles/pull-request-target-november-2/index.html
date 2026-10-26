@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <title>Public pull_request_target enforcement starts November 2</title>
-  <meta name="description" content="On November 2, 2026, GitHub enforces the pull_request_target default for affected repos that were using it before general availability.">
+  <meta name="description" content="GitHub enforces its public pull_request_target block on November 2, 2026. Check Policy Insights, evaluate mode, SHA pins, and allow-unsafe-pr-checkout.">
   <link rel="canonical" href="https://dsotn.com/articles/pull-request-target-november-2/">
   <meta property="og:title" content="Public pull_request_target enforcement starts November 2">
-  <meta property="og:description" content="On November 2, 2026, GitHub enforces the pull_request_target default for affected repos that were using it before general availability.">
+  <meta property="og:description" content="GitHub enforces its public pull_request_target block on November 2, 2026. Check Policy Insights, evaluate mode, SHA pins, and allow-unsafe-pr-checkout.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/pull-request-target-november-2/">
   <meta property="og:site_name" content="CI Tripwire">
@@ -22,7 +22,7 @@
   <meta property="article:tag" content="actions/checkout">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Public pull_request_target enforcement starts November 2">
-  <meta name="twitter:description" content="On November 2, 2026, GitHub enforces the pull_request_target default for affected repos that were using it before general availability.">
+  <meta name="twitter:description" content="GitHub enforces its public pull_request_target block on November 2, 2026. Check Policy Insights, evaluate mode, SHA pins, and allow-unsafe-pr-checkout.">
   <meta name="twitter:image" content="https://dsotn.com/og/articles/pull-request-target-november-2.png">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
@@ -76,7 +76,9 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
         <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
@@ -84,7 +86,7 @@
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/pull-request-target-november-2.jpg" width="1600" height="900" alt="Railroad crossing signals and a crossbuck beside tracks and a road in Yankton, South Dakota, with an electrical substation behind them.">
+      <img src="/public/images/articles/pull-request-target-november-2.jpg" width="1600" height="900" fetchpriority="high" alt="Railroad crossing signals and a crossbuck beside tracks and a road in Yankton, South Dakota, with an electrical substation behind them.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -95,6 +97,7 @@
         <a href="#who-is-covered">Who the default covers</a>
         <a href="#checkout-pins">SHA pins and checkout</a>
         <a href="#insights-before-enforcement">Policy insights</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
@@ -238,6 +241,33 @@
           <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, all primary GitHub documentation, last reviewed 2026-09-23.</p>
         </section>
 
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/categories/github-actions/">Explore all 15 GitHub Actions security guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pull-request-target-security/">GitHub Actions pull_request_target security: safe patterns</a>
+              <p>Separate untrusted fork code from privileged base-repository secrets and write-scoped tokens.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-workflow-execution-protections/">GitHub Actions workflow execution protections guide</a>
+              <p>Gate workflow runs with actor rules, event allowlists, and evaluate-mode testing before enforcement.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pin-github-actions-sha/">Pin GitHub Actions to commit SHAs: supply-chain control</a>
+              <p>Pin third-party actions to immutable 40-character commit SHAs and verify upstream repository provenance.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-token-permissions/">GitHub Actions GITHUB_TOKEN permissions: least privilege</a>
+              <p>Lock down top-level permissions in YAML and align repository and organization workflow-permission settings.</p>
+            </div>
+          </div>
+        </section>
+
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
@@ -251,7 +281,33 @@
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

@@ -763,8 +763,8 @@ below. This is necessary and **not sufficient**: a writer grading their own
 draft is the weakest possible reviewer of it. Section 8 is the real gate.
 
 **Pass 1 to 3: source content, numeric and acronym, tone and style.** Grade the
-tone pass against the chosen register and the section 3.3 denylist, not against
-a generic style guide.
+tone pass against the chosen register, `BRAND_VOICE.md`, and section 3.3 voice
+discipline, not against a generic style guide.
 
 **Pass 4: voice consistency end to end.** Read the opening (title, TL;DR,
 key takeaways, first paragraph), three random middle paragraphs, and the
@@ -777,7 +777,7 @@ every drift before commit.
 - Opening sample (title / TL;DR / first paragraph): <PASS|FAIL plus rewrites>
 - Middle samples (three paragraphs, by section id): <PASS|FAIL plus rewrites>
 - Closing sample: <PASS|FAIL plus rewrites>
-- Anti-AI voice audit (section 3.3 denylist): <PASS|FAIL plus what was cut>
+- Anti-AI voice audit (section 3.3 voice discipline): <PASS|FAIL plus what was cut>
 ```
 
 **Pass 5: scanability and trust signals.** Could a mobile reader scrolling fast
@@ -883,9 +883,9 @@ like an AI wrote it).
 | H2 | Human trial claims: design, n, arms, endpoints, estimand, effect sizes, p values, CIs |
 | H3 | Regulatory and legal: approval status, indications, label sections, scheduling, enforcement, anti-doping |
 | H4 | Safety: adverse events, contraindications, warnings, interactions, and all dose and unit math |
-| H5 | Absence claims, superlatives, counts, dates, chart/table values, three-place consistency |
+| H5 | Absence claims, unsupported superiority claims, counts, dates, chart/table values, three-place consistency |
 | C1-C5 | One disjoint block of `citations[]` each; open every assigned URL live |
-| S1 | Anti-AI denylist, community-narration ban, banned characters, product coherence, reader-value bar |
+| S1 | Section 3.3 voice discipline, community-narration ban, banned characters, product coherence, reader-value bar |
 | S2 | Voice consistency, digestibility, repetition, scanability, trust block, 8-gram plagiarism scan |
 | X1 | Breadth and currency sweep: what changed since publication, and what the piece omits |
 | X2 | Whole-draft adversarial verifier: reads it cold and tries to break the thesis |
@@ -926,7 +926,8 @@ without having opened the sources is a failed audit.
   the adjacent sentence and not the load-bearing one; a number rounded up,
   widened, or inconsistent between its three placements; wrong author, year, or
   identifier in a label; a review or registry record cited for results it does
-  not report; a load-bearing claim with no citation; a denylist voice tell; an
+  not report; a load-bearing claim with no citation; a robotic AI cliche or
+  throat-clearing tell (section 3.3); an
   unattributed verbatim run of 8+ words.
 - **LOW.** Style, precision, or polish that does not change what the reader
   believes.
@@ -1355,12 +1356,12 @@ ready-to-post draft. Nothing is auto-posted.
   the place right now", "here's where the evidence sits"). That shape is the
   exact signature of automated marketing, and a real post in that shape got
   called spam ("be gone bot", "looking for clicks").
-- **Run the anti-AI voice audit on the draft, not just the article.** The full
-  section 3.3 denylist plus a one-human-voice read.
+- **Run the anti-AI voice audit on the draft, not just the article.** Full
+  section 3.3 voice discipline plus a one-human-voice read.
 - **Honest title.** The question the reader is actually asking, or the one-line
   truth the piece lands. Sentence case, no clickbait, no em dashes.
 - Same content rules as the article: no em dashes, no curly quotes, no
-  superlatives, no disease claims, and the product-coherence stance (a peer
+  unsupported superiority or miracle claims, no disease claims, and the product-coherence stance (a peer
   sharing what works, never the brand lecturing the community it serves).
 - **Flag the posting reality every time.** Many communities ban promotion and
   external self-links outright, and posting from an obvious brand account makes
@@ -1378,7 +1379,7 @@ and deliver it in the hand-off message, not only in the changelog.
 
 - [ ] Reads like one specific person who knows the field wrote it, top to
       bottom.
-- [ ] Anti-AI denylist swept (section 3.3), including the catch-all reread.
+- [ ] Section 3.3 voice discipline and `BRAND_VOICE.md` 7-lens gate swept, including the catch-all reread.
 - [ ] No em dashes (`rg` returns nothing), no curly quotes, no emoji.
 - [ ] Disclaimer present exactly once, in the closing section.
 - [ ] All four trust signals plus the citation-density footer present.
