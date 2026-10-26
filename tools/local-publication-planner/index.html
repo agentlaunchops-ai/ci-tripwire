@@ -1,1 +1,167 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Local publication planner: issue outline and budget</title><meta name="description" content="Build a local-publication worksheet with an issue outline, cost assumptions, and demo questions. Free download; includes a disclosed affiliate offer."><meta name="robots" content="index,follow"><link rel="canonical" href="https://dsotn.com/tools/local-publication-planner/"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/funnel.css"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Local publication planner: issue outline and budget", "url": "https://dsotn.com/tools/local-publication-planner/", "description": "A free publication worksheet and cost calculator. Outputs are planning assumptions, not an earnings forecast.", "applicationCategory": "BusinessApplication", "operatingSystem": "Any web browser", "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "CI Tripwire"}}</script><script type="module" src="/public/js/local-publication-planner.mjs"></script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"}, {"@type": "ListItem", "position": 2, "name": "Publication planner", "item": "https://dsotn.com/tools/local-publication-planner/"}]}</script></head><body><header class="site-header"><nav class="nav" aria-label="Primary"><a class="brand" href="/">CI Tripwire</a><div class="nav-links"><a href="/articles/">Articles</a><a href="/tools/local-publication-planner/">Publication planner</a><a href="/about/">About</a></div></nav></header><main class="planner-shell"><p class="eyebrow">Free publication worksheet</p><ol class="funnel-steps" aria-label="Publication planning path"><li><a href="/articles/local-newsletter-launch-plan/">1. Plan an issue</a></li><li><a href="/tools/local-publication-planner/">2. Build your worksheet</a></li><li><a href="/articles/local-media-empire-publishing-checklist/">3. Evaluate Local Media Empire (ad)</a></li></ol><h1>Plan the issue. Price the work.</h1><p>Write the publication you want to run, then enter your own budget assumptions. Download the worksheet to keep the plan or bring it to a seller's demo.</p><p class="planner-note">Your entries are not submitted to a server or saved between visits. Download the worksheet before leaving the page. Amounts use USD.</p><noscript><div class="notice">Calculations and downloads need JavaScript. The complete planning guide remains available at <a href="/articles/local-newsletter-launch-plan/">the local-newsletter launch plan</a>.</div></noscript><form id="publication-planner"><div class="planner-grid"><div class="planner-panel"><fieldset><legend>Define a publication you can run</legend><label for="market">Place and target reader</label><textarea id="market" name="market" maxlength="2000" rows="2"></textarea><label for="promise">What the issue helps the reader do</label><textarea id="promise" name="promise" maxlength="2000" rows="2"></textarea><label for="issue">First issue outline</label><textarea id="issue" name="issue" maxlength="2000" rows="2"></textarea><label for="sources">Sources to verify before publication</label><textarea id="sources" name="sources" maxlength="2000" rows="2"></textarea><label for="demo">Tasks to ask the seller to demonstrate</label><textarea id="demo" name="demo" maxlength="2000" rows="2"></textarea></fieldset><fieldset><legend>Record what you have planned</legend><label class="check-label" for="check-0"><input id="check-0" type="checkbox">I have written a sample issue.</label><label class="check-label" for="check-1"><input id="check-1" type="checkbox">I have a plan for checking the facts in each issue.</label><label class="check-label" for="check-2"><input id="check-2" type="checkbox">I have listed the domain and email tasks to demonstrate.</label><label class="check-label" for="check-3"><input id="check-3" type="checkbox">I have identified who will maintain each listing or event.</label><label class="check-label" for="check-4"><input id="check-4" type="checkbox">I have questions about export, support, and package charges.</label></fieldset></div><div class="planner-panel"><fieldset id="budget"><legend>Enter your cost assumptions</legend><label for="setup">Setup cost (USD)</label><input id="setup" name="setup" type="number" value="0" min="0" max="1000000" step="0.01" required><label for="monthly">Monthly operating cost (USD)</label><input id="monthly" name="monthly" type="number" value="0" min="0" max="1000000" step="0.01" required><label for="growth">Monthly audience growth budget (USD)</label><input id="growth" name="growth" type="number" value="0" min="0" max="1000000" step="0.01" required><label for="hours">Publishing hours per week</label><input id="hours" name="hours" type="number" value="0" min="0" max="1000000" step="0.01" required><label for="hourly">Value of an hour of work (USD)</label><input id="hourly" name="hourly" type="number" value="0" min="0" max="1000000" step="0.01" required><label for="sponsor">Net amount per paid placement (USD)</label><input id="sponsor" name="sponsor" type="number" value="0" min="0" max="1000000" step="0.01" required><label for="months">Months to recover setup cost</label><input id="months" name="months" type="number" value="12" min="1" max="1000000" step="1" required></fieldset><h2>The costs your plan needs to cover</h2><p class="planner-note">An arithmetic scenario using your inputs, not a prediction of sponsorship sales. Dollar totals are displayed rounded to cents. Placement counts use unrounded totals.</p><dl class="planner-output"><dt>Monthly cash expenses</dt><dd id="cash-total">Enable JavaScript</dd><dt>Monthly labor allowance</dt><dd id="labor-total">Enable JavaScript</dd><dt>Monthly setup recovery</dt><dd id="recovery-total">Enable JavaScript</dd><dt>Monthly cost target</dt><dd id="budget-total">Enable JavaScript</dd><dt>Paid placements needed to cover modeled costs</dt><dd id="placements-total">Enable JavaScript</dd></dl><p id="planner-error" class="planner-error" role="status"></p><details><summary>How the cost calculation works</summary><p>Cash expenses = monthly operating cost + audience growth budget. Labor = hours per week x value per hour x 52 / 12. Setup recovery = setup cost / recovery months. Cost target = cash + labor + setup recovery. Placements = cost target / net placement amount, rounded up. A zero net placement amount leaves the placement count unset.</p><p>The model treats your entered weekly workload as constant across a 52-week year and spreads it across 12 months. It omits taxes, financing, and expenses you have not entered. Use a placement amount after any direct fees or delivery costs.</p></details></div></div><div class="funnel-actions"><button type="button" id="download-plan" class="funnel-button">Download my worksheet (.txt)</button></div><p id="download-status" role="status"></p></form><section class="funnel-read-more"><h2>Compare Local Media Empire with the work you planned</h2><p class="funnel-disclosure">Affiliate promotion: we may earn a commission if you purchase through our Local Media Empire paid link.</p><p>Bring the issue outline and your demo questions to the seller. Our <a href="/articles/local-media-empire-publishing-checklist/">Local Media Empire evaluation checklist (affiliate promotion)</a> helps you record what you see and the package terms you confirm.</p><a class="funnel-button" href="/articles/local-media-empire-publishing-checklist/">Evaluate Local Media Empire (affiliate promotion)</a></section><p class="planner-note">For the cited sending and advertising requirements, read the <a href="/articles/local-newsletter-launch-plan/">local-newsletter launch guide</a>.</p><section id="closing"><h2>Keep the worksheet with your publishing plan</h2><p>This article is informational and is not a substitute for a legal, tax, or business review of your own publication.</p><p>CI Tripwire Editorial has not commissioned independent expert review of this worksheet.</p><p>Read our <a href="/about/#contributors">editorial and contributor disclosure</a> and <a href="/about/#sourcing">sourcing posture</a>.</p><p>Report an error through our <a href="/about/#corrections">corrections process</a>.</p><p>Source posture: self-authored arithmetic using the stated assumptions; last reviewed 2026-09-30. Sending requirements are sourced in the linked launch guide.</p></section></main><footer class="site-footer"><div class="inner">Copyright 2026 CI Tripwire. Published by CI Tripwire Editorial.</div></footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Local publication planner: issue outline and budget</title>
+  <meta name="description" content="Build a local-publication worksheet with an issue outline, cost assumptions, and demo questions. Free download; includes a disclosed affiliate offer.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://dsotn.com/tools/local-publication-planner/">
+  <meta property="og:title" content="Local publication planner: issue outline and budget">
+  <meta property="og:description" content="Draft a sample issue, model monthly publishing costs in your browser, and download a plain-text worksheet before evaluating software.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dsotn.com/tools/local-publication-planner/">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/site.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Local publication planner: issue outline and budget">
+  <meta name="twitter:description" content="Draft a sample issue, model monthly publishing costs in your browser, and download a plain-text worksheet.">
+  <meta name="twitter:image" content="https://dsotn.com/og/site.png">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/funnel.css">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Local publication planner: issue outline and budget", "url": "https://dsotn.com/tools/local-publication-planner/", "description": "A free publication worksheet and cost calculator. Outputs are planning assumptions, not an earnings forecast.", "applicationCategory": "BusinessApplication", "operatingSystem": "Any web browser", "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "CI Tripwire"}}</script>
+  <script type="module" src="/public/js/local-publication-planner.mjs"></script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"}, {"@type": "ListItem", "position": 2, "name": "Publication planner", "item": "https://dsotn.com/tools/local-publication-planner/"}]}</script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
+        <a href="/tools/local-publication-planner/">Publication planner</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main class="planner-shell">
+    <p class="eyebrow">Free browser worksheet · Zero login required</p>
+    <ol class="funnel-steps" aria-label="Publication planning path">
+      <li><a href="/articles/local-newsletter-launch-plan/">1. Plan an issue</a></li>
+      <li><a href="/tools/local-publication-planner/">2. Build your worksheet</a></li>
+      <li><a href="/articles/local-media-empire-publishing-checklist/">3. Evaluate Local Media Empire (ad)</a></li>
+    </ol>
+    <h1>Plan the issue. Price the work.</h1>
+    <p>Outline the first issue you intend to publish, enter realistic time and operating costs, and download a clean text worksheet you can keep or bring to a software demo.</p>
+    <p class="planner-note">Everything stays in your browser tab: entries are never sent to a server or saved between visits. Download your <code>.txt</code> copy before closing the tab. All currency fields use USD.</p>
+    <noscript><div class="notice">Live cost totals and file downloads require JavaScript. You can still read the full step-by-step framework in <a href="/articles/local-newsletter-launch-plan/">the local-newsletter launch plan</a>.</div></noscript>
+    <form id="publication-planner">
+      <div class="planner-grid">
+        <div class="planner-panel">
+          <fieldset>
+            <legend>Define a publication you can run</legend>
+            <label for="market">Place and target reader</label>
+            <textarea id="market" name="market" maxlength="2000" rows="2" placeholder="Example: Homeowners and small business owners in Westside Portland"></textarea>
+            <label for="promise">What the issue helps the reader do</label>
+            <textarea id="promise" name="promise" maxlength="2000" rows="2" placeholder="Example: Track city council permits, weekend markets, and school board votes in 5 minutes"></textarea>
+            <label for="issue">First issue outline</label>
+            <textarea id="issue" name="issue" maxlength="2000" rows="2" placeholder="Example: 1 lead civic brief, 4 verified weekend events, 1 local business opening"></textarea>
+            <label for="sources">Sources to verify before publication</label>
+            <textarea id="sources" name="sources" maxlength="2000" rows="2" placeholder="Example: City clerk agenda packet, county permit log, direct organizer confirmation"></textarea>
+            <label for="demo">Tasks to ask the seller to demonstrate</label>
+            <textarea id="demo" name="demo" maxlength="2000" rows="2" placeholder="Example: Custom domain DKIM/SPF setup, subscriber CSV export, sponsor block formatting"></textarea>
+          </fieldset>
+          <fieldset>
+            <legend>Record what you have planned</legend>
+            <label class="check-label" for="check-0"><input id="check-0" type="checkbox">I have written a sample issue.</label>
+            <label class="check-label" for="check-1"><input id="check-1" type="checkbox">I have a plan for checking the facts in each issue.</label>
+            <label class="check-label" for="check-2"><input id="check-2" type="checkbox">I have listed the domain and email tasks to demonstrate.</label>
+            <label class="check-label" for="check-3"><input id="check-3" type="checkbox">I have identified who will maintain each listing or event.</label>
+            <label class="check-label" for="check-4"><input id="check-4" type="checkbox">I have questions about export, support, and package charges.</label>
+          </fieldset>
+        </div>
+        <div class="planner-panel">
+          <fieldset id="budget">
+            <legend>Enter your cost assumptions</legend>
+            <label for="setup">Setup cost (USD)</label>
+            <input id="setup" name="setup" type="number" value="0" min="0" max="1000000" step="0.01" required>
+            <label for="monthly">Monthly operating cost (USD)</label>
+            <input id="monthly" name="monthly" type="number" value="0" min="0" max="1000000" step="0.01" required>
+            <label for="growth">Monthly audience growth budget (USD)</label>
+            <input id="growth" name="growth" type="number" value="0" min="0" max="1000000" step="0.01" required>
+            <label for="hours">Publishing hours per week</label>
+            <input id="hours" name="hours" type="number" value="0" min="0" max="1000000" step="0.01" required>
+            <label for="hourly">Value of an hour of work (USD)</label>
+            <input id="hourly" name="hourly" type="number" value="0" min="0" max="1000000" step="0.01" required>
+            <label for="sponsor">Net amount per paid placement (USD)</label>
+            <input id="sponsor" name="sponsor" type="number" value="0" min="0" max="1000000" step="0.01" required>
+            <label for="months">Months to recover setup cost</label>
+            <input id="months" name="months" type="number" value="12" min="1" max="1000000" step="1" required>
+          </fieldset>
+          <h2>The costs your plan needs to cover</h2>
+          <p class="planner-note">An arithmetic scenario using your inputs, not a prediction of sponsorship sales. Dollar totals are displayed rounded to cents. Placement counts use unrounded totals.</p>
+          <dl class="planner-output">
+            <dt>Monthly cash expenses</dt>
+            <dd id="cash-total">Enable JavaScript</dd>
+            <dt>Monthly labor allowance</dt>
+            <dd id="labor-total">Enable JavaScript</dd>
+            <dt>Monthly setup recovery</dt>
+            <dd id="recovery-total">Enable JavaScript</dd>
+            <dt>Monthly cost target</dt>
+            <dd id="budget-total">Enable JavaScript</dd>
+            <dt>Paid placements needed to cover modeled costs</dt>
+            <dd id="placements-total">Enable JavaScript</dd>
+          </dl>
+          <p id="planner-error" class="planner-error" role="status"></p>
+          <details>
+            <summary>How the cost calculation works</summary>
+            <p>Cash expenses = monthly operating cost + audience growth budget. Labor = hours per week x value per hour x 52 / 12. Setup recovery = setup cost / recovery months. Cost target = cash + labor + setup recovery. Placements = cost target / net placement amount, rounded up. A zero net placement amount leaves the placement count unset.</p>
+            <p>The model treats your entered weekly workload as constant across a 52-week year and spreads it across 12 months. It omits taxes, financing, and expenses you have not entered. Use a placement amount after any direct fees or delivery costs.</p>
+          </details>
+        </div>
+      </div>
+      <div class="funnel-actions">
+        <button type="button" id="download-plan" class="funnel-button">Download my worksheet (.txt)</button>
+      </div>
+      <p id="download-status" role="status"></p>
+    </form>
+    <section class="funnel-read-more">
+      <h2>Compare Local Media Empire with the work you planned</h2>
+      <p class="funnel-disclosure">Affiliate promotion: we may earn a commission if you purchase through our Local Media Empire paid link.</p>
+      <p>Bring your sample issue outline and demo questions to the seller's page. Our <a href="/articles/local-media-empire-publishing-checklist/">Local Media Empire evaluation checklist (affiliate promotion)</a> walks through what to verify on sending, account ownership, and package terms.</p>
+      <a class="funnel-button" href="/articles/local-media-empire-publishing-checklist/">Evaluate Local Media Empire (affiliate promotion)</a>
+    </section>
+    <p class="planner-note">For the cited CAN-SPAM, authentication, and advertising rules behind these checks, read the <a href="/articles/local-newsletter-launch-plan/">local-newsletter launch guide</a>.</p>
+    <section id="closing">
+      <h2>Keep the worksheet with your publishing plan</h2>
+      <p>This article is informational and is not a substitute for a legal, tax, or business review of your own publication.</p>
+      <p>CI Tripwire Editorial has not commissioned independent expert review of this worksheet.</p>
+      <p>Read our <a href="/about/#contributors">editorial and contributor disclosure</a> and <a href="/about/#sourcing">sourcing posture</a>.</p>
+      <p>Report an error through our <a href="/about/#corrections">corrections process</a>.</p>
+      <p>Source posture: self-authored arithmetic using the stated assumptions; last reviewed 2026-09-30. Sending requirements are sourced in the linked launch guide.</p>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Engineering Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
+  </footer>
+</body>
+</html>

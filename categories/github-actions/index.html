@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>GitHub Actions Security Guides: YAML &amp; Policy | CI Tripwire</title>
+  <meta name="description" content="15 primary-sourced GitHub Actions security guides: GITHUB_TOKEN permissions, pull_request_target Nov 2 enforcement, SHA pins, OIDC, and runner isolation.">
+  <link rel="canonical" href="https://dsotn.com/categories/github-actions/">
+  <meta property="og:title" content="GitHub Actions Security Guides: YAML &amp; Policy | CI Tripwire">
+  <meta property="og:description" content="15 primary-sourced playbooks for hardening GitHub Actions workflows, tokens, OIDC roles, and runners.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dsotn.com/categories/github-actions/">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/site.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GitHub Actions Security Guides: YAML &amp; Policy | CI Tripwire">
+  <meta name="twitter:description" content="15 primary-sourced playbooks for hardening GitHub Actions workflows, tokens, OIDC roles, and runners.">
+  <meta name="twitter:image" content="https://dsotn.com/og/site.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "GitHub Actions Security Guides",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "url": "https://dsotn.com/articles/pull-request-target-november-2/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "url": "https://dsotn.com/articles/github-actions-workflow-execution-protections/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "url": "https://dsotn.com/articles/github-actions-security-risks/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "url": "https://dsotn.com/articles/dependabot-github-actions-security/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "url": "https://dsotn.com/articles/reusable-workflows-security/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "url": "https://dsotn.com/articles/github-token-permissions/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "url": "https://dsotn.com/articles/pin-github-actions-sha/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "url": "https://dsotn.com/articles/oidc-trust-policy-footguns/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "url": "https://dsotn.com/articles/artifact-attestations-github-actions/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "url": "https://dsotn.com/articles/npm-trusted-publishing-github-actions/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "url": "https://dsotn.com/articles/github-actions-job-summary-security/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "url": "https://dsotn.com/articles/pull-request-target-security/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "url": "https://dsotn.com/articles/github-actions-script-injection/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "url": "https://dsotn.com/articles/github-actions-cache-security/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "url": "https://dsotn.com/articles/self-hosted-runners-security/"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dsotn.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "GitHub Actions Security",
+      "item": "https://dsotn.com/categories/github-actions/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/">CI Tripwire</a>
+      <div class="nav-links">
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
+      </div>
+    </nav>
+  </header>
+  <main class="wrap">
+    <p class="eyebrow">Category Hub · 15 Guides</p>
+    <h1>GitHub Actions workflow security playbooks</h1>
+    <p>Harden your CI/CD pipelines from repository settings down to individual shell steps. Each guide cites official GitHub documentation and OpenSSF guidance inline so maintainers can verify behavior before changing workflow YAML or org policies.</p>
+
+    <nav class="filter-bar" aria-label="GitHub Actions subtopics">
+      <a href="#governance">Rollout Deadlines &amp; Governance (5)</a>
+      <a href="#tokens-supply-chain">Tokens, OIDC &amp; Supply Chain (5)</a>
+      <a href="#pr-runners">Pull Requests, Runners &amp; Isolation (5)</a>
+    </nav>
+
+    <div class="notice">
+      <strong>Scanning a repository right now?</strong> Start with <a href="/articles/github-actions-security-risks/">five workflow risks to fix now</a> for the audit sequence, check <a href="/articles/pull-request-target-november-2/">November 2 pull_request_target enforcement</a> if you maintain public repos, or run <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a> locally against <code>.github/workflows</code>.
+    </div>
+
+    <section id="governance" class="section-block">
+      <div class="section-head">
+        <h2>1. Rollout deadlines, execution policies, and shared workflows</h2>
+      </div>
+      <p class="section-sub">Control which events, actors, bots, and shared workflow_call files can start jobs across your organization.</p>
+      <div class="article-list">
+        <article class="card">
+          <img src="/public/images/articles/pull-request-target-november-2.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Railroad crossing signals and a crossbuck beside tracks and a road in Yankton, South Dakota, with an electrical substation behind them.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/pull-request-target-november-2/">Public pull_request_target enforcement starts November 2</a></h3>
+            <p>See whether GitHub&#x27;s November 2, 2026 default block affects your public repository, inspect Policy Insights, and check SHA-pinned PR checkouts before runs stop.</p>
+            <p class="article-meta">10 min read · Updated 2026-09-23</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/github-actions-workflow-execution-protections.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="A large control panel with rows of switches, buttons, and displays.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/github-actions-workflow-execution-protections/">GitHub Actions workflow execution protections guide</a></h3>
+            <p>Put actor and event allow-lists in front of workflow execution, measure real run impact in evaluate mode, and enforce policies without breaking releases.</p>
+            <p class="article-meta">9 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/github-actions-security-risks.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Server racks in a computing facility, used as a visual metaphor for CI infrastructure.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/github-actions-security-risks/">GitHub Actions security: five workflow risks to fix now</a></h3>
+            <p>Start a fast repository audit in priority order: unpinned third-party tags, overbroad GITHUB_TOKEN access, pull_request_target, shell input, and missing timeouts.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/dependabot-github-actions-security.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Robotic arm arranged for automated sorting and stacking.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/dependabot-github-actions-security/">Dependabot and GitHub Actions: secure bot PR workflows</a></h3>
+            <p>Understand how Dependabot PRs handle secrets and token scopes, review workflow-file bumps manually, and guard automerge rules.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/reusable-workflows-security.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Industrial conveyor system inside a factory.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/reusable-workflows-security/">GitHub Actions reusable workflows: secure workflow_call</a></h3>
+            <p>Pin shared workflow_call references, replace blanket secrets: inherit with explicit inputs, and audit both caller and callee permissions.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="tokens-supply-chain" class="section-block">
+      <div class="section-head">
+        <h2>2. GITHUB_TOKEN permissions, OIDC roles, and supply-chain pins</h2>
+      </div>
+      <p class="section-sub">Scope credentials to the exact job and ref that needs them, pin third-party actions to full SHAs, and verify build provenance.</p>
+      <div class="article-list">
+        <article class="card">
+          <img src="/public/images/articles/github-token-permissions.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="A transparent padlock photographed open with a key inserted, used as a visual metaphor for workflow token access.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/github-token-permissions/">GitHub Actions GITHUB_TOKEN permissions: least privilege</a></h3>
+            <p>Lock workflows to read-only defaults, scope write grants to individual jobs, and resolve organization greyed-out pull-request creation errors.</p>
+            <p class="article-meta">8 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/pin-github-actions-sha.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Assorted padlocks attached to a chain link fence, used as a visual metaphor for pinned workflow dependencies.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/pin-github-actions-sha/">Pin GitHub Actions to commit SHAs: supply-chain control</a></h3>
+            <p>Replace mutable version tags with full 40-character commit SHAs, turn on repository SHA-pinning policy, and pair pins with automated update PRs.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/oidc-trust-policy-footguns.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Clouds above the north Atlantic Ocean photographed from orbit.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/oidc-trust-policy-footguns/">GitHub Actions OIDC trust policies: lock down cloud IAM</a></h3>
+            <p>Eliminate wildcard subject claims in AWS, Azure, and GCP roles by filtering OIDC tokens to exact repositories, refs, environments, and deploy jobs.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/artifact-attestations-github-actions.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Rows of high-performance computing racks in a data center.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/artifact-attestations-github-actions/">GitHub Actions artifact attestations: verify CI provenance</a></h3>
+            <p>Bind release binaries and packages to verifiable workflow provenance and enforce signer checks before deployment or installation.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/npm-trusted-publishing-github-actions.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Corrugated cardboard moving down a conveyor belt.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/npm-trusted-publishing-github-actions/">npm trusted publishing in GitHub Actions: OIDC releases</a></h3>
+            <p>Drop long-lived npm publish tokens in favor of OIDC trusted publishing, provenance attestations, and isolated release job permissions.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="pr-runners" class="section-block">
+      <div class="section-head">
+        <h2>3. Pull-request boundaries, shell steps, caches, and runners</h2>
+      </div>
+      <p class="section-sub">Keep untrusted fork inputs, job summaries, restored caches, and self-hosted runner machines from leaking secrets or tampering with builds.</p>
+      <div class="article-list">
+        <article class="card">
+          <img src="/public/images/articles/github-actions-job-summary-security.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Data-reporting dashboard displayed on a laptop screen.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/github-actions-job-summary-security/">Can GitHub Actions job summaries expose CI secrets?</a></h3>
+            <p>Automatic secret masking inside GITHUB_STEP_SUMMARY is best-effort. Replace raw command output with fixed templates and validated summary fields.</p>
+            <p class="article-meta">6 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/pull-request-target-security.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="A transparent padlock photographed closed, used as a visual metaphor for trusted workflow gates.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/pull-request-target-security/">GitHub Actions pull_request_target security: safe patterns</a></h3>
+            <p>Keep base-repository secrets and write tokens away from untrusted fork code by separating metadata labeling from build execution.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/github-actions-script-injection.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Code displayed on a computer monitor.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/github-actions-script-injection/">GitHub Actions script injection: safe run-step patterns</a></h3>
+            <p>Keep PR titles, branch names, and issue comments out of inline ${{ }} shell interpolation by passing untrusted context through environment variables.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/github-actions-cache-security.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Industrial shelving with stacked storage boxes.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/github-actions-cache-security/">GitHub Actions cache security: prevent poisoned builds</a></h3>
+            <p>Scope restore keys to lockfiles, understand branch cache inheritance, and stop release jobs from trusting dependencies restored from lower-trust runs.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/self-hosted-runners-security.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Rows of data center equipment and cabling.">
+          <div class="card-body">
+            <span class="chip">GitHub Actions</span>
+            <h3><a href="/articles/self-hosted-runners-security/">Self-hosted GitHub Actions runners: isolate CI machines</a></h3>
+            <p>Keep public pull requests off persistent hosts, segment capacity with runner groups, and provision ephemeral clean machines per job.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Engineering Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
+  </footer>
+</body>
+</html>

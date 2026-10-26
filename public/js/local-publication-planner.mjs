@@ -65,7 +65,7 @@ if (typeof document !== 'undefined') {
     link.href = url; link.download = 'local-publication-plan.txt';
     document.body.append(link); link.click(); link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    document.querySelector('#download-status').textContent = 'Your worksheet download has been requested.';
+    document.querySelector('#download-status').textContent = 'Downloaded local-publication-plan.txt to your device.';
   });
   update();
 }
