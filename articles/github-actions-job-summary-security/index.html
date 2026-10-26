@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <title>Can GitHub Actions job summaries expose CI secrets?</title>
-  <meta name="description" content="GitHub Actions job summaries can expose sensitive CI data. A fixed template with validated fields limits raw output and reliance on masking.">
+  <meta name="description" content="Prevent secret leaks in GitHub Actions GITHUB_STEP_SUMMARY output: why automatic masking is not enough and how to publish validated, fixed-field reports.">
   <link rel="canonical" href="https://dsotn.com/articles/github-actions-job-summary-security/">
   <meta property="og:title" content="Can GitHub Actions job summaries expose CI secrets?">
-  <meta property="og:description" content="GitHub Actions job summaries can expose sensitive CI data. A fixed template with validated fields limits raw output and reliance on masking.">
+  <meta property="og:description" content="Prevent secret leaks in GitHub Actions GITHUB_STEP_SUMMARY output: why automatic masking is not enough and how to publish validated, fixed-field reports.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/github-actions-job-summary-security/">
   <meta property="og:site_name" content="CI Tripwire">
@@ -22,7 +22,7 @@
   <meta property="article:tag" content="CI secret handling">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Can GitHub Actions job summaries expose CI secrets?">
-  <meta name="twitter:description" content="GitHub Actions job summaries can expose sensitive CI data. A fixed template with validated fields limits raw output and reliance on masking.">
+  <meta name="twitter:description" content="Prevent secret leaks in GitHub Actions GITHUB_STEP_SUMMARY output: why automatic masking is not enough and how to publish validated, fixed-field reports.">
   <meta name="twitter:image" content="https://dsotn.com/og/articles/github-actions-job-summary-security.png">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
@@ -80,7 +80,9 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
         <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
@@ -88,7 +90,7 @@
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/github-actions-job-summary-security.jpg" width="1600" height="900" alt="Data-reporting dashboard displayed on a laptop screen.">
+      <img src="/public/images/articles/github-actions-job-summary-security.jpg" width="1600" height="900" fetchpriority="high" alt="Data-reporting dashboard displayed on a laptop screen.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -100,6 +102,7 @@
         <a href="#masking">Secret masking</a>
         <a href="#recovery">Cleanup and limits</a>
         <a href="#review">Review checklist</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
@@ -236,6 +239,33 @@
           <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 8 official GitHub primary-source entries, last reviewed 2026-08-11.</p>
         </section>
 
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/categories/github-actions/">Explore all 15 GitHub Actions security guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-script-injection/">GitHub Actions script injection: safe run-step patterns</a>
+              <p>Pass untrusted PR titles, branch names, and event payloads through environment variables instead of inline shell syntax.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-token-permissions/">GitHub Actions GITHUB_TOKEN permissions: least privilege</a>
+              <p>Lock down top-level permissions in YAML and align repository and organization workflow-permission settings.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-security-risks/">GitHub Actions security: five workflow risks to fix now</a>
+              <p>Run a fast five-point baseline across commit SHA pins, token scopes, pull_request_target, shell input, and timeouts.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/artifact-attestations-github-actions/">GitHub Actions artifact attestations: verify CI provenance</a>
+              <p>Sign release artifacts in CI and enforce gh attestation verify checks before deployment.</p>
+            </div>
+          </div>
+        </section>
+
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
@@ -253,7 +283,33 @@
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <title>Five AI trends for software engineering teams in 2026</title>
-  <meta name="description" content="Release checks for agent reliability, model choice, benchmark defects, agent security, and AI compliance transitions in 2026.">
+  <meta name="description" content="Five primary-sourced 2026 AI release checks for engineering teams: agent task horizons, coding eval noise, indirect prompt injection, and EU AI Act dates.">
   <link rel="canonical" href="https://dsotn.com/articles/ai-trends-software-engineering-2026/">
   <meta property="og:title" content="Five AI trends for software engineering teams in 2026">
-  <meta property="og:description" content="Release checks for agent reliability, model choice, benchmark defects, agent security, and AI compliance transitions in 2026.">
+  <meta property="og:description" content="Five primary-sourced 2026 AI release checks for engineering teams: agent task horizons, coding eval noise, indirect prompt injection, and EU AI Act dates.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/ai-trends-software-engineering-2026/">
   <meta property="og:site_name" content="CI Tripwire">
@@ -22,7 +22,7 @@
   <meta property="article:tag" content="AI engineering">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Five AI trends for software engineering teams in 2026">
-  <meta name="twitter:description" content="Release checks for agent reliability, model choice, benchmark defects, agent security, and AI compliance transitions in 2026.">
+  <meta name="twitter:description" content="Five primary-sourced 2026 AI release checks for engineering teams: agent task horizons, coding eval noise, indirect prompt injection, and EU AI Act dates.">
   <meta name="twitter:image" content="https://dsotn.com/og/articles/ai-trends-software-engineering-2026.png">
   <link rel="stylesheet" href="/styles.css">
   <style>
@@ -92,7 +92,9 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
         <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
@@ -100,7 +102,7 @@
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/ai-trends-software-engineering-2026.jpg" width="1600" height="900" alt="Electronic equipment racks filled with components and multicolored cables.">
+      <img src="/public/images/articles/ai-trends-software-engineering-2026.jpg" width="1600" height="900" fetchpriority="high" alt="Electronic equipment racks filled with components and multicolored cables.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -113,6 +115,7 @@
         <a href="#agent-security">Agent security</a>
         <a href="#compliance">Compliance controls</a>
         <a href="#review">Engineering checklist</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
@@ -266,6 +269,33 @@
           <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 11 entries, primary canon plus reputable secondary sources, with inline acknowledgment, last reviewed 2026-08-12.</p>
         </section>
 
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/articles/#ai-engineering">Browse all engineering &amp; AI release guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-workflow-execution-protections/">GitHub Actions workflow execution protections guide</a>
+              <p>Gate workflow runs with actor rules, event allowlists, and evaluate-mode testing before enforcement.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-script-injection/">GitHub Actions script injection: safe run-step patterns</a>
+              <p>Pass untrusted PR titles, branch names, and event payloads through environment variables instead of inline shell syntax.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/oidc-trust-policy-footguns/">GitHub Actions OIDC trust policies: lock down cloud IAM</a>
+              <p>Scope cloud IAM subject claims to exact repositories, branches, and environments so foreign workflows cannot assume roles.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/artifact-attestations-github-actions/">GitHub Actions artifact attestations: verify CI provenance</a>
+              <p>Sign release artifacts in CI and enforce gh attestation verify checks before deployment.</p>
+            </div>
+          </div>
+        </section>
+
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
@@ -286,7 +316,33 @@
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

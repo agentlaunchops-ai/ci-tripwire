@@ -3,57 +3,116 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GitHub Actions Script Injection: Safer Shell Steps</title>
-  <meta name="description" content="Prevent GitHub Actions script injection by treating event data as untrusted, moving expressions into env vars, and controlling workflow command output.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>GitHub Actions script injection: safe run-step patterns</title>
+  <meta name="description" content="Stop GitHub Actions script injection in run steps by passing untrusted github.event fields through environment variables instead of inline expressions.">
   <link rel="canonical" href="https://dsotn.com/articles/github-actions-script-injection/">
-  <meta property="og:title" content="GitHub Actions Script Injection: Safer Shell Steps">
-  <meta property="og:description" content="How to keep pull request text and other event data from becoming shell code.">
+  <meta property="og:title" content="GitHub Actions script injection: safe run-step patterns">
+  <meta property="og:description" content="Stop GitHub Actions script injection in run steps by passing untrusted github.event fields through environment variables instead of inline expressions.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/github-actions-script-injection/">
-  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-script-injection.jpg">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/articles/github-actions-script-injection.png">
   <meta property="article:published_time" content="2026-06-08T02:09:00-06:00">
-  <meta property="article:modified_time" content="2026-06-08T02:09:00-06:00">
+  <meta property="article:modified_time" content="2026-10-26T11:30:00-05:00">
   <meta property="article:author" content="CI Tripwire Editorial">
   <meta property="article:section" content="GitHub Actions">
   <meta property="article:tag" content="script injection">
   <meta property="article:tag" content="untrusted input">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-script-injection.jpg">
+  <meta name="twitter:title" content="GitHub Actions script injection: safe run-step patterns">
+  <meta name="twitter:description" content="Stop GitHub Actions script injection in run steps by passing untrusted github.event fields through environment variables instead of inline expressions.">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/github-actions-script-injection.png">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": "GitHub Actions Script Injection: Safer Shell Steps",
-    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
-    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
-    "datePublished": "2026-06-08T02:09:00-06:00",
-    "dateModified": "2026-06-08T02:09:00-06:00",
-    "articleSection": "GitHub Actions",
-    "keywords": ["GitHub Actions script injection", "untrusted contexts", "workflow commands", "pull request title"],
-    "wordCount": 1011,
-    "timeRequired": "PT7M",
-    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-script-injection/",
-    "articleBody": "Script injection risk appears when untrusted event data is expanded into shell code before the runner executes a GitHub Actions step.",
-    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-script-injection.jpg", "width": 5760, "height": 3840},
-    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
-    "citation": [
-      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
-      {"@type": "CreativeWork", "name": "Contexts reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts"},
-      {"@type": "CreativeWork", "name": "Workflow commands for GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands"}
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "GitHub Actions script injection: safe run-step patterns",
+  "author": {
+    "@type": "Organization",
+    "name": "CI Tripwire Editorial",
+    "url": "https://dsotn.com/about/#contributors"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CI Tripwire",
+    "url": "https://dsotn.com/"
+  },
+  "datePublished": "2026-06-08T02:09:00-06:00",
+  "dateModified": "2026-10-26T11:30:00-05:00",
+  "articleSection": "GitHub Actions",
+  "keywords": [
+    "GitHub Actions script injection",
+    "untrusted contexts",
+    "workflow commands",
+    "pull request title"
+  ],
+  "wordCount": 955,
+  "timeRequired": "PT7M",
+  "mainEntityOfPage": "https://dsotn.com/articles/github-actions-script-injection/",
+  "articleBody": "Script injection risk appears when untrusted event data is expanded into shell code before the runner executes a GitHub Actions step.",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://dsotn.com/og/articles/github-actions-script-injection.png",
+    "width": 1200,
+    "height": 630
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      "#key-takeaways",
+      "#article-summary",
+      "#editorial-summary"
     ]
-  }
+  },
+  "citation": [
+    {
+      "@type": "CreativeWork",
+      "name": "Secure use reference",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Contexts reference",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Workflow commands for GitHub Actions",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands"
+    }
+  ]
+}
   </script>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
-      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
-      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Script Injection: Safer Shell Steps", "item": "https://dsotn.com/articles/github-actions-script-injection/"}
-    ]
-  }
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dsotn.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://dsotn.com/articles/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "GitHub Actions script injection: safe run-step patterns",
+      "item": "https://dsotn.com/articles/github-actions-script-injection/"
+    }
+  ]
+}
   </script>
     <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
     <!-- Google tag (gtag.js) -->
@@ -70,15 +129,17 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
-        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
     </nav>
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/github-actions-script-injection.jpg" width="5760" height="3840" alt="Code displayed on a computer monitor.">
+      <img src="/public/images/articles/github-actions-script-injection.jpg" width="1600" height="900" fetchpriority="high" alt="Code displayed on a computer monitor.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -91,17 +152,14 @@
         <a href="#commands">Commands</a>
         <a href="#secrets">Secrets</a>
         <a href="#audit">Fast audit</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
         <p class="eyebrow">GitHub Actions</p>
-        <h1>GitHub Actions Script Injection: Safer Shell Steps</h1>
-        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <h1>GitHub Actions script injection: safe run-step patterns</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · Updated 2026-10-26 · 7 min read</p>
         <p id="editorial-summary">A shell step is safer when untrusted pull request text stays data, not syntax, from expression expansion through command execution.</p>
-
-        <aside class="notice" aria-label="Editorial disclaimer">
-          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
-        </aside>
 
         <section id="key-takeaways" class="takeaways">
           <h2>Key takeaways for GitHub Actions script injection</h2>
@@ -164,25 +222,80 @@
           <h2>A fast script-injection audit starts with every run block</h2>
           <p>Search workflow files for <code>run:</code> blocks that contain <code>${{</code>. Classify each expression by source, then move untrusted event data into <code>env:</code> variables, validate expected formats, and keep shell quoting simple.</p>
           <p>Next, inspect any step that prints event data, generated content, or tool output. Use workflow-command controls when command-looking text could be printed, and review logs from both expected and malformed inputs.</p>
-          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so script-injection review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, and required-check audits.</p>
-          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
-          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a> locally so script-injection review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, and required-check audits.</p>
+          <aside class="notice" aria-label="Editorial disclaimer">
+            This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+          </aside>
+          <p>CI Tripwire Editorial has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
           <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 3 entries, primary GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/categories/github-actions/">Explore all 15 GitHub Actions security guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-job-summary-security/">Can GitHub Actions job summaries expose CI secrets?</a>
+              <p>Keep raw logs and unmasked credentials out of GITHUB_STEP_SUMMARY with fixed-schema report templates.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pull-request-target-security/">GitHub Actions pull_request_target security: safe patterns</a>
+              <p>Separate untrusted fork code from privileged base-repository secrets and write-scoped tokens.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-security-risks/">GitHub Actions security: five workflow risks to fix now</a>
+              <p>Run a fast five-point baseline across commit SHA pins, token scopes, pull_request_target, shell input, and timeouts.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">AI Release Engineering</span>
+              <a href="/articles/ai-trends-software-engineering-2026/">Five AI trends for software engineering teams in 2026</a>
+              <p>Add primary-sourced release gates for agent reliability, benchmark noise, indirect prompt injection, and EU AI Act obligations.</p>
+            </div>
+          </div>
         </section>
 
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
-            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use">Secure use reference</a>.</li>
-            <li id="ref-contexts">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/contexts">Contexts reference</a>.</li>
-            <li id="ref-commands">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands">Workflow commands for GitHub Actions</a>.</li>
+            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/security/secure-use" rel="nofollow noopener noreferrer" target="_blank">Secure use reference</a>.</li>
+            <li id="ref-contexts">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/contexts" rel="nofollow noopener noreferrer" target="_blank">Contexts reference</a>.</li>
+            <li id="ref-commands">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands" rel="nofollow noopener noreferrer" target="_blank">Workflow commands for GitHub Actions</a>.</li>
           </ol>
         </section>
       </article>
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

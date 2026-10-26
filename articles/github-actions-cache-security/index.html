@@ -3,57 +3,116 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GitHub Actions Cache Security: Avoid Poisoned Builds</title>
-  <meta name="description" content="Harden GitHub Actions cache usage with scoped keys, safe restore paths, fork-aware access, and checks for poisoned dependency restores in CI builds.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>GitHub Actions cache security: prevent poisoned builds</title>
+  <meta name="description" content="Harden GitHub Actions dependency caches: understand branch cache isolation, audit restored build directories, and prevent cache poisoning before release.">
   <link rel="canonical" href="https://dsotn.com/articles/github-actions-cache-security/">
-  <meta property="og:title" content="GitHub Actions Cache Security: Avoid Poisoned Builds">
-  <meta property="og:description" content="How to use GitHub Actions caches without turning dependency restores into a hidden supply-chain trust path.">
+  <meta property="og:title" content="GitHub Actions cache security: prevent poisoned builds">
+  <meta property="og:description" content="Harden GitHub Actions dependency caches: understand branch cache isolation, audit restored build directories, and prevent cache poisoning before release.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/github-actions-cache-security/">
-  <meta property="og:image" content="https://dsotn.com/public/images/articles/github-actions-cache-security.jpg">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/articles/github-actions-cache-security.png">
   <meta property="article:published_time" content="2026-06-08T01:05:00-06:00">
-  <meta property="article:modified_time" content="2026-06-08T01:05:00-06:00">
+  <meta property="article:modified_time" content="2026-10-26T11:30:00-05:00">
   <meta property="article:author" content="CI Tripwire Editorial">
   <meta property="article:section" content="GitHub Actions">
   <meta property="article:tag" content="actions/cache">
   <meta property="article:tag" content="cache poisoning">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/github-actions-cache-security.jpg">
+  <meta name="twitter:title" content="GitHub Actions cache security: prevent poisoned builds">
+  <meta name="twitter:description" content="Harden GitHub Actions dependency caches: understand branch cache isolation, audit restored build directories, and prevent cache poisoning before release.">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/github-actions-cache-security.png">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": "GitHub Actions Cache Security: Avoid Poisoned Builds",
-    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
-    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
-    "datePublished": "2026-06-08T01:05:00-06:00",
-    "dateModified": "2026-06-08T01:05:00-06:00",
-    "articleSection": "GitHub Actions",
-    "keywords": ["GitHub Actions cache security", "actions/cache", "cache poisoning", "dependency caching"],
-    "wordCount": 1058,
-    "timeRequired": "PT7M",
-    "mainEntityOfPage": "https://dsotn.com/articles/github-actions-cache-security/",
-    "articleBody": "GitHub Actions caches speed up dependency installs, but cache keys and restore scope can become part of a CI trust boundary.",
-    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/github-actions-cache-security.jpg", "width": 1920, "height": 1280},
-    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
-    "citation": [
-      {"@type": "CreativeWork", "name": "Dependency caching reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/reference/dependency-caching-reference"},
-      {"@type": "CreativeWork", "name": "Secure use reference", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions"},
-      {"@type": "CreativeWork", "name": "GHSL-2024-148_GHSL-2024-149: Code Injection and Execution of Untrusted Code in Astro's Actions workflows", "publisher": "GitHub Security Lab", "url": "https://securitylab.github.com/advisories/GHSL-2024-148_GHSL-2024-149_Astro/"}
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "GitHub Actions cache security: prevent poisoned builds",
+  "author": {
+    "@type": "Organization",
+    "name": "CI Tripwire Editorial",
+    "url": "https://dsotn.com/about/#contributors"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CI Tripwire",
+    "url": "https://dsotn.com/"
+  },
+  "datePublished": "2026-06-08T01:05:00-06:00",
+  "dateModified": "2026-10-26T11:30:00-05:00",
+  "articleSection": "GitHub Actions",
+  "keywords": [
+    "GitHub Actions cache security",
+    "actions/cache",
+    "cache poisoning",
+    "dependency caching"
+  ],
+  "wordCount": 1085,
+  "timeRequired": "PT7M",
+  "mainEntityOfPage": "https://dsotn.com/articles/github-actions-cache-security/",
+  "articleBody": "GitHub Actions caches speed up dependency installs, but cache keys and restore scope can become part of a CI trust boundary.",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://dsotn.com/og/articles/github-actions-cache-security.png",
+    "width": 1200,
+    "height": 630
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      "#key-takeaways",
+      "#article-summary",
+      "#editorial-summary"
     ]
-  }
+  },
+  "citation": [
+    {
+      "@type": "CreativeWork",
+      "name": "Dependency caching reference",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/reference/dependency-caching-reference"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Secure use reference",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "GHSL-2024-148_GHSL-2024-149: Code Injection and Execution of Untrusted Code in Astro's Actions workflows",
+      "publisher": "GitHub Security Lab",
+      "url": "https://securitylab.github.com/advisories/GHSL-2024-148_GHSL-2024-149_Astro/"
+    }
+  ]
+}
   </script>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
-      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
-      {"@type": "ListItem", "position": 3, "name": "GitHub Actions Cache Security: Avoid Poisoned Builds", "item": "https://dsotn.com/articles/github-actions-cache-security/"}
-    ]
-  }
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dsotn.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://dsotn.com/articles/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "GitHub Actions cache security: prevent poisoned builds",
+      "item": "https://dsotn.com/articles/github-actions-cache-security/"
+    }
+  ]
+}
   </script>
     <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
     <!-- Google tag (gtag.js) -->
@@ -70,15 +129,17 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
-        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
     </nav>
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/github-actions-cache-security.jpg" width="1920" height="1280" alt="Industrial shelving with stacked storage boxes.">
+      <img src="/public/images/articles/github-actions-cache-security.jpg" width="1600" height="900" fetchpriority="high" alt="Industrial shelving with stacked storage boxes.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -91,17 +152,14 @@
         <a href="#secrets">Secrets</a>
         <a href="#poisoning">Poisoning signals</a>
         <a href="#audit">Fast audit</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
         <p class="eyebrow">GitHub Actions</p>
-        <h1>GitHub Actions Cache Security: Avoid Poisoned Builds</h1>
-        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <h1>GitHub Actions cache security: prevent poisoned builds</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · Updated 2026-10-26 · 7 min read</p>
         <p id="editorial-summary">Dependency caches are useful because they are invisible when they work. That same invisibility makes them worth auditing before a release workflow trusts restored dependencies.</p>
-
-        <aside class="notice" aria-label="Editorial disclaimer">
-          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
-        </aside>
 
         <section id="key-takeaways" class="takeaways">
           <h2>Key takeaways for GitHub Actions cache security</h2>
@@ -165,25 +223,80 @@
           <h2>A fast cache audit follows keys, paths, and consumers</h2>
           <p>Start with <code>uses: actions/cache</code>, package-manager cache settings, and built-in setup-action caching. Check each <code>path</code>, exact <code>key</code>, and <code>restore-keys</code> chain against GitHub's documented matching behavior. <a href="#ref-cache">[1]</a></p>
           <p>Then list who can write or influence the cached files: pull requests, scheduled jobs, manual dispatch inputs, reusable workflows, self-hosted runners, and third-party actions. Finally, list who consumes those files: tests, code generation, package publishing, Docker builds, deployment jobs, and artifact signing.</p>
-          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so cache review sits beside pinned-action, token-permission, timeout, OIDC, reusable-workflow, runner, attestation, and shell-context checks.</p>
-          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
-          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a> locally so cache review sits beside pinned-action, token-permission, timeout, OIDC, reusable-workflow, runner, attestation, and shell-context checks.</p>
+          <aside class="notice" aria-label="Editorial disclaimer">
+            This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+          </aside>
+          <p>CI Tripwire Editorial has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
           <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 3 entries, primary platform documentation and GitHub Security Lab, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/categories/github-actions/">Explore all 15 GitHub Actions security guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pull-request-target-november-2/">Public pull_request_target enforcement starts November 2</a>
+              <p>See which public repositories hit the November 2, 2026 default block and how to audit runs in Policy Insights.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pull-request-target-security/">GitHub Actions pull_request_target security: safe patterns</a>
+              <p>Separate untrusted fork code from privileged base-repository secrets and write-scoped tokens.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/self-hosted-runners-security/">Self-hosted GitHub Actions runners: isolate CI machines</a>
+              <p>Isolate persistent runners from public fork PRs and prefer ephemeral just-in-time runner hosts.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/artifact-attestations-github-actions/">GitHub Actions artifact attestations: verify CI provenance</a>
+              <p>Sign release artifacts in CI and enforce gh attestation verify checks before deployment.</p>
+            </div>
+          </div>
         </section>
 
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
-            <li id="ref-cache">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/dependency-caching-reference">Dependency caching reference</a>.</li>
-            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions">Secure use reference</a>.</li>
-            <li id="ref-astro">GitHub Security Lab, <a href="https://securitylab.github.com/advisories/GHSL-2024-148_GHSL-2024-149_Astro/">GHSL-2024-148_GHSL-2024-149: Code Injection and Execution of Untrusted Code in Astro's Actions workflows</a>.</li>
+            <li id="ref-cache">GitHub Docs, <a href="https://docs.github.com/en/actions/reference/dependency-caching-reference" rel="nofollow noopener noreferrer" target="_blank">Dependency caching reference</a>.</li>
+            <li id="ref-secure">GitHub Docs, <a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions" rel="nofollow noopener noreferrer" target="_blank">Secure use reference</a>.</li>
+            <li id="ref-astro">GitHub Security Lab, <a href="https://securitylab.github.com/advisories/GHSL-2024-148_GHSL-2024-149_Astro/" rel="nofollow noopener noreferrer" target="_blank">GHSL-2024-148_GHSL-2024-149: Code Injection and Execution of Untrusted Code in Astro's Actions workflows</a>.</li>
           </ol>
         </section>
       </article>
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

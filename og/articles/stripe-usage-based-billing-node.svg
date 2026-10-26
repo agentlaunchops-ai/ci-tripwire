@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Stripe usage-based billing in Node: safe meter ledgers</title>
+  <desc id="desc">Durable usage ledgers, idempotent meter events, and customer alerts.</desc>
+  <rect width="1200" height="630" fill="#102129"/>
+  <rect x="68" y="68" width="1064" height="494" rx="8" fill="#ffffff"/>
+  <rect x="68" y="68" width="10" height="494" fill="#b9322b"/>
+  <text x="108" y="142" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#b9322b">CI Tripwire  |  Stripe &amp; Billing</text>
+  <text x="108" y="246" font-family="Arial, sans-serif" font-size="54" font-weight="800" fill="#172026">Stripe usage-based billing in Node:</text>
+  <text x="108" y="320" font-family="Arial, sans-serif" font-size="54" font-weight="800" fill="#172026">safe meter ledgers</text>
+  <text x="108" y="514" font-family="Arial, sans-serif" font-size="29" fill="#52616b">Durable usage ledgers, idempotent meter events, and customer alerts.</text>
+</svg>

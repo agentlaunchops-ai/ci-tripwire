@@ -3,78 +3,183 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Stripe & Billing Guides | CI Tripwire</title>
-  <meta name="description" content="Cited CI Tripwire guides for Stripe webhooks, invoices, billing state, and SaaS payment reliability.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>Stripe &amp; Node.js Billing Reliability Guides | CI Tripwire</title>
+  <meta name="description" content="Cited Stripe and Node.js billing guides: webhook event.id idempotency, per-seat proration_behavior, usage meters, cancel_at_period_end, and MRR ledgers.">
   <link rel="canonical" href="https://dsotn.com/categories/stripe-billing/">
+  <meta property="og:title" content="Stripe &amp; Node.js Billing Reliability Guides | CI Tripwire">
+  <meta property="og:description" content="Build replay-safe Stripe webhooks, seat proration controls, usage meters, retention flows, and MRR ledgers in Node.js.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dsotn.com/categories/stripe-billing/">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/site.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Stripe &amp; Node.js Billing Reliability Guides | CI Tripwire">
+  <meta name="twitter:description" content="Build replay-safe Stripe webhooks, seat proration controls, usage meters, retention flows, and MRR ledgers in Node.js.">
+  <meta name="twitter:image" content="https://dsotn.com/og/site.png">
   <link rel="stylesheet" href="/styles.css">
-    <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2C26MR4ZSP"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-2C26MR4ZSP');
-    </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Stripe & Node.js Billing Guides",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "url": "https://dsotn.com/articles/stripe-webhook-idempotency-node/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "url": "https://dsotn.com/articles/stripe-per-seat-billing-proration-node/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "url": "https://dsotn.com/articles/stripe-cancel-save-retention-node/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "url": "https://dsotn.com/articles/stripe-usage-based-billing-node/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "url": "https://dsotn.com/articles/stripe-mrr-churn-events-node/"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dsotn.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Stripe & Billing Guides",
+      "item": "https://dsotn.com/categories/stripe-billing/"
+    }
+  ]
+}
+  </script>
+  <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2C26MR4ZSP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2C26MR4ZSP');
+  </script>
 </head>
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
-        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
     </nav>
   </header>
   <main class="wrap">
-    <p class="eyebrow">Category</p>
-    <h1>Stripe & Billing guides</h1>
-    <p>Source-linked implementation guides for SaaS builders who need webhook, invoice, entitlement, and billing-state paths to fail cleanly.</p>
-    <article class="card">
-      <img src="/public/images/articles/stripe-cancel-save-retention-node.jpg" width="3264" height="1840" alt="Green exit sign hanging from a ceiling.">
-      <div>
-        <p class="article-meta">Research · Published 2026-06-09 · Updated 2026-06-09</p>
-        <h2><a href="/articles/stripe-cancel-save-retention-node/">Stripe Cancel-Save Flow in Node: Retain Subscribers</a></h2>
-        <p>Build a Stripe cancel-save flow in Node with cancellation intent, save offers, period-end cancellation, and reason analytics.</p>
-      </div>
-    </article>
-    <article class="card">
-      <img src="/public/images/articles/stripe-mrr-churn-events-node.jpg" width="3233" height="2424" alt="Programmable calculator photographed on a desk.">
-      <div>
-        <p class="article-meta">Research · Published 2026-06-09 · Updated 2026-06-09</p>
-        <h2><a href="/articles/stripe-mrr-churn-events-node/">Stripe MRR and Churn in Node: Subscription Metrics</a></h2>
-        <p>Compute Stripe MRR, ARR, churn, paid invoice revenue, and refunds from idempotently stored subscription events in Node.</p>
-      </div>
-    </article>
-    <article class="card">
-      <img src="/public/images/articles/stripe-usage-based-billing-node.jpg" width="2272" height="1704" alt="Close-up of a mechanical electricity meter with numbered dials.">
-      <div>
-        <p class="article-meta">Research · Published 2026-06-09 · Updated 2026-06-09</p>
-        <h2><a href="/articles/stripe-usage-based-billing-node/">Usage-Based Billing with Stripe in Node: Meter Safely</a></h2>
-        <p>Build usage-based Stripe billing in Node with a durable usage ledger, billing meter events, customer alerts, and invoice timing checks.</p>
-      </div>
-    </article>
-    <article class="card">
-      <img src="/public/images/articles/stripe-per-seat-billing-proration-node.jpg" width="5552" height="3701" alt="Conference room table surrounded by empty chairs.">
-      <div>
-        <p class="article-meta">Research · Published 2026-06-09 · Updated 2026-06-09</p>
-        <h2><a href="/articles/stripe-per-seat-billing-proration-node/">Stripe Per-Seat Billing in Node: Proration Controls</a></h2>
-        <p>Build Stripe per-seat subscriptions in Node with durable seat counts, explicit quantity updates, and predictable proration behavior.</p>
-      </div>
-    </article>
-    <article class="card">
-      <img src="/public/images/articles/stripe-webhook-idempotency-node.jpg" width="3695" height="2414" alt="Historical invoice document photographed flat on a light background.">
-      <div>
-        <p class="article-meta">Research · Published 2026-06-09 · Updated 2026-06-09</p>
-        <h2><a href="/articles/stripe-webhook-idempotency-node/">Stripe Webhook Idempotency in Node: Stop Double Work</a></h2>
-        <p>Build idempotent Stripe webhooks in Node by verifying raw bodies, storing event IDs, and separating API idempotency from webhook dedupe.</p>
-      </div>
-    </article>
+    <p class="eyebrow">Category Hub · 5 Guides</p>
+    <h1>Stripe &amp; Node.js billing reliability playbooks</h1>
+    <p>Most SaaS billing bugs come from treating Stripe API calls and webhooks as fire-and-forget events instead of state transitions backed by a local database ledger. These five primary-sourced guides form one coherent Node.js billing architecture.</p>
+
+    <div class="notice">
+      <strong>Recommended reading order:</strong> Start with <a href="/articles/stripe-webhook-idempotency-node/">webhook idempotency</a> to establish raw-body verification and durable <code>event.id</code> storage, then layer on <a href="/articles/stripe-per-seat-billing-proration-node/">per-seat proration_behavior</a>, <a href="/articles/stripe-usage-based-billing-node/">usage-based meters</a>, <a href="/articles/stripe-cancel-save-retention-node/">cancel-save flows</a>, and <a href="/articles/stripe-mrr-churn-events-node/">MRR and churn projections</a>.
+    </div>
+
+    <div class="article-list" style="margin-top: 28px;">
+        <article class="card">
+          <img src="/public/images/articles/stripe-webhook-idempotency-node.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Historical invoice document photographed flat on a light background.">
+          <div class="card-body">
+            <span class="chip">Stripe &amp; Billing</span>
+            <h2><a href="/articles/stripe-webhook-idempotency-node/">Stripe webhook idempotency in Node.js: stop double work</a></h2>
+            <p>Verify raw webhook bodies first, deduplicate retried deliveries by storing event.id once, and keep side effects separate from Stripe API idempotency keys.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/stripe-per-seat-billing-proration-node.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Conference room table surrounded by empty chairs.">
+          <div class="card-body">
+            <span class="chip">Stripe &amp; Billing</span>
+            <h2><a href="/articles/stripe-per-seat-billing-proration-node/">Stripe per-seat billing in Node: safe proration_behavior</a></h2>
+            <p>Maintain a local team-seat ledger before updating subscription item quantities, and pick proration_behavior deliberately so mid-cycle changes never surprise customers.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/stripe-cancel-save-retention-node.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Green exit sign hanging from a ceiling.">
+          <div class="card-body">
+            <span class="chip">Stripe &amp; Billing</span>
+            <h2><a href="/articles/stripe-cancel-save-retention-node/">Stripe cancel-save flow in Node: cancel_at_period_end</a></h2>
+            <p>Record cancellation intent before mutating Stripe, apply reversible save offers, schedule cancel_at_period_end cleanly, and sync reactivations.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/stripe-usage-based-billing-node.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Close-up of a mechanical electricity meter with numbered dials.">
+          <div class="card-body">
+            <span class="chip">Stripe &amp; Billing</span>
+            <h2><a href="/articles/stripe-usage-based-billing-node/">Stripe usage-based billing in Node: safe meter ledgers</a></h2>
+            <p>Write accepted usage to your own ledger first, forward idempotent Stripe billing meter events from a worker, and trigger customer spend alerts early.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/public/images/articles/stripe-mrr-churn-events-node.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Programmable calculator photographed on a desk.">
+          <div class="card-body">
+            <span class="chip">Stripe &amp; Billing</span>
+            <h2><a href="/articles/stripe-mrr-churn-events-node/">Stripe MRR and churn in Node.js: event-ledger metrics</a></h2>
+            <p>Project active subscription MRR and subscriber churn from an immutable webhook ledger while keeping paid invoice cash and refunds distinct.</p>
+            <p class="article-meta">7 min read · Updated 2026-10-26</p>
+          </div>
+        </article>
+    </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

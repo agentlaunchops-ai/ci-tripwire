@@ -92,13 +92,20 @@ rg -n '[\x{2014}\x{2013}\x{2018}\x{2019}\x{201C}\x{201D}]' <ARTICLE_DIR><file>
 
 `grep -P` does not work on macOS BSD grep. Use `rg`.
 
-### 1.5 Claim hygiene
+### 1.5 Substantive claim hygiene
 
-- No marketing superlatives (revolutionary, miracle, best-ever, game-changer,
-  cutting-edge, must-know).
+- No unsupported superiority, miracle, or guaranteed-outcome claims
+  (for example: miracle, guaranteed fix, unhackable, 100% foolproof).
+- Ordinary persuasive and benefit-oriented words (`complete`, `comprehensive`,
+  `powerful`, `confidence`, `smarter`, `easier`, `better`, `transform`,
+  `simplify`, `advanced`, `professional`, `master`) are evaluated in context per
+  `BRAND_VOICE.md`: allowed when accurate, natural, and specific; cut when vague
+  or unsupported.
 - No claim that anything diagnoses, treats, cures, or prevents disease.
-- No second-person prescription ("you should", "you must") on regulated topics.
-  It reads as advice, not education.
+- No second-person prescription ("you should", "you must") on regulated clinical
+  or legal advice topics where it implies individualized professional advice.
+  Direct engineering configuration imperatives ("Pin third-party actions to a
+  full commit SHA") are normal and encouraged on software engineering guides.
 - `<TOPIC_EXCLUSIONS>` stay out of the catalog entirely.
 
 ### 1.6 Preserve other people's work
@@ -253,147 +260,97 @@ and abstractions where a concrete noun would do.
   enough that which tub you buy matters more than whether you use powder at
   all."
 
-### 3.3 Do not write like an AI (the denylist)
+### 3.3 Do not write like an AI (contextual voice discipline)
 
-This is the canonical, catalog-wide anti-AI-voice rule. It binds every piece in
-every register and every distribution draft.
+This is the catalog-wide anti-AI-voice rule, harmonized with `BRAND_VOICE.md`.
+It binds every piece in every register and every distribution draft.
 
-Why it is not a nitpick: a live article got publicly mocked with "give my
-regards to Claude for writing it up." That is a brand-credibility failure. A
-technical, skeptical audience smells machine-written copy in one paragraph and
-stops reading before the facts land, however correct the facts are.
+Why it matters: a live article got publicly mocked with "give my regards to
+Claude for writing it up." A technical, skeptical audience smells robotic copy
+in one paragraph and stops reading before the facts land.
 
-The rule has two halves and **both bind**: a hard denylist, and a catch-all.
-The list is illustrative. **The catch-all is the law: if a phrase is one an AI
-would produce by reflex, it is banned here even if it is not printed below.**
+Apply **contextual editorial judgment**, not mechanical single-word bans
+(`BRAND_VOICE.md` section 3). Reject phrases and patterns because they sound
+robotic, vague, repetitive, or evasive. Never reject clear two-part headlines,
+short slogans, natural benefit statements, or direct conversational questions
+when they communicate concrete value.
 
-**The negation-and-reveal reflex (loudest tell, kill on sight).**
-Defining a thing by what it is not, then revealing what it really is:
+**The hollow negation-and-reveal tic.**
+Defining a thing by an empty strawman negation before stating what it is:
 "It's not X, it's Y." "It's not just X, it's Y." "This isn't about X, it's
-about Y." "X isn't the problem, Y is." "Not X, but Y." "It's less about X and
-more about Y." Also the general setup-and-pivot: a sentence that exists only to
-knock down a strawman so the next clause sounds profound.
-State what the thing IS. "Staying on it is the maintenance plan" is a real
-sentence. "It's not a bridge to getting off the drug, it's the plan itself" is
-the AI rewrite of the same idea.
+about Y." "It's less about X and more about Y."
+State what the thing IS directly. (Real technical contrasts where both halves
+name concrete mechanisms, such as distinguishing webhook event deduplication from
+API request idempotency, are substantive explanations rather than filler.)
 
-**The rule-of-three drumbeat.** Three adjectives, three parallel clauses,
-three-item payoffs ("safer, cheaper, and more consistent"). Vary it: sometimes
-one word, sometimes five real items. Never a reflexive tricolon whose third
-element exists only for rhythm. A real ranked list or table of data is fine;
-the tell is the decorative triad inside a sentence.
+**The rule-of-three drumbeat.** Avoid reflexive decorative triads whose third
+element exists only for cadence. Real enumerations of distinct items are fine;
+vary sentence structure naturally.
 
-**The performative-casual flourish (subtlest and most dangerous).** When told
-to "sound human", an AI reaches into a small bag of writerly tricks instead of
-saying the specific thing plainly. All banned:
+**Performative-casual filler.** When told to "sound human", an AI reaches into a
+bag of writerly tricks instead of stating the specific fact plainly. Cut empty
+devices:
 
-- Rhetorical reversal / chiasmus: "the question people ask last and should ask
-  first", "we don't stop to rest, we rest to keep going."
-- Writerly setup devices: "if you only read one thing, read this", "here is the
-  part that matters." Make the point; do not announce it or rank your own
-  sentences for the reader.
-- Cutesy sensory or anthropomorphic metaphor: "food gets less loud", "the drug
-  presses its buttons", "the schedule never rushes." Say the literal thing.
-  (An established community term is fine; the ban is on decorative rephrasings
-  of plain facts.)
-- Folksy idiom as costume: "without white-knuckling it", "the whole nine
-  yards", "easier said than done", "your mileage may vary", "at the end of the
-  day."
-- Ironic understatement as a wit move: "the reliable way to feel awful", "that
-  went about as well as you'd expect."
-- The reflexive punchy fragment. One deliberate fragment can be real voice; a
-  drop-to-a-fragment after every claim is the tell.
-- "The X thing" as filler: "the single-versus-dual thing." Name the actual
-  thing.
-- Imperative nudges: "but notice the timeline", "watch what happens here", "sit
-  with that for a second."
-- Framing lead-ins that rank the next sentence: "a fair way to read that:",
-  "the honest truth is", "here is the part people miss", "if we're being real."
+- Writerly self-ranking lead-ins: "if you only read one thing, read this", "here
+  is the part that matters", "the honest truth is", "if we're being real." Make
+  the point without announcing how important your next sentence is.
+- Cutesy anthropomorphic metaphor where a literal mechanism belongs ("food gets
+  less loud", "the schedule never rushes").
+- Folksy cliche padding: "the whole nine yards", "at the end of the day", "your
+  mileage may vary."
+- Mechanical fragment-after-every-claim cadence. Intentional two-part headlines
+  and crisp short sentences are welcome (`BRAND_VOICE.md`); repetitive machine
+  tics are not.
+- Vague placeholder nouns ("the single-versus-dual thing"). Name the actual
+  mechanism.
 
-The test: if the personality in a sentence is a device rather than a real
-thought, cut the device and keep the thought.
-
-**Throat-clearing and transition filler.** "Here's the thing." "Here's the
-deal." "But here's the kicker." "The thing is." "The reality is." "The truth
-is." "Let's be honest/clear." "Let's face it." "Make no mistake." "Look," /
-"Honestly," / "Frankly," / "Now," / "So," as a sentence-opening throat-clear.
-"That said." "That being said." "At the end of the day." "When it comes to."
-"It's worth noting/mentioning." "It's important to note/remember/understand."
+**Throat-clearing and transition filler.** Cut empty openers: "Here's the
+thing." "Here's the deal." "But here's the kicker." "Let's be honest." "Make no
+mistake." "It's worth noting/mentioning." "It's important to note/remember."
 "Needless to say." "It's no secret that."
 
-**Tour-guide and essay scaffolding.** "Let's dive in." "Let's unpack this."
-"Let's break it down." "Let's take a closer look." "A deep dive." "In this
-article, we'll..." "By the end of this, you'll..." "In the sections that
-follow..." A "First... Second... Finally" scaffold when the ideas do not
-actually need numbering.
+**Tour-guide scaffolding.** Cut "Let's dive in", "Let's unpack this", "In this
+article, we'll...", "By the end of this, you'll...", "In the sections that
+follow..." Start directly with the useful problem and answer.
 
-**LLM-vocabulary tells.** Use the plain word or cut the sentence:
-delve; navigate / landscape / realm / sphere / arena / "the world of X" as
-metaphor; tapestry; "a testament to"; beacon; cornerstone; bedrock; ecosystem
-as metaphor; leverage; utilize (use "use"); harness; unlock; unleash; empower;
-elevate; streamline; foster; facilitate; spearhead; boasts; showcase;
-underscore; highlight (meaning emphasize); robust; seamless; holistic; nuanced;
-multifaceted; intricate; myriad; plethora; "a wealth of"; "a treasure trove
-of"; "a wide array of"; "a vast array"; crucial; pivotal; vital; paramount;
-essential; "key" as adjective spam; notable; compelling; significant (when it
-means nothing); "ever-evolving"; "rapidly changing"; "fast-paced"; "in today's
-world"; "in an era of"; game-changer; revolutionary; cutting-edge;
-state-of-the-art; groundbreaking; transformative; next-level.
+**Robotic AI-cliche vocabulary.** Cut over-produced LLM cliches (`delve`,
+`tapestry`, `"a testament to"`, `"in today's ever-evolving landscape"`,
+`myriad`, `plethora`, `"a treasure trove of"`, `game-changer`, `revolutionary`).
+Ordinary English words, including `complete`, `comprehensive`, `powerful`,
+`confidence`, `smarter`, `easier`, `better`, `transform`, `simplify`,
+`advanced`, `professional`, `essential`, `key`, `significant`, and `master`, are
+governed by contextual judgment (`BRAND_VOICE.md` section 3.1): use them when
+specific and accurate; cut them when used as empty filler.
 
-None are forbidden English. They are forbidden because AI over-produces them
-and readers pattern-match them instantly.
+**The both-sides sandwich and the tidy uplifting closer.** Cut "Ultimately, the
+choice is yours", "In conclusion", "To sum up", "...empowering you to make an
+informed decision", and "Results may vary" (give the actual variance or cut it).
+End on the most useful operational check, a clear next step, or a real opinion
+backed by evidence, followed by the structured closing trust block.
 
-**The both-sides sandwich and the tidy uplifting closer.** "Ultimately, the
-choice is yours." "The decision comes down to you." "Only you can decide."
-"Whether you're X or Y, [tidy takeaway]." "One thing is clear:" "In
-conclusion," "To sum up," "All in all." A closing paragraph that restates what
-was already said. "...empowering you to make an informed decision." The empty
-universal caveat: "Everyone is different." "Results may vary." "What works for
-one person may not work for another." (Give the actual variance with a number,
-or cut it.)
-End on the most useful specific, or a real opinion with a spine, or nothing.
-Not a bow. This does not touch the structured Bottom-line callout or the
-closing trust block; those are load-bearing and named.
+**Deceptive curiosity gaps vs. genuine questions.** Direct, specific
+conversational questions that name the real problem ("Can GitHub Actions job
+summaries expose CI secrets?") are effective and permitted. Empty rhetorical
+stallers ("So what does this mean for you?", "You might be wondering...") and
+clickbait curiosity gaps that withhold the payoff ("what nobody tells you",
+"the wild part", "you won't believe", "here's the kicker", "let that sink in",
+"and the results may surprise you") remain banned. **Never tease a payoff you
+are about to give; state it.**
 
-**Rhetorical-question filler and curiosity gaps.** "So what does this mean for
-you?" "But why does this matter?" "You might be wondering..." "Ever
-wondered...?" "The million-dollar question is..."
-Plus the full curiosity-gap denylist, banned in titles, headings, summaries,
-and body: "the crazy part", "the wild part", "the surprising part", "what most
-people miss", "what nobody tells you", "what they don't tell you", "what they
-don't want you to know", "the part nobody talks about", "the real reason", "the
-truth about", "you won't believe", "here's the kicker", "plot twist", "and that
-changes everything", "the one thing", "this is huge", "let that sink in", "the
-secret to", "and the results may surprise you."
-The rule underneath: **never tease a payoff you are about to give. State it.**
-"Most of the food-noise data is on drug A, not drug B" beats "the food-noise
-detail nobody mentions."
+**Formatting and rhythm hygiene.** Vary sentence length and paragraph shape.
+Avoid hedge-stacking ("may potentially possibly help support"). Commit to what
+the cited source supports or state the exact boundary of uncertainty.
 
-**Structural and formatting tics.** The reflexive bold-label-colon bullet on
-every point ("**Dosing:** start low"). Over-listing prose that should breathe.
-Perfectly even rhythm (AI writes similar-length sentences in similar shapes;
-put a five-word sentence next to a twenty-five-word one). Colon-spray.
-Exclamation spray. Hedge-stacking: "may potentially possibly help support",
-"arguably", "relatively", "somewhat", "fairly", "quite", "generally speaking",
-"for the most part", "by and large" as reflex softeners. Commit or cut.
+### 3.4 Seven-lens editorial & anti-AI voice pass
 
-### 3.4 How to sound human instead
+Start at the useful operational problem, use concrete nouns and verified
+identifiers/numbers, and vary rhythm naturally so the piece reads aloud like a
+capable human specialist wrote it.
 
-Start in the middle, at the useful part, not with context-setting. Use concrete
-nouns and real numbers instead of abstractions. Have an opinion and commit to
-it; hedge only where the evidence is genuinely thin, and then say exactly how
-thin ("two small trials and a lot of forum confidence"). Let the rhythm be
-uneven. Contractions are good. Define a term in half a sentence the first time,
-then move on. Write the whole piece as if one specific person who knows the
-field typed it in one sitting and did not go back to sand it smooth. If a
-paragraph reads back smooth and content-free, it is slop; rewrite until a real
-person is in it.
-
-**Anti-AI voice audit is a mandatory pre-commit pass.** Reread the finished
-draft against 3.3 adversarially, in the voice of the skeptical commenter who
-will publicly credit an AI for writing it. For every sentence ask: would a
-person who actually knows this field type this? Fix every hit and record the
-pass in the changelog next to the voice verdict.
+**Pre-commit voice & quality pass (mandatory).** Reread the finished draft
+against both section 3.3 and the **Seven-Lens Quality Gate** in `BRAND_VOICE.md`
+(Human, Differentiation, Usefulness, Repetition, Accuracy, Conversion, Brand).
+Fix every robotic or vague sentence and record the pass in the changelog.
 
 ---
 
@@ -442,9 +399,11 @@ rule docs go stale on them.
 
 Field rules that matter:
 
-- **`title`**: 50-60 characters. Search truncates around 60 and a truncated
-  title loses the hook in front of the click decision. Longer editorial framing
-  goes in `summary`, never in `title`.
+- **`title`**: 45-60 characters on articles (50-60 preferred; never over 60 so
+  search snippets do not truncate the hook). Natural sentence case preserving
+  exact technical identifiers (`GITHUB_TOKEN`, `OIDC`, `SHA`, `Stripe`,
+  `Node.js`, `CI/CD`). Conversational questions, two-part headlines, and
+  benefit-driven hooks are allowed when specific and honest (`BRAND_VOICE.md`).
 - **`tldr`**: the answer-shaped bottom line, not a restatement of the takeaways
   and not "this article covers...". Front-load it: some surfaces truncate at
   145 characters, so the payoff must land in the first clause. Practical test:
@@ -717,12 +676,13 @@ ships.
 
 ### 6.1 Per-piece on-page
 
-- Canonical URL of the form `<SITE>/articles/<slug>`.
-- `<title>` 50-60 characters, specific, no clickbait, sentence case.
+- Canonical URL of the form `<SITE>/articles/<slug>/`.
+- `<title>` 45-60 characters on articles (`50-60` preferred and required on
+  funnel routes covered by `tests/check-funnel.py`), specific, no deceptive
+  clickbait, natural sentence case preserving technical identifiers.
 - Meta description 50-160 characters (cap the authored field at ~155 to leave
-  headroom for HTML escaping, since the same string is reused for `og:` and
-  `twitter:` descriptions). Precedence: `metaDescription`, then `tldr`, then
-  `summary`.
+  headroom for HTML escaping, front-loading exact query identifiers and concrete
+  reader payoff). Precedence: `metaDescription`, then `tldr`, then `summary`.
 - OpenGraph title / description / URL / type / site name / image, plus
   `article:published_time`, `article:modified_time`, `article:author`,
   `article:section`, `article:tag`.
@@ -803,8 +763,8 @@ below. This is necessary and **not sufficient**: a writer grading their own
 draft is the weakest possible reviewer of it. Section 8 is the real gate.
 
 **Pass 1 to 3: source content, numeric and acronym, tone and style.** Grade the
-tone pass against the chosen register and the section 3.3 denylist, not against
-a generic style guide.
+tone pass against the chosen register, `BRAND_VOICE.md`, and section 3.3 voice
+discipline, not against a generic style guide.
 
 **Pass 4: voice consistency end to end.** Read the opening (title, TL;DR,
 key takeaways, first paragraph), three random middle paragraphs, and the
@@ -817,7 +777,7 @@ every drift before commit.
 - Opening sample (title / TL;DR / first paragraph): <PASS|FAIL plus rewrites>
 - Middle samples (three paragraphs, by section id): <PASS|FAIL plus rewrites>
 - Closing sample: <PASS|FAIL plus rewrites>
-- Anti-AI voice audit (section 3.3 denylist): <PASS|FAIL plus what was cut>
+- Anti-AI voice audit (section 3.3 voice discipline): <PASS|FAIL plus what was cut>
 ```
 
 **Pass 5: scanability and trust signals.** Could a mobile reader scrolling fast
@@ -923,9 +883,9 @@ like an AI wrote it).
 | H2 | Human trial claims: design, n, arms, endpoints, estimand, effect sizes, p values, CIs |
 | H3 | Regulatory and legal: approval status, indications, label sections, scheduling, enforcement, anti-doping |
 | H4 | Safety: adverse events, contraindications, warnings, interactions, and all dose and unit math |
-| H5 | Absence claims, superlatives, counts, dates, chart/table values, three-place consistency |
+| H5 | Absence claims, unsupported superiority claims, counts, dates, chart/table values, three-place consistency |
 | C1-C5 | One disjoint block of `citations[]` each; open every assigned URL live |
-| S1 | Anti-AI denylist, community-narration ban, banned characters, product coherence, reader-value bar |
+| S1 | Section 3.3 voice discipline, community-narration ban, banned characters, product coherence, reader-value bar |
 | S2 | Voice consistency, digestibility, repetition, scanability, trust block, 8-gram plagiarism scan |
 | X1 | Breadth and currency sweep: what changed since publication, and what the piece omits |
 | X2 | Whole-draft adversarial verifier: reads it cold and tries to break the thesis |
@@ -966,7 +926,8 @@ without having opened the sources is a failed audit.
   the adjacent sentence and not the load-bearing one; a number rounded up,
   widened, or inconsistent between its three placements; wrong author, year, or
   identifier in a label; a review or registry record cited for results it does
-  not report; a load-bearing claim with no citation; a denylist voice tell; an
+  not report; a load-bearing claim with no citation; a robotic AI cliche or
+  throat-clearing tell (section 3.3); an
   unattributed verbatim run of 8+ words.
 - **LOW.** Style, precision, or polish that does not change what the reader
   believes.
@@ -1285,11 +1246,9 @@ stale silently.
 
 ### 12.1 Required reading before writing
 
-The repo's operating guide and agent workflow; the content-library guardrail
-(voice posture, Citation Correctness Standard, imagery, JSON-LD); the workflow
-contract with the audit-pass templates; the register rules for the chosen
-voice; the schema file; then skim 2-3 recent pieces for live conventions and
-the newest changelog.
+Read `AGENTS.md`, `BRAND_VOICE.md`, and this document (`ARTICLE_WRITING_RULES.md`)
+in full; inspect the target HTML/JSON-LD conventions; then skim 2-3 recent
+pieces for live conventions and the newest changelog.
 
 Then inspect repo state: current branch, `git status --short`,
 `git log --oneline -5`. Identify uncommitted work. **It is not yours.**
@@ -1397,12 +1356,12 @@ ready-to-post draft. Nothing is auto-posted.
   the place right now", "here's where the evidence sits"). That shape is the
   exact signature of automated marketing, and a real post in that shape got
   called spam ("be gone bot", "looking for clicks").
-- **Run the anti-AI voice audit on the draft, not just the article.** The full
-  section 3.3 denylist plus a one-human-voice read.
+- **Run the anti-AI voice audit on the draft, not just the article.** Full
+  section 3.3 voice discipline plus a one-human-voice read.
 - **Honest title.** The question the reader is actually asking, or the one-line
   truth the piece lands. Sentence case, no clickbait, no em dashes.
 - Same content rules as the article: no em dashes, no curly quotes, no
-  superlatives, no disease claims, and the product-coherence stance (a peer
+  unsupported superiority or miracle claims, no disease claims, and the product-coherence stance (a peer
   sharing what works, never the brand lecturing the community it serves).
 - **Flag the posting reality every time.** Many communities ban promotion and
   external self-links outright, and posting from an obvious brand account makes
@@ -1420,7 +1379,7 @@ and deliver it in the hand-off message, not only in the changelog.
 
 - [ ] Reads like one specific person who knows the field wrote it, top to
       bottom.
-- [ ] Anti-AI denylist swept (section 3.3), including the catch-all reread.
+- [ ] Section 3.3 voice discipline and `BRAND_VOICE.md` 7-lens gate swept, including the catch-all reread.
 - [ ] No em dashes (`rg` returns nothing), no curly quotes, no emoji.
 - [ ] Disclaimer present exactly once, in the closing section.
 - [ ] All four trust signals plus the citation-density footer present.

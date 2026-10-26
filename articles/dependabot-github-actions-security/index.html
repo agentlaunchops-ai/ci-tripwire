@@ -3,59 +3,128 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dependabot GitHub Actions: Safer Bot PR CI Workflows</title>
-  <meta name="description" content="Secure Dependabot-triggered GitHub Actions workflows by reviewing bot tokens, secrets, policy bypasses, automerge jobs, and workflow updates.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>Dependabot and GitHub Actions: secure bot PR workflows</title>
+  <meta name="description" content="Harden Dependabot-triggered GitHub Actions workflows: understand read-only bot secrets, narrow GITHUB_TOKEN scopes, and gate automerge rules safely.">
   <link rel="canonical" href="https://dsotn.com/articles/dependabot-github-actions-security/">
-  <meta property="og:title" content="Dependabot GitHub Actions: Safer Bot PR CI Workflows">
-  <meta property="og:description" content="How to review token, secret, and automation boundaries on Dependabot pull requests.">
+  <meta property="og:title" content="Dependabot and GitHub Actions: secure bot PR workflows">
+  <meta property="og:description" content="Harden Dependabot-triggered GitHub Actions workflows: understand read-only bot secrets, narrow GITHUB_TOKEN scopes, and gate automerge rules safely.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/dependabot-github-actions-security/">
-  <meta property="og:image" content="https://dsotn.com/public/images/articles/dependabot-github-actions-security.jpg">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/articles/dependabot-github-actions-security.png">
   <meta property="article:published_time" content="2026-06-08T03:34:00-06:00">
-  <meta property="article:modified_time" content="2026-06-08T03:34:00-06:00">
+  <meta property="article:modified_time" content="2026-10-26T11:30:00-05:00">
   <meta property="article:author" content="CI Tripwire Editorial">
   <meta property="article:section" content="GitHub Actions">
   <meta property="article:tag" content="Dependabot">
   <meta property="article:tag" content="bot pull requests">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/dependabot-github-actions-security.jpg">
+  <meta name="twitter:title" content="Dependabot and GitHub Actions: secure bot PR workflows">
+  <meta name="twitter:description" content="Harden Dependabot-triggered GitHub Actions workflows: understand read-only bot secrets, narrow GITHUB_TOKEN scopes, and gate automerge rules safely.">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/dependabot-github-actions-security.png">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": "Dependabot GitHub Actions: Safer Bot PR CI Workflows",
-    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
-    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
-    "datePublished": "2026-06-08T03:34:00-06:00",
-    "dateModified": "2026-06-08T03:34:00-06:00",
-    "articleSection": "GitHub Actions",
-    "keywords": ["Dependabot GitHub Actions", "Dependabot secrets", "bot pull request security", "GITHUB_TOKEN permissions"],
-    "wordCount": 1087,
-    "timeRequired": "PT7M",
-    "mainEntityOfPage": "https://dsotn.com/articles/dependabot-github-actions-security/",
-    "articleBody": "Dependabot pull requests are useful automation, but their GitHub Actions runs need explicit review around tokens, secrets, policy bypasses, and automerge authority.",
-    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/dependabot-github-actions-security.jpg", "width": 1332, "height": 552},
-    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
-    "citation": [
-      {"@type": "CreativeWork", "name": "Dependabot on GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-on-actions"},
-      {"@type": "CreativeWork", "name": "About Dependabot on GitHub Actions runners", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/code-security/dependabot/working-with-dependabot/about-dependabot-on-github-actions-runners"},
-      {"@type": "CreativeWork", "name": "Understanding GitHub secret types", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/code-security/getting-started/understanding-github-secret-types"},
-      {"@type": "CreativeWork", "name": "Automating Dependabot with GitHub Actions", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions"},
-      {"@type": "CreativeWork", "name": "Keeping your actions up to date with Dependabot", "publisher": "GitHub Docs", "url": "https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot?learn=dependency_version_updates"}
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Dependabot and GitHub Actions: secure bot PR workflows",
+  "author": {
+    "@type": "Organization",
+    "name": "CI Tripwire Editorial",
+    "url": "https://dsotn.com/about/#contributors"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CI Tripwire",
+    "url": "https://dsotn.com/"
+  },
+  "datePublished": "2026-06-08T03:34:00-06:00",
+  "dateModified": "2026-10-26T11:30:00-05:00",
+  "articleSection": "GitHub Actions",
+  "keywords": [
+    "Dependabot GitHub Actions",
+    "Dependabot secrets",
+    "bot pull request security",
+    "GITHUB_TOKEN permissions"
+  ],
+  "wordCount": 885,
+  "timeRequired": "PT7M",
+  "mainEntityOfPage": "https://dsotn.com/articles/dependabot-github-actions-security/",
+  "articleBody": "Dependabot pull requests are useful automation, but their GitHub Actions runs need explicit review around tokens, secrets, policy bypasses, and automerge authority.",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://dsotn.com/og/articles/dependabot-github-actions-security.png",
+    "width": 1200,
+    "height": 630
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      "#key-takeaways",
+      "#article-summary",
+      "#editorial-summary"
     ]
-  }
+  },
+  "citation": [
+    {
+      "@type": "CreativeWork",
+      "name": "Dependabot on GitHub Actions",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-on-actions"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "About Dependabot on GitHub Actions runners",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/code-security/dependabot/working-with-dependabot/about-dependabot-on-github-actions-runners"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Understanding GitHub secret types",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/code-security/getting-started/understanding-github-secret-types"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Automating Dependabot with GitHub Actions",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Keeping your actions up to date with Dependabot",
+      "publisher": "GitHub Docs",
+      "url": "https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot?learn=dependency_version_updates"
+    }
+  ]
+}
   </script>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
-      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
-      {"@type": "ListItem", "position": 3, "name": "Dependabot GitHub Actions: Safer Bot PR CI Workflows", "item": "https://dsotn.com/articles/dependabot-github-actions-security/"}
-    ]
-  }
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dsotn.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://dsotn.com/articles/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Dependabot and GitHub Actions: secure bot PR workflows",
+      "item": "https://dsotn.com/articles/dependabot-github-actions-security/"
+    }
+  ]
+}
   </script>
     <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
     <!-- Google tag (gtag.js) -->
@@ -72,15 +141,17 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
-        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
     </nav>
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/dependabot-github-actions-security.jpg" width="1332" height="552" alt="Robotic arm arranged for automated sorting and stacking.">
+      <img src="/public/images/articles/dependabot-github-actions-security.jpg" width="1600" height="900" fetchpriority="high" alt="Robotic arm arranged for automated sorting and stacking.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -93,17 +164,14 @@
         <a href="#automation">Automation jobs</a>
         <a href="#updates">Action updates</a>
         <a href="#audit">Fast audit</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
         <p class="eyebrow">GitHub Actions</p>
-        <h1>Dependabot GitHub Actions: Safer Bot PR CI Workflows</h1>
-        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · 7 min read</p>
+        <h1>Dependabot and GitHub Actions: secure bot PR workflows</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-08 · Updated 2026-10-26 · 7 min read</p>
         <p id="editorial-summary">Dependabot pull requests reduce dependency drift, but the workflows around them still need a clear trust boundary for bot-authored code, token scopes, secrets, and automerge authority.</p>
-
-        <aside class="notice" aria-label="Editorial disclaimer">
-          This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
-        </aside>
 
         <section id="key-takeaways" class="takeaways">
           <h2>Key takeaways for Dependabot workflow security</h2>
@@ -167,27 +235,82 @@
           <h2>A fast Dependabot workflow audit starts with writes</h2>
           <p>List every workflow that can run when <code>github.actor</code> is <code>dependabot[bot]</code>. Mark which jobs request write permissions, read Dependabot secrets, approve pull requests, enable automerge, comment, label, publish artifacts, deploy, or touch package registries.</p>
           <p>Then check whether each privileged job has an actor guard, a repository guard where appropriate, pinned third-party actions, explicit token permissions, and no unnecessary checkout of untrusted pull-request code into a privileged context.</p>
-          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a> locally so Dependabot review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, and concurrency audits.</p>
-          <p>This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.</p>
-          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <p>Run <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a> locally so Dependabot review sits beside pinned-action, token-permission, timeout, pull-request trigger, OIDC, reusable-workflow, runner, cache, attestation, environment, dependency-review, shell-context, required-check, script-injection, allowlist, artifact-retention, fork-approval, and concurrency audits.</p>
+          <aside class="notice" aria-label="Editorial disclaimer">
+            This article is informational and is not a substitute for a security review of your own workflows, repositories, or cloud accounts.
+          </aside>
+          <p>CI Tripwire Editorial has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
           <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 5 entries, primary GitHub documentation, last reviewed 2026-06-08.</p>
+        </section>
+
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/categories/github-actions/">Explore all 15 GitHub Actions security guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pull-request-target-november-2/">Public pull_request_target enforcement starts November 2</a>
+              <p>See which public repositories hit the November 2, 2026 default block and how to audit runs in Policy Insights.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/pin-github-actions-sha/">Pin GitHub Actions to commit SHAs: supply-chain control</a>
+              <p>Pin third-party actions to immutable 40-character commit SHAs and verify upstream repository provenance.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-token-permissions/">GitHub Actions GITHUB_TOKEN permissions: least privilege</a>
+              <p>Lock down top-level permissions in YAML and align repository and organization workflow-permission settings.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">GitHub Actions</span>
+              <a href="/articles/github-actions-workflow-execution-protections/">GitHub Actions workflow execution protections guide</a>
+              <p>Gate workflow runs with actor rules, event allowlists, and evaluate-mode testing before enforcement.</p>
+            </div>
+          </div>
         </section>
 
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
-            <li id="ref-dependabot-actions">GitHub Docs, <a href="https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-on-actions">Dependabot on GitHub Actions</a>.</li>
-            <li id="ref-runners">GitHub Docs, <a href="https://docs.github.com/en/code-security/dependabot/working-with-dependabot/about-dependabot-on-github-actions-runners">About Dependabot on GitHub Actions runners</a>.</li>
-            <li id="ref-secret-types">GitHub Docs, <a href="https://docs.github.com/en/code-security/getting-started/understanding-github-secret-types">Understanding GitHub secret types</a>.</li>
-            <li id="ref-automation">GitHub Docs, <a href="https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions">Automating Dependabot with GitHub Actions</a>.</li>
-            <li id="ref-action-updates">GitHub Docs, <a href="https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot?learn=dependency_version_updates">Keeping your actions up to date with Dependabot</a>.</li>
+            <li id="ref-dependabot-actions">GitHub Docs, <a href="https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-on-actions" rel="nofollow noopener noreferrer" target="_blank">Dependabot on GitHub Actions</a>.</li>
+            <li id="ref-runners">GitHub Docs, <a href="https://docs.github.com/en/code-security/dependabot/working-with-dependabot/about-dependabot-on-github-actions-runners" rel="nofollow noopener noreferrer" target="_blank">About Dependabot on GitHub Actions runners</a>.</li>
+            <li id="ref-secret-types">GitHub Docs, <a href="https://docs.github.com/en/code-security/getting-started/understanding-github-secret-types" rel="nofollow noopener noreferrer" target="_blank">Understanding GitHub secret types</a>.</li>
+            <li id="ref-automation">GitHub Docs, <a href="https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions" rel="nofollow noopener noreferrer" target="_blank">Automating Dependabot with GitHub Actions</a>.</li>
+            <li id="ref-action-updates">GitHub Docs, <a href="https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot?learn=dependency_version_updates" rel="nofollow noopener noreferrer" target="_blank">Keeping your actions up to date with Dependabot</a>.</li>
           </ol>
         </section>
       </article>
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

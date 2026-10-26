@@ -3,59 +3,124 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Stripe Webhook Idempotency in Node: Stop Double Work</title>
-  <meta name="description" content="Build idempotent Stripe webhooks in Node with raw-body signature checks, durable event ID storage, and safe invoice side effects for SaaS billing.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>Stripe webhook idempotency in Node.js: stop double work</title>
+  <meta name="description" content="Build replay-safe Stripe webhooks in Node.js: verify raw bodies with constructEvent, deduplicate event.id in your database, and run side effects once.">
   <link rel="canonical" href="https://dsotn.com/articles/stripe-webhook-idempotency-node/">
-  <meta property="og:title" content="Stripe Webhook Idempotency in Node: Stop Double Work">
-  <meta property="og:description" content="A practical Node pattern for Stripe webhook dedupe, raw-body signature checks, and durable event handling.">
+  <meta property="og:title" content="Stripe webhook idempotency in Node.js: stop double work">
+  <meta property="og:description" content="Build replay-safe Stripe webhooks in Node.js: verify raw bodies with constructEvent, deduplicate event.id in your database, and run side effects once.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://dsotn.com/articles/stripe-webhook-idempotency-node/">
-  <meta property="og:image" content="https://dsotn.com/public/images/articles/stripe-webhook-idempotency-node.jpg">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/articles/stripe-webhook-idempotency-node.png">
   <meta property="article:published_time" content="2026-06-09T10:38:00-06:00">
-  <meta property="article:modified_time" content="2026-06-09T10:38:00-06:00">
+  <meta property="article:modified_time" content="2026-10-26T11:30:00-05:00">
   <meta property="article:author" content="CI Tripwire Editorial">
   <meta property="article:section" content="Stripe & Billing">
   <meta property="article:tag" content="Stripe webhooks">
   <meta property="article:tag" content="idempotency">
   <meta property="article:tag" content="Node.js">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://dsotn.com/public/images/articles/stripe-webhook-idempotency-node.jpg">
+  <meta name="twitter:title" content="Stripe webhook idempotency in Node.js: stop double work">
+  <meta name="twitter:description" content="Build replay-safe Stripe webhooks in Node.js: verify raw bodies with constructEvent, deduplicate event.id in your database, and run side effects once.">
+  <meta name="twitter:image" content="https://dsotn.com/og/articles/stripe-webhook-idempotency-node.png">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": "Stripe Webhook Idempotency in Node: Stop Double Work",
-    "author": {"@type": "Organization", "name": "CI Tripwire Editorial", "url": "https://dsotn.com/about/#contributors"},
-    "publisher": {"@type": "Organization", "name": "CI Tripwire", "url": "https://dsotn.com/"},
-    "datePublished": "2026-06-09T10:38:00-06:00",
-    "dateModified": "2026-06-09T10:38:00-06:00",
-    "articleSection": "Stripe & Billing",
-    "keywords": ["Stripe webhooks", "Node.js", "idempotency", "webhook dedupe", "billing events"],
-    "wordCount": 879,
-    "timeRequired": "PT7M",
-    "mainEntityOfPage": "https://dsotn.com/articles/stripe-webhook-idempotency-node/",
-    "articleBody": "Idempotent Stripe webhooks in Node need signature verification, a durable processed-event record, and side effects that run once.",
-    "image": {"@type": "ImageObject", "url": "https://dsotn.com/public/images/articles/stripe-webhook-idempotency-node.jpg", "width": 3695, "height": 2414},
-    "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["#key-takeaways", "#article-summary", "#editorial-summary"]},
-    "citation": [
-      {"@type": "CreativeWork", "name": "Receive Stripe events in your webhook endpoint", "publisher": "Stripe Docs", "url": "https://docs.stripe.com/webhooks?lang=node"},
-      {"@type": "CreativeWork", "name": "Resolve webhook signature verification errors", "publisher": "Stripe Docs", "url": "https://docs.stripe.com/webhooks/signatures"},
-      {"@type": "CreativeWork", "name": "Idempotent requests", "publisher": "Stripe Docs", "url": "https://docs.stripe.com/api/idempotent_requests"},
-      {"@type": "CreativeWork", "name": "Events", "publisher": "Stripe Docs", "url": "https://docs.stripe.com/api/events"}
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Stripe webhook idempotency in Node.js: stop double work",
+  "author": {
+    "@type": "Organization",
+    "name": "CI Tripwire Editorial",
+    "url": "https://dsotn.com/about/#contributors"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CI Tripwire",
+    "url": "https://dsotn.com/"
+  },
+  "datePublished": "2026-06-09T10:38:00-06:00",
+  "dateModified": "2026-10-26T11:30:00-05:00",
+  "articleSection": "Stripe & Billing",
+  "keywords": [
+    "Stripe webhooks",
+    "Node.js",
+    "idempotency",
+    "webhook dedupe",
+    "billing events"
+  ],
+  "wordCount": 833,
+  "timeRequired": "PT7M",
+  "mainEntityOfPage": "https://dsotn.com/articles/stripe-webhook-idempotency-node/",
+  "articleBody": "Idempotent Stripe webhooks in Node need signature verification, a durable processed-event record, and side effects that run once.",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://dsotn.com/og/articles/stripe-webhook-idempotency-node.png",
+    "width": 1200,
+    "height": 630
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      "#key-takeaways",
+      "#article-summary",
+      "#editorial-summary"
     ]
-  }
+  },
+  "citation": [
+    {
+      "@type": "CreativeWork",
+      "name": "Receive Stripe events in your webhook endpoint",
+      "publisher": "Stripe Docs",
+      "url": "https://docs.stripe.com/webhooks?lang=node"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Resolve webhook signature verification errors",
+      "publisher": "Stripe Docs",
+      "url": "https://docs.stripe.com/webhooks/signatures"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Idempotent requests",
+      "publisher": "Stripe Docs",
+      "url": "https://docs.stripe.com/api/idempotent_requests"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Events",
+      "publisher": "Stripe Docs",
+      "url": "https://docs.stripe.com/api/events"
+    }
+  ]
+}
   </script>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dsotn.com/"},
-      {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://dsotn.com/articles/"},
-      {"@type": "ListItem", "position": 3, "name": "Stripe Webhook Idempotency in Node: Stop Double Work", "item": "https://dsotn.com/articles/stripe-webhook-idempotency-node/"}
-    ]
-  }
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dsotn.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://dsotn.com/articles/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Stripe webhook idempotency in Node.js: stop double work",
+      "item": "https://dsotn.com/articles/stripe-webhook-idempotency-node/"
+    }
+  ]
+}
   </script>
     <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
     <!-- Google tag (gtag.js) -->
@@ -72,15 +137,17 @@
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
-        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
     </nav>
   </header>
   <main>
     <div class="article-hero">
-      <img src="/public/images/articles/stripe-webhook-idempotency-node.jpg" width="3695" height="2414" alt="Historical invoice document photographed flat on a light background.">
+      <img src="/public/images/articles/stripe-webhook-idempotency-node.jpg" width="1600" height="900" fetchpriority="high" alt="Historical invoice document photographed flat on a light background.">
     </div>
     <div class="article-shell">
       <aside class="toc" aria-label="Table of contents">
@@ -91,17 +158,14 @@
         <a href="#node-handler">Node handler</a>
         <a href="#side-effects">Side effects</a>
         <a href="#audit">Fast audit</a>
+        <a href="#related-guides">Related guides</a>
         <a href="#references">Sources</a>
       </aside>
       <article class="article-body">
         <p class="eyebrow">Stripe & Billing</p>
-        <h1>Stripe Webhook Idempotency in Node: Stop Double Work</h1>
-        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-09 · 7 min read</p>
-        <p id="editorial-summary">Stripe webhook idempotency is not just a retry header. In Node, the reliable pattern starts with raw-body signature verification and ends with a durable event ledger.</p>
-
-        <aside class="notice" aria-label="Editorial disclaimer">
-          This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.
-        </aside>
+        <h1>Stripe webhook idempotency in Node.js: stop double work</h1>
+        <p class="article-meta">By <a href="/about/#contributors">CI Tripwire Editorial</a> · Published 2026-06-09 · Updated 2026-10-26 · 7 min read</p>
+        <p id="editorial-summary">Reliable Stripe webhooks in Node.js pair two distinct guards: raw-body signature verification with <code>stripe.webhooks.constructEvent</code> at the HTTP edge, and a unique database record keyed by <code>event.id</code> before any invoice or entitlement side effect runs.</p>
 
         <section id="key-takeaways" class="takeaways">
           <h2>Key takeaways for idempotent Stripe webhooks</h2>
@@ -129,7 +193,7 @@
           <p>That mechanism belongs to outbound API calls, such as creating a Checkout Session or invoice item. Incoming webhooks need a different guard because the side effect is in your system: marking an invoice paid, granting access, sending a receipt, or writing tax metadata.</p>
           <p>Stripe's webhook guide has a dedicated duplicate-event section and tells readers to log processed event IDs, then avoid processing an event that is already logged. <a href="#ref-webhooks">[1]</a></p>
           <div class="callout" role="note" aria-label="Evidence" data-callout-tone="evidence">
-            <strong>Clean verdict:</strong> Treat <code>event.id</code> as the first dedupe key, and put a unique database constraint behind it so two concurrent deliveries cannot both win.
+            <strong>Deduplicate at the database constraint:</strong> Treat <code>event.id</code> as the first dedupe key, and put a unique database constraint behind it so two concurrent deliveries cannot both win.
           </div>
         </section>
 
@@ -139,7 +203,7 @@
           <p>In Node, that means your webhook route should receive bytes or a raw body string before JSON parsing. Stripe's Node example constructs the event with <code>request.body</code>, the signature header, and the endpoint secret before switching on <code>event.type</code>. <a href="#ref-webhooks">[1]</a></p>
           <p>After verification, store a minimal processed-event row: event ID, event type, Stripe object ID, received time, processing status, and a checksum or reference to the raw payload if your retention policy allows it.</p>
           <div class="callout" role="note" aria-label="Caution" data-callout-tone="caution">
-            <strong>Avoid verdict:</strong> Do not parse JSON first, send receipts first, or update invoice state before the processed-event insert has committed.
+            <strong>Keep side effects downstream:</strong> Do not parse JSON first, send receipts first, or update invoice state before the processed-event insert has committed.
           </div>
         </section>
 
@@ -147,7 +211,7 @@
           <h2>Invoice side effects should be small, replayable, and ordered by source state</h2>
           <p>Stripe Docs says an Event object describes activity in an account and includes a linked API resource in its <code>data.object</code> field. <a href="#ref-events">[4]</a></p>
           <p>For invoice webhooks, keep the first transaction narrow. Insert the event row, record the latest known invoice status, and enqueue customer-visible work such as receipt rendering or entitlement updates. If the handler crashes after the insert, a retry sees the event as known and can continue from an explicit status instead of blindly running every side effect again.</p>
-          <p>Want this as a drop-in kit? <a href="https://launchagent.gumroad.com/l/knpcbo">Stripe Invoice Tax Kit</a> packages invoice metadata, tax ID collection, raw-body webhook signature verification, invoice status syncing, and receipt rendering for Node builders.</p>
+          <p>Want this as a drop-in kit? <a href="https://launchagent.gumroad.com/l/knpcbo" rel="nofollow noopener noreferrer" target="_blank">Stripe Invoice Tax Kit</a> packages invoice metadata, tax ID collection, raw-body webhook signature verification, invoice status syncing, and receipt rendering for Node builders.</p>
         </section>
 
         <section id="audit">
@@ -155,25 +219,80 @@
           <p>Search your webhook route for <code>constructEvent</code>, raw-body middleware, and any database write that runs before signature verification. Stripe Docs says the endpoint secret comes from the webhook endpoint details, and that each endpoint has its own secret. <a href="#ref-signatures">[2]</a></p>
           <p>Then search for every side effect after the switch on <code>event.type</code>. Anything that sends email, grants access, updates invoice state, or emits analytics should be downstream of a durable duplicate check.</p>
           <p>Finally, verify your own retry story. Stripe's duplicate-event guidance is explicit about logging processed events, and API idempotency docs cover outbound request retries; use both, but do not confuse one for the other. <a href="#ref-webhooks">[1]</a> <a href="#ref-idempotency">[3]</a></p>
-          <p>This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.</p>
-          <p>CI Tripwire has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
+          <aside class="notice" aria-label="Editorial disclaimer">
+            This article is informational and is not a substitute for a security, billing, tax, or legal review of your own product.
+          </aside>
+          <p>CI Tripwire Editorial has not commissioned independent expert review of this article. Read more about the organization byline at <a href="/about/#contributors">contributors</a> and the source posture at <a href="/about/#sourcing">sourcing</a>.</p>
           <p>Corrections can be routed through <a href="/about/#corrections">the corrections note</a>. Sources: 4 entries, Stripe documentation, last reviewed 2026-06-09.</p>
+        </section>
+
+        <section id="related-guides" class="related-guides">
+          <h2>Related engineering guides</h2>
+          <p><a href="/categories/stripe-billing/">Explore all 5 Stripe &amp; Node.js billing guides</a> or continue with the adjacent playbooks below:</p>
+          <div class="related-grid">
+            <div class="related-item">
+              <span class="eyebrow">Stripe &amp; Billing</span>
+              <a href="/articles/stripe-per-seat-billing-proration-node/">Stripe per-seat billing in Node: safe proration_behavior</a>
+              <p>Sync seat counts from your own team ledger and set proration_behavior deliberately on mid-cycle changes.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">Stripe &amp; Billing</span>
+              <a href="/articles/stripe-usage-based-billing-node/">Stripe usage-based billing in Node: safe meter ledgers</a>
+              <p>Persist usage events locally before forwarding idempotent meter events to Stripe from a worker.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">Stripe &amp; Billing</span>
+              <a href="/articles/stripe-cancel-save-retention-node/">Stripe cancel-save flow in Node: cancel_at_period_end</a>
+              <p>Record cancellation intent first, apply bounded retention offers, and schedule period-end cancellations cleanly.</p>
+            </div>
+            <div class="related-item">
+              <span class="eyebrow">Stripe &amp; Billing</span>
+              <a href="/articles/stripe-mrr-churn-events-node/">Stripe MRR and churn in Node.js: event-ledger metrics</a>
+              <p>Compute normalized subscription MRR and churn from an immutable webhook ledger separate from cash receipts.</p>
+            </div>
+          </div>
         </section>
 
         <section id="references" class="refs">
           <h2>Sources</h2>
           <ol>
-            <li id="ref-webhooks">Stripe Docs, <a href="https://docs.stripe.com/webhooks?lang=node">Receive Stripe events in your webhook endpoint</a>.</li>
-            <li id="ref-signatures">Stripe Docs, <a href="https://docs.stripe.com/webhooks/signatures">Resolve webhook signature verification errors</a>.</li>
-            <li id="ref-idempotency">Stripe Docs, <a href="https://docs.stripe.com/api/idempotent_requests">Idempotent requests</a>.</li>
-            <li id="ref-events">Stripe Docs, <a href="https://docs.stripe.com/api/events">Events</a>.</li>
+            <li id="ref-webhooks">Stripe Docs, <a href="https://docs.stripe.com/webhooks?lang=node" rel="nofollow noopener noreferrer" target="_blank">Receive Stripe events in your webhook endpoint</a>.</li>
+            <li id="ref-signatures">Stripe Docs, <a href="https://docs.stripe.com/webhooks/signatures" rel="nofollow noopener noreferrer" target="_blank">Resolve webhook signature verification errors</a>.</li>
+            <li id="ref-idempotency">Stripe Docs, <a href="https://docs.stripe.com/api/idempotent_requests" rel="nofollow noopener noreferrer" target="_blank">Idempotent requests</a>.</li>
+            <li id="ref-events">Stripe Docs, <a href="https://docs.stripe.com/api/events" rel="nofollow noopener noreferrer" target="_blank">Events</a>.</li>
           </ol>
         </section>
       </article>
     </div>
   </main>
   <footer class="site-footer">
-    <div class="inner">© 2026 CI Tripwire. Published by CI Tripwire Editorial.</div>
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
   </footer>
 </body>
 </html>

@@ -3,46 +3,150 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>About CI Tripwire</title>
-  <meta name="description" content="CI Tripwire publishes source-linked CI/CD workflow security articles for developers and maintainers.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>About CI Tripwire: Editorial &amp; Sourcing Standards</title>
+  <meta name="description" content="How CI Tripwire Editorial researches, cites, and maintains primary-sourced guides for GitHub Actions security, Stripe billing, and AI releases.">
   <link rel="canonical" href="https://dsotn.com/about/">
+  <meta property="og:title" content="About CI Tripwire: Editorial &amp; Sourcing Standards">
+  <meta property="og:description" content="Independent software engineering guides with inline primary-source citations, clear review posture, and open corrections.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dsotn.com/about/">
+  <meta property="og:site_name" content="CI Tripwire">
+  <meta property="og:image" content="https://dsotn.com/og/site.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="About CI Tripwire: Editorial &amp; Sourcing Standards">
+  <meta name="twitter:description" content="Independent software engineering guides with inline primary-source citations, clear review posture, and open corrections.">
+  <meta name="twitter:image" content="https://dsotn.com/og/site.png">
   <link rel="stylesheet" href="/styles.css">
-    <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2C26MR4ZSP"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-2C26MR4ZSP');
-    </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "About CI Tripwire",
+  "url": "https://dsotn.com/about/",
+  "mainEntity": {
+    "@type": "Organization",
+    "@id": "https://dsotn.com/#organization",
+    "name": "CI Tripwire",
+    "alternateName": "CI Tripwire Editorial",
+    "url": "https://dsotn.com/",
+    "description": "Independent software engineering publication covering GitHub Actions CI/CD security, Node.js Stripe billing reliability, and production AI release checks."
+  }
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://dsotn.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "About",
+      "item": "https://dsotn.com/about/"
+    }
+  ]
+}
+  </script>
+  <script defer data-domain="dsotn.com" src="https://plausible.io/js/script.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2C26MR4ZSP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2C26MR4ZSP');
+  </script>
 </head>
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="Primary">
       <a class="brand" href="/">CI Tripwire</a>
       <div class="nav-links">
-        <a href="/articles/github-actions-security-risks/">Articles</a>
+        <a href="/categories/github-actions/">GitHub Actions</a>
+        <a href="/categories/stripe-billing/">Stripe &amp; Billing</a>
+        <a href="/articles/">All Guides</a>
         <a href="/about/">About</a>
-        <a href="https://github.com/agentlaunchops-ai/gha-guard">gha-guard</a>
+        <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>
       </div>
     </nav>
   </header>
   <main class="wrap">
+    <p class="eyebrow">Editorial Mission &amp; Standards</p>
     <h1>About CI Tripwire</h1>
-    <section id="contributors">
-      <h2>Contributors</h2>
-      <p>CI Tripwire articles are published under the organization byline CI Tripwire Editorial.</p>
+    <p>CI Tripwire (published at <code>dsotn.com</code>) is an independent software engineering publication built for developers, repository maintainers, and SaaS teams who want concrete, primary-sourced answers before merging high-impact configuration or billing code.</p>
+
+    <div class="about-grid">
+      <div class="about-card">
+        <h2>What we cover</h2>
+        <p>We focus on <a href="/categories/github-actions/">GitHub Actions CI/CD security</a>, <a href="/categories/stripe-billing/">Node.js Stripe billing reliability</a>, and <a href="/articles/ai-trends-software-engineering-2026/">production AI release engineering</a>, plus practical planning worksheets for independent operators.</p>
+      </div>
+      <div class="about-card">
+        <h2>How every guide is structured</h2>
+        <p>Guides lead with extractable key takeaways and a direct bottom-line answer, bind non-trivial technical claims inline to official documentation, and close with explicit review and source disclosures.</p>
+      </div>
+      <div class="about-card">
+        <h2>Independent identity</h2>
+        <p>CI Tripwire is published independently by CI Tripwire Editorial and is paired with our open-source workflow auditor <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">gha-guard</a>. We are unaffiliated with GitHub, Stripe, Fortra Tripwire, or any enterprise security vendor.</p>
+      </div>
+    </div>
+
+    <section id="contributors" class="section-block">
+      <h2>Contributors, review posture, and commercial disclosure</h2>
+      <p>Articles on CI Tripwire are authored and maintained at the organization level under the byline <strong>CI Tripwire Editorial</strong>. We do not invent individual personas, fabricated credentials, or third-party endorsements, and each article states plainly in its closing section that independent external security, legal, or clinical review has not been commissioned.</p>
+      <p>All engineering guides and browser worksheets on <code>dsotn.com</code> are free to read without login walls or email gates. Where a guide or worksheet includes a commercial affiliate relationship, such as our <a href="/articles/local-newsletter-launch-plan/">local-newsletter launch plan</a> and <a href="/articles/local-media-empire-publishing-checklist/">Ad: Local Media Empire checklist</a>, every discovery card, page header, and outbound button discloses the paid relationship before you click and uses <code>rel="sponsored noopener noreferrer"</code>.</p>
     </section>
-    <section id="sourcing">
-      <h2>Sourcing</h2>
-      <p>We prefer official documentation, standards bodies, and primary project documentation. Articles cite factual claims inline and list source entries at the end.</p>
+
+    <section id="sourcing" class="section-block">
+      <h2>Primary sourcing standard</h2>
+      <p>We treat citations as claim-level verification rather than decorative footnotes. Every non-trivial claim about platform behavior, default permissions, API parameters, rollout dates, or benchmark figures must appear in the exact source linked beside that sentence.</p>
+      <ul>
+        <li><strong>Primary canon first:</strong> Official platform documentation and changelogs (GitHub Docs, GitHub Changelog, Stripe Documentation), standards bodies and security foundations (NIST, OpenSSF, SLSA, OWASP, FTC), statutes, and peer-reviewed technical papers.</li>
+        <li><strong>Labeled secondary context:</strong> When reputable secondary reporting or preprints add operational context not covered in official docs, we state the source type and limitations inline.</li>
+        <li><strong>No commercial fluff as proof:</strong> Marketing landing pages, forum speculation, and unverified summaries are never cited as evidence of technical capability or performance.</li>
+      </ul>
     </section>
-    <section id="corrections">
-      <h2>Corrections</h2>
-      <p>Send corrections through the public repository issue channel when the repository has issues enabled, or through the linked project contact path.</p>
+
+    <section id="corrections" class="section-block">
+      <h2>Corrections and currency updates</h2>
+      <p>Platform defaults, rollout dates, and API versions move. When official documentation changes or a reader spots an inaccurate claim, broken reference, or ambiguous example, we verify the live primary record, update the affected guide, increment its modified timestamp, and log the change in the repository changelog.</p>
+      <p>To report a factual error or outdated platform behavior, open an issue through our public GitHub project channel on <a href="https://github.com/agentlaunchops-ai/gha-guard" rel="nofollow noopener noreferrer" target="_blank">agentlaunchops-ai/gha-guard</a> with the article URL and the primary documentation link.</p>
     </section>
   </main>
-  <footer class="site-footer"><div class="inner">© 2026 CI Tripwire.</div></footer>
+  <footer class="site-footer">
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <p class="footer-brand">CI Tripwire</p>
+          <p>Primary-sourced software engineering guides for GitHub Actions workflow security, Node.js Stripe billing reliability, and production AI releases at dsotn.com.</p>
+        </div>
+        <div class="footer-col">
+          <strong>Engineering Tracks</strong>
+          <ul class="footer-links">
+            <li><a href="/categories/github-actions/">GitHub Actions Security (15)</a></li>
+            <li><a href="/categories/stripe-billing/">Stripe &amp; Node.js Billing (5)</a></li>
+            <li><a href="/articles/">All Guides (23)</a></li>
+            <li><a href="/tools/local-publication-planner/">Free Publication Planner</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <strong>Editorial &amp; Trust</strong>
+          <ul class="footer-links">
+            <li><a href="/about/">About CI Tripwire</a></li>
+            <li><a href="/about/#sourcing">Primary Sourcing Standard</a></li>
+            <li><a href="/about/#contributors">Editorial &amp; Affiliate Disclosure</a></li>
+            <li><a href="/about/#corrections">Report a Correction</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">Copyright 2026 CI Tripwire. Published independently by CI Tripwire Editorial at dsotn.com. Unaffiliated with GitHub, Stripe, or Fortra Tripwire.</div>
+    </div>
+  </footer>
 </body>
 </html>
